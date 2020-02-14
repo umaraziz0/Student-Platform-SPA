@@ -16,8 +16,9 @@ Route::get('/', function () {
 });
 
 Route::get('/admin/{name}', 'AdminController@show');
+Route::get('admin', 'AdminController@index');
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index');
-Route::get('/assignments', 'AssignmentController@index');
+Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/assignments', 'AssignmentController@index')->name('assignments');

@@ -16,7 +16,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <link rel="stylesheet" href="/css/app.css">
 </head>
 <body class="hold-transition sidebar-mini">
-<div class="wrapper">
+<div class="wrapper" id="app">
 
   <!-- Navbar -->
   <nav class="main-header navbar navbar-expand navbar-white navbar-light">
@@ -57,7 +57,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
           <a href="#" class="dropdown-item">
             <!-- Message Start -->
             <div class="media">
-              <img src="dist/img/user1-128x128.jpg" alt="User Avatar" class="img-size-50 mr-3 img-circle">
+              <img src="" alt="User Avatar" class="img-size-50 mr-3 img-circle">
               <div class="media-body">
                 <h3 class="dropdown-item-title">
                   Brad Diesel
@@ -73,7 +73,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
           <a href="#" class="dropdown-item">
             <!-- Message Start -->
             <div class="media">
-              <img src="dist/img/user8-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
+              <img src="" alt="User Avatar" class="img-size-50 img-circle mr-3">
               <div class="media-body">
                 <h3 class="dropdown-item-title">
                   John Pierce
@@ -89,7 +89,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
           <a href="#" class="dropdown-item">
             <!-- Message Start -->
             <div class="media">
-              <img src="dist/img/user3-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
+              <img src="" alt="User Avatar" class="img-size-50 img-circle mr-3">
               <div class="media-body">
                 <h3 class="dropdown-item-title">
                   Nora Silvester
@@ -143,7 +143,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <!-- Main Sidebar Container -->
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
-    <a href="index3.html" class="brand-link">
+    <a href="home" class="brand-link">
       <img src="./img/professor.png" alt="Student Platform Logo" class="brand-image img-circle elevation-3"
            style="opacity: .8">
       <span class="brand-text font-weight-light">Student Platform</span>
@@ -157,9 +157,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
           <img src="./img/graduate.png" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
-          <a href="#" class="d-block">
+          <router-link to="/profile" class="d-block">
             {{ Auth::user()->name }}
-          </a>
+          </router-link>
         </div>
       </div>
 
@@ -179,15 +179,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
             </a>
             <ul class="nav nav-treeview">
              <li class="nav-item">
-                <a href="home" class="nav-link {{ Request::is('home') ? 'active' : '' }}">
+                <router-link to="/dashboard" class="nav-link">
                   <i class="fas fa-home nav-icon"></i>
                   <p>
-                      Home
+                      Dashboard
                   </p>
-                </a>
+                </router-link>
               </li>
-              <li class="nav-item has-treeview 
-              {{ Request::is('assignments') || Request::is('exams') ? 'menu-open' : '' }}">
+              <li class="nav-item has-treeview">
                 <a href="#" class="nav-link">
                   <i class="fas fa-clipboard-list nav-icon"></i>
                   <p>
@@ -197,12 +196,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 </a>
                 <ul class="nav nav-treeview">
                     <li class="nav-item">
-                      <a href="assignments" class="nav-link {{ Request::is('assignments') ? 'active' : '' }}">
+                      <router-link to="/assignments" class="nav-link">
                         <i class="fas fa-pen-alt nav-icon"></i>
                         <p>
                             Assignments
                         </p>
-                      </a>
+                      </router-link>
                     </li>
                     <li class="nav-item">
                         <a href="#" class="nav-link">
@@ -284,7 +283,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 </p>
               </a>
               <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                @csrf 
+                @csrf
             </form>
           </li>
         </ul>
@@ -319,13 +318,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!-- Main content -->
     <div class="content">
       <div class="container-fluid">
-        <div class="row">
-          <div class="col-lg-6">
-            @yield('content')
-          </div>
-          <!-- /.col-md-6 -->
-        </div>
-        <!-- /.row -->
+        <router-view></router-view>
       </div><!-- /.container-fluid -->
     </div>
     <!-- /.content -->

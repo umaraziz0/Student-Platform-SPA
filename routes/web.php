@@ -21,4 +21,7 @@ Route::get('admin', 'AdminController@index');
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
-Route::get('/assignments', 'AssignmentController@index')->name('assignments');
+Route::get('{path}', 'HomeController@index')->where( 'path' , '([A-z\d\-\/_.]+)?' );
+    // fixes 404 error caused by trying to find a laravel page
+
+// Route::get('/assignments', 'AssignmentController@index')->name('assignments');

@@ -15,7 +15,9 @@
         @else
             You're a Guest
         @endif
-    @else
+    @elseif($name)
         Welcome, {{ $name }}
+    @else
+        
     @endif 
 @endsection

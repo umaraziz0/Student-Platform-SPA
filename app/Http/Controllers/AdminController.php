@@ -7,6 +7,16 @@ use App\Admin;
 
 class AdminController extends Controller
 {
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function show($slug){
         // Get slug from database
         return view('admin', [

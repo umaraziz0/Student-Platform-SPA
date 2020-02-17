@@ -154,7 +154,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
         <div class="image">
-          <img src="./img/graduate.png" class="img-circle elevation-2" alt="User Image">
+          <img src="/img/me-cropped.jpg" class="img-circle elevation-2" alt="">
         </div>
         <div class="info">
           <router-link to="/profile" class="d-block">
@@ -166,7 +166,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
       <!-- Sidebar Menu -->
       @yield('sidebar')
       <nav class="mt-2">
-        <ul class="nav nav-pills nav-sidebar flex-column  nav-child-indent" data-widget="treeview" role="menu" data-accordion="false">
+        <ul class="nav nav-pills nav-sidebar flex-column nav-child-indent" data-widget="treeview" role="menu" data-accordion="false">
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
           <li class="nav-item has-treeview menu-open nav-child-indent">
@@ -186,7 +186,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   </p>
                 </router-link>
               </li>
-              <li class="nav-item has-treeview">
+              <li class="nav-item has-treeview menu-open">
                 <a href="#" class="nav-link">
                   <i class="fas fa-clipboard-list nav-icon"></i>
                   <p>
@@ -195,7 +195,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   </p>
                 </a>
                 <ul class="nav nav-treeview">
-                    <li class="nav-item">
+                <li class="nav-item">
                       <router-link to="/assignments" class="nav-link">
                         <i class="fas fa-pen-alt nav-icon"></i>
                         <p>

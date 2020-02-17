@@ -7,7 +7,7 @@
                         <h3 class="card-title">Users Table</h3>
 
                         <div class="card-tools">
-                            <button type="button" class="btn btn-block btn-success">
+                            <button type="button" class="btn btn-block btn-success" data-toggle="modal" data-target="#addNew">
                                 <i class="fas fa-user-plus"></i>
                             </button>
                             <!-- <div class="input-group input-group-sm" style="width: 150px;">
@@ -58,6 +58,27 @@
                 </div>
             </div>
         </div>
+        <!-- Modal -->
+        <div class="modal fade" id="addNew" tabindex="-1" role="dialog" aria-labelledby="addNewLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">Default Modal</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <p>One fine body…</p>
+            </div>
+            <div class="modal-footer justify-content-between">
+              <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary">Add</button>
+            </div>
+            </div>
+        </div>
+        </div>
+    <!-- Modal End -->
     </div>
 </template>
 

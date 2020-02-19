@@ -20,7 +20,7 @@ class AdminController extends Controller
     public function show($slug){
         // Get slug from database
         return view('admin', [
-            'name' => admin::where('slug', $slug)->firstOrFail()
+            'name' => Admin::where('slug', $slug)->firstOrFail()
         ]);
     }
 

@@ -61,21 +61,40 @@
         <!-- Modal -->
         <div class="modal fade" id="addNew" tabindex="-1" role="dialog" aria-labelledby="addNewLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
-            <div class="modal-content">
+          <div class="modal-content">
             <div class="modal-header">
-              <h4 class="modal-title">Default Modal</h4>
+              <h4 class="modal-title">Create New User</h4>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">×</span>
               </button>
             </div>
-            <div class="modal-body">
-              <p>One fine body…</p>
-            </div>
-            <div class="modal-footer justify-content-between">
-              <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary">Add</button>
-            </div>
-            </div>
+            <form role="form" @submit.prevent="createUser">
+              <div class="modal-body">
+                <div class="card-body">
+                  <div class="form-group">
+                    <label for="inputName">Name</label>
+                    <input type="text" v-model="form.name" class="form-control" :class="{ 'is-invalid': form.errors.has('name')}" id="inputName" placeholder="Name" field="name">
+                  </div>
+                  <div class="form-group">
+                    <label for="inputEmail">Email address</label>
+                    <input type="email" v-model="form.email" class="form-control" :class="{ 'is-invalid': form.errors.has('email')}" id="inputEmail" placeholder="Email" field="email">
+                  </div>
+                  <div class="form-group">
+                    <label for="inputPassword">Password</label>
+                    <input type="password" v-model="form.password" class="form-control" :class="{ 'is-invalid': form.errors.has('password')}" id="inputPassword" placeholder="Password" field="password">
+                  </div>
+                  <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="isAdmin" v-model="form.is_admin">
+                    <label class="form-check-label" for="isAdmin">Admin</label>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Create</button>
+              </div>
+            </form>
+          </div>
         </div>
         </div>
     <!-- Modal End -->
@@ -84,6 +103,23 @@
 
 <script>
     export default {
+        data (){
+            return {
+                form: new Form({
+                    name: '',
+                    email: '',
+                    password: '',
+                    is_admin: ''
+                })
+            }
+        },
+
+        methods: {
+            createUser(){
+                this.form.post('api/user');
+            }
+        },
+
         mounted() {
             console.log('Component mounted.')
         }

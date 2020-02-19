@@ -2184,6 +2184,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2191,7 +2192,7 @@ __webpack_require__.r(__webpack_exports__);
         name: '',
         email: '',
         password: '',
-        is_admin: ''
+        is_admin: false
       })
     };
   },
@@ -38840,7 +38841,6 @@ var render = function() {
               _c(
                 "form",
                 {
-                  attrs: { role: "form" },
                   on: {
                     submit: function($event) {
                       $event.preventDefault()
@@ -38850,10 +38850,12 @@ var render = function() {
                 },
                 [
                   _c("div", { staticClass: "modal-body" }, [
-                    _c("div", { staticClass: "card-body" }, [
-                      _c("div", { staticClass: "form-group" }, [
+                    _c(
+                      "div",
+                      { staticClass: "form-group" },
+                      [
                         _c("label", { attrs: { for: "inputName" } }, [
-                          _vm._v("Name")
+                          _vm._v("Name:")
                         ]),
                         _vm._v(" "),
                         _c("input", {
@@ -38882,12 +38884,21 @@ var render = function() {
                               _vm.$set(_vm.form, "name", $event.target.value)
                             }
                           }
+                        }),
+                        _vm._v(" "),
+                        _c("has-error", {
+                          attrs: { form: _vm.form, field: "name" }
                         })
-                      ]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "form-group" }, [
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "form-group" },
+                      [
                         _c("label", { attrs: { for: "inputEmail" } }, [
-                          _vm._v("Email address")
+                          _vm._v("Email address:")
                         ]),
                         _vm._v(" "),
                         _c("input", {
@@ -38916,12 +38927,21 @@ var render = function() {
                               _vm.$set(_vm.form, "email", $event.target.value)
                             }
                           }
+                        }),
+                        _vm._v(" "),
+                        _c("has-error", {
+                          attrs: { form: _vm.form, field: "email" }
                         })
-                      ]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "form-group" }, [
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "form-group" },
+                      [
                         _c("label", { attrs: { for: "inputPassword" } }, [
-                          _vm._v("Password")
+                          _vm._v("Password:")
                         ]),
                         _vm._v(" "),
                         _c("input", {
@@ -38956,67 +38976,70 @@ var render = function() {
                               )
                             }
                           }
-                        })
-                      ]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "form-check" }, [
-                        _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: _vm.form.is_admin,
-                              expression: "form.is_admin"
-                            }
-                          ],
-                          staticClass: "form-check-input",
-                          attrs: { type: "checkbox", id: "isAdmin" },
-                          domProps: {
-                            checked: Array.isArray(_vm.form.is_admin)
-                              ? _vm._i(_vm.form.is_admin, null) > -1
-                              : _vm.form.is_admin
-                          },
-                          on: {
-                            change: function($event) {
-                              var $$a = _vm.form.is_admin,
-                                $$el = $event.target,
-                                $$c = $$el.checked ? true : false
-                              if (Array.isArray($$a)) {
-                                var $$v = null,
-                                  $$i = _vm._i($$a, $$v)
-                                if ($$el.checked) {
-                                  $$i < 0 &&
-                                    _vm.$set(
-                                      _vm.form,
-                                      "is_admin",
-                                      $$a.concat([$$v])
-                                    )
-                                } else {
-                                  $$i > -1 &&
-                                    _vm.$set(
-                                      _vm.form,
-                                      "is_admin",
-                                      $$a
-                                        .slice(0, $$i)
-                                        .concat($$a.slice($$i + 1))
-                                    )
-                                }
-                              } else {
-                                _vm.$set(_vm.form, "is_admin", $$c)
-                              }
-                            }
-                          }
                         }),
                         _vm._v(" "),
-                        _c(
-                          "label",
+                        _c("has-error", {
+                          attrs: { form: _vm.form, field: "password" }
+                        })
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "form-check" }, [
+                      _c("input", {
+                        directives: [
                           {
-                            staticClass: "form-check-label",
-                            attrs: { for: "isAdmin" }
-                          },
-                          [_vm._v("Admin")]
-                        )
-                      ])
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.form.is_admin,
+                            expression: "form.is_admin"
+                          }
+                        ],
+                        staticClass: "form-check-input",
+                        attrs: { type: "checkbox", id: "isAdmin" },
+                        domProps: {
+                          checked: Array.isArray(_vm.form.is_admin)
+                            ? _vm._i(_vm.form.is_admin, null) > -1
+                            : _vm.form.is_admin
+                        },
+                        on: {
+                          change: function($event) {
+                            var $$a = _vm.form.is_admin,
+                              $$el = $event.target,
+                              $$c = $$el.checked ? true : false
+                            if (Array.isArray($$a)) {
+                              var $$v = null,
+                                $$i = _vm._i($$a, $$v)
+                              if ($$el.checked) {
+                                $$i < 0 &&
+                                  _vm.$set(
+                                    _vm.form,
+                                    "is_admin",
+                                    $$a.concat([$$v])
+                                  )
+                              } else {
+                                $$i > -1 &&
+                                  _vm.$set(
+                                    _vm.form,
+                                    "is_admin",
+                                    $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                                  )
+                              }
+                            } else {
+                              _vm.$set(_vm.form, "is_admin", $$c)
+                            }
+                          }
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c(
+                        "label",
+                        {
+                          staticClass: "form-check-label",
+                          attrs: { for: "isAdmin" }
+                        },
+                        [_vm._v("Admin")]
+                      )
                     ])
                   ]),
                   _vm._v(" "),

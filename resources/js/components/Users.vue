@@ -68,26 +68,27 @@
                 <span aria-hidden="true">×</span>
               </button>
             </div>
-            <form role="form" @submit.prevent="createUser">
+            <form @submit.prevent="createUser">
               <div class="modal-body">
-                <div class="card-body">
                   <div class="form-group">
-                    <label for="inputName">Name</label>
-                    <input type="text" v-model="form.name" class="form-control" :class="{ 'is-invalid': form.errors.has('name')}" id="inputName" placeholder="Name" field="name">
+                    <label for="inputName">Name:</label>
+                    <input type="text" v-model="form.name" class="form-control" :class="{ 'is-invalid': form.errors.has('name') }" id="inputName" placeholder="Name" field="name">
+                    <has-error :form="form" field="name"></has-error>
                   </div>
                   <div class="form-group">
-                    <label for="inputEmail">Email address</label>
+                    <label for="inputEmail">Email address:</label>
                     <input type="email" v-model="form.email" class="form-control" :class="{ 'is-invalid': form.errors.has('email')}" id="inputEmail" placeholder="Email" field="email">
+                    <has-error :form="form" field="email"></has-error>
                   </div>
                   <div class="form-group">
-                    <label for="inputPassword">Password</label>
+                    <label for="inputPassword">Password:</label>
                     <input type="password" v-model="form.password" class="form-control" :class="{ 'is-invalid': form.errors.has('password')}" id="inputPassword" placeholder="Password" field="password">
+                    <has-error :form="form" field="password"></has-error>
                   </div>
                   <div class="form-check">
                     <input type="checkbox" class="form-check-input" id="isAdmin" v-model="form.is_admin">
                     <label class="form-check-label" for="isAdmin">Admin</label>
                   </div>
-                </div>
               </div>
               <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
@@ -109,7 +110,7 @@
                     name: '',
                     email: '',
                     password: '',
-                    is_admin: ''
+                    is_admin: false
                 })
             }
         },

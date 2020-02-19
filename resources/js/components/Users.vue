@@ -25,20 +25,22 @@
                         <thead>
                             <tr>
                             <th>ID</th>
-                            <th>Student ID</th>
+                            <!-- <th>Student ID</th> -->
                             <th>Name</th>
                             <th>Email</th>
                             <th>Admin</th>
+                            <th>Registered at</th>
                             <th>Modify</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                            <td>183</td>
-                            <td>John Doe</td>
-                            <td>11-7-2014</td>
-                            <td><span class="tag tag-success">Approved</span></td>
-                            <td></td>
+                            <tr v-for="user in users" :key="user.id">
+                            <td>{{ user.id }}</td>
+                            <td>{{ user.name }}</td>
+                            <td>{{ user.email }}</td>
+                            <td v-if="user.is_admin">True</td>
+                            <td v-else>False</td>
+                            <td>{{ user.created_at }}</td>
                             <td>
                                 <div class="btn-group">
                                     <button type="button" class="btn btn-info">
@@ -49,7 +51,6 @@
                                     </button>
                                 </div>
                             </td>
-                            <td></td>
                             </tr>
                         </tbody>
                         </table>
@@ -106,6 +107,7 @@
     export default {
         data (){
             return {
+                users: {},
                 form: new Form({
                     name: '',
                     email: '',
@@ -116,13 +118,17 @@
         },
 
         methods: {
+            loadUsers(){
+                axios.get("api/user").then(({ data }) => (this.users = data.data));
+            },
+
             createUser(){
                 this.form.post('api/user');
             }
         },
 
-        mounted() {
-            console.log('Component mounted.')
+        created() {
+            this.loadUsers();
         }
     }
 </script>

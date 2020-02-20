@@ -7,9 +7,30 @@
 require('./bootstrap');
 
 window.Vue = require('vue');
-import moment from 'moment';
 
+import moment from 'moment'
 import { Form, HasError, AlertError } from 'vform'
+import Swal from 'sweetalert2'
+import VueProgressBar from 'vue-progressbar'
+
+
+window.Swal = 'Swal';
+
+const Toast = Swal.mixin({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
+    onOpen: (toast) => {
+      toast.addEventListener('mouseenter', Swal.stopTimer)
+      toast.addEventListener('mouseleave', Swal.resumeTimer)
+    }
+})
+
+window.Toast = 'Toast';
+
+// VForm
 window.Form = Form;
 Vue.component(HasError.name, HasError)
 Vue.component(AlertError.name, AlertError)
@@ -30,13 +51,18 @@ const router = new VueRouter({
     linkActiveClass: 'active' // sets element tab class to 'active' if on current page
 })
 
-// Global vue filters
+Vue.use(VueProgressBar, {
+    color: 'rgb(143, 255, 199)',
+    failedColor: 'red',
+    height: '3px'
+})
 
+// Global vue filters
 // to uppercase first letter in text
 Vue.filter('upText', function(text){
     return text.charAt(0).toUpperCase() + text.slice(1)
 });
-//
+// reformat date
 Vue.filter('myDate', function(created){
     return moment(created).format('MMMM Do YYYY, h:mm a')
 });

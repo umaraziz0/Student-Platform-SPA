@@ -123,12 +123,24 @@
             },
 
             createUser(){
+                this.$Progress.start();
                 this.form.post('api/user');
+
+                // Toast.fire({
+                //     icon: 'success',
+                //     title: 'Signed in successfully'
+                // })
+
+                this.$Progress.finish();
             }
         },
 
         created() {
+            this.$Progress.start();
             this.loadUsers();
+            Swal.fire('Hello world!');
+            this.$Progress.finish();
+
         }
     }
 </script>

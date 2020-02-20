@@ -40,7 +40,7 @@
                             <td>{{ user.email }}</td>
                             <td v-if="user.is_admin">True</td>
                             <td v-else>False</td>
-                            <td>{{ user.created_at }}</td>
+                            <td>{{ user.created_at | myDate}}</td>
                             <td>
                                 <div class="btn-group">
                                     <button type="button" class="btn btn-info">

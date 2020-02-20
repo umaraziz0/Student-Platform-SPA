@@ -123,28 +123,21 @@
             },
 
             createUser(){
-                this.$Progress.start();
+                // this.$Progress.start();
                 this.form.post('api/user');
                 $('#addNew').modal('hide');
-                // Toast.fire({
-                //     icon: 'success',
-                //     title: 'Signed in successfully'
-                // });
-
-                this.$Progress.finish();
+                Toast.fire({
+                    icon: 'success',
+                    title: 'User created successfully.'
+                });
+                // this.$Progress.finish();
             }
         },
 
         created() {
-            this.$Progress.start();
+            // this.$Progress.start();
             this.loadUsers();
-            Toast.fire({
-                    icon: 'success',
-                    title: 'Signed in successfully'
-                });
-            // Swal.fire('toast');
-            this.$Progress.finish();
-
+            // this.$Progress.finish();
         }
     }
 </script>

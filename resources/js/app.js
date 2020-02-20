@@ -10,7 +10,7 @@ window.Vue = require('vue');
 
 import moment from 'moment';
 import { Form, HasError, AlertError } from 'vform';
-import VueProgressBar from 'vue-progressbar';
+// import VueProgressBar from 'vue-progressbar';
 
 window.Swal = require('sweetalert2');
 
@@ -26,11 +26,12 @@ window.Toast = Swal.mixin({
     // }
 })
 
-Vue.use(VueProgressBar, {
-    color: 'rgb(143, 255, 199)',
-    failedColor: 'red',
-    height: '3px'
-})
+// Vue.use(VueProgressBar, {
+//     color: 'rgb(143, 255, 199)',
+//     failedColor: 'red',
+//     height: '5px',
+//     location: 'top'
+// })
 
 // VForm
 window.Form = Form;

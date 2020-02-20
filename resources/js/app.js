@@ -8,27 +8,29 @@ require('./bootstrap');
 
 window.Vue = require('vue');
 
-import moment from 'moment'
-import { Form, HasError, AlertError } from 'vform'
-import Swal from 'sweetalert2'
-import VueProgressBar from 'vue-progressbar'
+import moment from 'moment';
+import { Form, HasError, AlertError } from 'vform';
+import VueProgressBar from 'vue-progressbar';
 
+window.Swal = require('sweetalert2');
 
-window.Swal = 'Swal';
-
-const Toast = Swal.mixin({
+window.Toast = Swal.mixin({
     toast: true,
     position: 'top-end',
     showConfirmButton: false,
     timer: 3000,
-    timerProgressBar: true,
-    onOpen: (toast) => {
-      toast.addEventListener('mouseenter', Swal.stopTimer)
-      toast.addEventListener('mouseleave', Swal.resumeTimer)
-    }
+    timerProgressBar: false,
+    // onOpen: (toast) => {
+    //   toast.addEventListener('mouseenter', Swal.stopTimer)
+    //   toast.addEventListener('mouseleave', Swal.resumeTimer)
+    // }
 })
 
-window.Toast = 'Toast';
+Vue.use(VueProgressBar, {
+    color: 'rgb(143, 255, 199)',
+    failedColor: 'red',
+    height: '3px'
+})
 
 // VForm
 window.Form = Form;
@@ -49,12 +51,6 @@ const router = new VueRouter({
     mode: 'history',
     routes, // short for `routes: routes`
     linkActiveClass: 'active' // sets element tab class to 'active' if on current page
-})
-
-Vue.use(VueProgressBar, {
-    color: 'rgb(143, 255, 199)',
-    failedColor: 'red',
-    height: '3px'
 })
 
 // Global vue filters

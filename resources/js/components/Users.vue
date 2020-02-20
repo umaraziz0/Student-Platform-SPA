@@ -125,11 +125,11 @@
             createUser(){
                 this.$Progress.start();
                 this.form.post('api/user');
-
+                $('#addNew').modal('hide');
                 // Toast.fire({
                 //     icon: 'success',
                 //     title: 'Signed in successfully'
-                // })
+                // });
 
                 this.$Progress.finish();
             }
@@ -138,7 +138,11 @@
         created() {
             this.$Progress.start();
             this.loadUsers();
-            Swal.fire('Hello world!');
+            Toast.fire({
+                    icon: 'success',
+                    title: 'Signed in successfully'
+                });
+            // Swal.fire('toast');
             this.$Progress.finish();
 
         }

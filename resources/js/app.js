@@ -10,7 +10,7 @@ window.Vue = require('vue');
 
 import moment from 'moment';
 import { Form, HasError, AlertError } from 'vform';
-// import VueProgressBar from 'vue-progressbar';
+import VueProgressBar from 'vue-progressbar';
 
 window.Swal = require('sweetalert2');
 
@@ -26,12 +26,17 @@ window.Toast = Swal.mixin({
     // }
 })
 
-// Vue.use(VueProgressBar, {
-//     color: 'rgb(143, 255, 199)',
-//     failedColor: 'red',
-//     height: '5px',
-//     location: 'top'
-// })
+Vue.use(VueProgressBar, {
+    color: 'rgb(143, 255, 199)',
+    failedColor: 'red',
+    height: '5px',
+    location: 'top',
+    transition: {
+        speed: '0.2s',
+        opacity: '0.6s',
+        termination: 300
+    },
+})
 
 // VForm
 window.Form = Form;
@@ -63,6 +68,8 @@ Vue.filter('upText', function(text){
 Vue.filter('myDate', function(created){
     return moment(created).format('MMMM Do YYYY, h:mm a')
 });
+
+window.Fire = new Vue();
 
 /**
  * The following block of code may be used to automatically register your

@@ -43,10 +43,10 @@
                             <td>{{ user.created_at | myDate}}</td>
                             <td>
                                 <div class="btn-group">
-                                    <button type="button" class="btn btn-info">
+                                    <button type="button" class="btn btn-info" v-on:click="editUser(user.id)">
                                         <i class="fas fa-edit text-white"></i>
                                     </button>
-                                    <button type="button" class="btn btn-danger">
+                                    <button type="button" class="btn btn-danger" v-on:click="deleteUser(user.id)">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </div>
@@ -119,25 +119,68 @@
 
         methods: {
             loadUsers(){
+                //Send request to fetch data of all users
                 axios.get("api/user").then(({ data }) => (this.users = data.data));
             },
 
             createUser(){
-                // this.$Progress.start();
-                this.form.post('api/user');
-                $('#addNew').modal('hide');
-                Toast.fire({
+                this.$Progress.start();
+                this.form.post('api/user').then( () => {
+                    $('#addNew').modal('hide');
+                    Toast.fire({
                     icon: 'success',
                     title: 'User created successfully.'
-                });
-                // this.$Progress.finish();
+                    });
+                    location.reload();
+                }).catch( () => {
+                    this.$Progress.finish();
+                })
+            },
+
+            editUser(id){
+
+            },
+
+            deleteUser(id){
+                Swal.fire({
+                    title: 'Are you sure?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    // Send request to delete user
+                    this.form.delete('api/user/' + id).then(() => {
+                        Swal.fire(
+                            'Deleted!',
+                            'Your file has been deleted.',
+                            'success'
+                        );
+                        Fire.$emit('refresh');
+                    }).catch(() => {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Something went wrong!'
+                        })
+                    })
+                })
             }
         },
 
         created() {
-            // this.$Progress.start();
+            this.$Progress.start();
             this.loadUsers();
-            // this.$Progress.finish();
+            Fire.$on('refresh', () => {
+                this.loadUsers();
+            })
+            this.$Progress.finish();
+        },
+
+        mounted()
+        {
+
         }
     }
 </script>

@@ -7,7 +7,7 @@
                         <h3 class="card-title">Users Table</h3>
 
                         <div class="card-tools">
-                            <button type="button" class="btn btn-block btn-success" data-toggle="modal" data-target="#addNew">
+                            <button type="button" class="btn btn-block btn-success" v-on:click="createModal">
                                 <i class="fas fa-user-plus"></i>
                             </button>
                             <!-- <div class="input-group input-group-sm" style="width: 150px;">
@@ -43,7 +43,7 @@
                             <td>{{ user.created_at | myDate}}</td>
                             <td>
                                 <div class="btn-group">
-                                    <button type="button" class="btn btn-info" v-on:click="editUser(user.id)">
+                                    <button type="button" class="btn btn-info" v-on:click="editModal(user)">
                                         <i class="fas fa-edit text-white"></i>
                                     </button>
                                     <button type="button" class="btn btn-danger" v-on:click="deleteUser(user.id)">
@@ -64,12 +64,12 @@
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h4 class="modal-title">Create New User</h4>
+              <h4 class="modal-title">{{ editMode ? 'Edit User' : 'Create New User'}}</h4>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">×</span>
               </button>
             </div>
-            <form @submit.prevent="createUser">
+            <form @submit.prevent="editMode ? editUser() : createUser()">
               <div class="modal-body">
                   <div class="form-group">
                     <label for="inputName">Name:</label>
@@ -93,7 +93,8 @@
               </div>
               <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary">Create</button>
+                <button type="submit" class="btn" :class="{ 'btn-success': !editMode, 'btn-primary' : editMode }">
+                    {{ editMode ? 'Update' : 'Create'}}</button>
               </div>
             </form>
           </div>
@@ -107,8 +108,10 @@
     export default {
         data (){
             return {
+                editMode: false,
                 users: {},
                 form: new Form({
+                    id: '',
                     name: '',
                     email: '',
                     password: '',
@@ -118,6 +121,21 @@
         },
 
         methods: {
+            createModal(){
+                this.editMode = false;
+                // this.form.clear();
+                this.form.reset();
+                $('#addNew').modal('show');
+            },
+
+            editModal(user){
+                this.editMode = true;
+                // this.form.clear();
+                this.form.reset();
+                $('#addNew').modal('show');
+                this.form.fill(user);
+            },
+
             loadUsers(){
                 //Send request to fetch data of all users
                 axios.get("api/user").then(({ data }) => (this.users = data.data));
@@ -128,17 +146,30 @@
                 this.form.post('api/user').then( () => {
                     $('#addNew').modal('hide');
                     Toast.fire({
-                    icon: 'success',
-                    title: 'User created successfully.'
+                        icon: 'success',
+                        title: 'User created successfully'
                     });
-                    location.reload();
-                }).catch( () => {
+                    Fire.$emit('refresh');
                     this.$Progress.finish();
+                }).catch( () => {
+                    this.$Progress.fail();
                 })
             },
 
-            editUser(id){
-
+            editUser(){
+                this.$Progress.start();
+                this.form.put('api/user/' + this.form.id)
+                .then(() => {
+                    $('#addNew').modal('hide');
+                    Toast.fire({
+                        icon: 'success',
+                        title: 'Update success'
+                    });
+                    Fire.$emit('refresh');
+                    this.$Progress.finish();
+                }).catch(() => {
+                    this.$Progress.fail();
+                })
             },
 
             deleteUser(id){
@@ -150,21 +181,25 @@
                     cancelButtonColor: '#d33',
                     confirmButtonText: 'Yes, delete it!'
                 }).then((result) => {
-                    // Send request to delete user
-                    this.form.delete('api/user/' + id).then(() => {
-                        Swal.fire(
-                            'Deleted!',
-                            'Your file has been deleted.',
-                            'success'
-                        );
-                        Fire.$emit('refresh');
-                    }).catch(() => {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Oops...',
-                            text: 'Something went wrong!'
+                    if(result.value){
+                        // Send request to delete user
+                        this.form.delete('api/user/' + id).then(() => {
+                            this.$Progress.start();
+                            Swal.fire(
+                                'Deleted!',
+                                'User deleted.',
+                                'success'
+                            );
+                            Fire.$emit('refresh');
+                            this.$Progress.finish();
+                        }).catch(() => {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: 'Something went wrong!'
+                            })
                         })
-                    })
+                    }
                 })
             }
         },

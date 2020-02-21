@@ -12,6 +12,13 @@ import moment from 'moment';
 import { Form, HasError, AlertError } from 'vform';
 import VueProgressBar from 'vue-progressbar';
 
+Vue.use(VueProgressBar, {
+    color: 'rgb(143, 255, 199)',
+    failedColor: 'red',
+    height: '3px',
+    location: 'top'
+  })
+
 window.Swal = require('sweetalert2');
 
 window.Toast = Swal.mixin({
@@ -24,18 +31,6 @@ window.Toast = Swal.mixin({
     //   toast.addEventListener('mouseenter', Swal.stopTimer)
     //   toast.addEventListener('mouseleave', Swal.resumeTimer)
     // }
-})
-
-Vue.use(VueProgressBar, {
-    color: 'rgb(143, 255, 199)',
-    failedColor: 'red',
-    height: '5px',
-    location: 'top',
-    transition: {
-        speed: '0.2s',
-        opacity: '0.6s',
-        termination: 300
-    },
 })
 
 // VForm

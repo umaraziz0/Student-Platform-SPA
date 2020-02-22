@@ -10,7 +10,7 @@
                     <h5 class="widget-user-desc">Student ID</h5>
                 </div>
                 <div class="widget-user-image">
-                    <img class="img-circle elevation-2" src="/img/me-cropped.jpg" alt="">
+                    <img class="img-circle elevation-2" src="/img/me-cropped.png" alt="">
                 </div>
                 <div class="card-footer">
                     <div class="row justify-content-center">

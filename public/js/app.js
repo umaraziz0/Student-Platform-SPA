@@ -59514,7 +59514,7 @@ var staticRenderFns = [
             _c("div", { staticClass: "widget-user-image" }, [
               _c("img", {
                 staticClass: "img-circle elevation-2",
-                attrs: { src: "/img/me-cropped.jpg", alt: "" }
+                attrs: { src: "/img/me-cropped.png", alt: "" }
               })
             ]),
             _vm._v(" "),

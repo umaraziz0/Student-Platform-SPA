@@ -169,6 +169,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
             <li class="nav-item">
+                <router-link to="/dashboard" class="nav-link">
+                    <i class="fas fa-home nav-icon"></i>
+                    <p>
+                        Dashboard
+                    </p>
+                </router-link>
+            </li>
+            <li class="nav-item">
                 <router-link to="/users" class="nav-link">
                 <i class="fas fa-user nav-icon"></i>
                 <p>

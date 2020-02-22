@@ -1,16 +1,34 @@
 @extends('layouts.basic')
 
+@section('toplinks')
+<div class="top-right links">
+
+</div>
+@endsection
+
+@section('icon')
+    <img src="img/professor.png" style="max-width:100%; height: 5em" alt="logo">
+@endsection
+
 @section('heading')
-    Laravel
+    Student Portal
 @endsection
 
 @section('links')
-    <a href="https://laravel.com/docs">Docs</a>
-    <a href="https://laracasts.com">Laracasts</a>
-    <a href="https://laravel-news.com">News</a>
-    <a href="https://blog.laravel.com">Blog</a>
-    <a href="https://nova.laravel.com">Nova</a>
-    <a href="https://forge.laravel.com">Forge</a>
-    <a href="https://vapor.laravel.com">Vapor</a>
-    <a href="https://github.com/laravel/laravel">GitHub</a>
+    <a href="#">Admin Login</a>
+    @auth
+        <a href="{{ url('/home') }}">Home</a>
+        <a href="{{ route('logout') }}" onclick="event.preventDefault();
+            document.getElementById('logout-form').submit();" class="nav-link">
+            {{ __('Logout') }}</a>
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                @csrf
+            </form>
+    @else
+        <a href="{{ route('login') }}">Student Login</a>
+
+        @if (Route::has('register'))
+            <a href="{{ route('register') }}">Register</a>
+        @endif
+    @endauth
 @endsection

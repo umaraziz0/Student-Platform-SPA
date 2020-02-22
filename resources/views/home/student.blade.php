@@ -196,8 +196,16 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 </a>
                 <ul class="nav nav-treeview">
                     <li class="nav-item">
-                        <router-link to="#" class="nav-link">
-                            <i class="fas fa-user nav-icon"></i>
+                        <router-link to="/todo" class="nav-link">
+                            <i class="fas fa-edit nav-icon"></i>
+                            <p>
+                                To-Do List
+                            </p>
+                        </router-link>
+                    </li>
+                    <li class="nav-item">
+                        <router-link to="/assignments" class="nav-link">
+                            <i class="fas fa-clipboard nav-icon"></i>
                             <p>
                                 Assignments
                             </p>
@@ -205,7 +213,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     </li>
                     <li class="nav-item">
                         <a href="#" class="nav-link">
-                            <i class="fas fa-user nav-icon"></i>
+                            <i class="fas fa-book nav-icon"></i>
                             <p>
                                 Exams
                             </p>

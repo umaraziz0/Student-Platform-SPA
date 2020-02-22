@@ -193,6 +193,7 @@
                             Fire.$emit('refresh');
                             this.$Progress.finish();
                         }).catch(() => {
+                            this.$Progress.fail();
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Oops...',

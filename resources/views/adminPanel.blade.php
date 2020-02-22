@@ -15,6 +15,7 @@
 @endsection
 
 @section('links')
+    <a href="#">Admin Panel</a>
     @auth
         <a href="{{ url('/home') }}">Home</a>
         <a href="{{ route('logout') }}" onclick="event.preventDefault();

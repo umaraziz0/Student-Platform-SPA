@@ -13,7 +13,7 @@
   <script src="/js/app.js"></script>
 </head>
 <body class="hold-transition login-page">
-<img src="img/professor.png" style="max-width:100%; height: 5em" alt="logo">
+<a href="/"><img src="img/professor.png" style="max-width:100%; height: 5em" alt="logo"></a>
 <div class="login-box">
   <div class="login-logo">
     Student Platform
@@ -26,7 +26,7 @@
       <form method="POST" action="{{ route('login') }}">
         @csrf
         <div class="input-group mb-4">
-          <input id="student_id" type="integer" class="form-control @error('student_id') is-invalid @enderror" name="student_id" value="{{ old('student_id') }}" required autocomplete="student_id" autofocus placeholder='Student ID'>
+          <input id="student_id" type="number" class="form-control @error('student_id') is-invalid @enderror" name="student_id" value="{{ old('student_id') }}" required autocomplete="student_id" autofocus placeholder='Student ID'>
             @error('student_id')
                 <span class="invalid-feedback" role="alert">
                     <strong>{{ $message }}</strong>

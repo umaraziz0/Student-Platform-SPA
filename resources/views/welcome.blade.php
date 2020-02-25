@@ -11,11 +11,11 @@
 @endsection
 
 @section('title')
-    Student Portal
+    Student Platform
 @endsection
 
 @section('heading')
-    Student Portal
+    Student Platform
 @endsection
 
 @section('links')

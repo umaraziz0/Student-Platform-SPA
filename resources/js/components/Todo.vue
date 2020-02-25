@@ -6,7 +6,7 @@
                     <div class="card-header">Todo Component</div>
 
                     <div class="card-body">
-                        I'm an example component.
+                        Insert todo list here
                     </div>
                 </div>
             </div>

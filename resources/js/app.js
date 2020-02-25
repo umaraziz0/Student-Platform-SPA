@@ -42,11 +42,11 @@ import VueRouter from 'vue-router'
 Vue.use(VueRouter)
 
 let routes = [
-    { path: '/dashboard', component: require('./components/dashboard.vue').default },
-    { path: '/profile', component: require('./components/profile.vue').default },
-    { path: '/users', component: require('./components/users.vue').default },
-    { path: '/assignments', component: require('./components/assignments.vue').default },
-    { path: '/todo', component: require('./components/todo.vue').default }
+    { path: '/dashboard', component: require('./components/Dashboard.vue').default },
+    { path: '/profile', component: require('./components/Profile.vue').default },
+    { path: '/users', component: require('./components/Users.vue').default },
+    { path: '/assignments', component: require('./components/Assignments.vue').default },
+    { path: '/todo', component: require('./components/Todo.vue').default }
   ]
 
 const router = new VueRouter({

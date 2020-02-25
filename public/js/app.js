@@ -2220,32 +2220,86 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       editMode: false,
       users: {},
       form: new Form({
-        id: '',
-        name: '',
-        email: '',
-        password: '',
+        id: "",
+        student_id: "",
+        name: "",
+        email: "",
+        password: "",
         is_admin: false
       })
     };
   },
   methods: {
     createModal: function createModal() {
-      this.editMode = false; // this.form.clear();
-
+      this.editMode = false;
+      this.form.clear();
       this.form.reset();
-      $('#addNew').modal('show');
+      $("#addNew").modal("show");
     },
     editModal: function editModal(user) {
-      this.editMode = true; // this.form.clear();
-
+      this.editMode = true;
+      this.form.clear();
       this.form.reset();
-      $('#addNew').modal('show');
+      $("#addNew").modal("show");
       this.form.fill(user);
     },
     loadUsers: function loadUsers() {
@@ -2261,13 +2315,13 @@ __webpack_require__.r(__webpack_exports__);
       var _this2 = this;
 
       this.$Progress.start();
-      this.form.post('api/user').then(function () {
-        $('#addNew').modal('hide');
+      this.form.post("api/user").then(function () {
+        $("#addNew").modal("hide");
         Toast.fire({
-          icon: 'success',
-          title: 'User created successfully'
+          icon: "success",
+          title: "User created successfully"
         });
-        Fire.$emit('refresh');
+        Fire.$emit("refresh");
 
         _this2.$Progress.finish();
       })["catch"](function () {
@@ -2278,13 +2332,13 @@ __webpack_require__.r(__webpack_exports__);
       var _this3 = this;
 
       this.$Progress.start();
-      this.form.put('api/user/' + this.form.id).then(function () {
-        $('#addNew').modal('hide');
+      this.form.put("api/user/" + this.form.id).then(function () {
+        $("#addNew").modal("hide");
         Toast.fire({
-          icon: 'success',
-          title: 'Update success'
+          icon: "success",
+          title: "Update success"
         });
-        Fire.$emit('refresh');
+        Fire.$emit("refresh");
 
         _this3.$Progress.finish();
       })["catch"](function () {
@@ -2295,29 +2349,29 @@ __webpack_require__.r(__webpack_exports__);
       var _this4 = this;
 
       Swal.fire({
-        title: 'Are you sure?',
-        icon: 'warning',
+        title: "Are you sure?",
+        icon: "warning",
         showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, delete it!'
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!"
       }).then(function (result) {
         if (result.value) {
           // Send request to delete user
-          _this4.form["delete"]('api/user/' + id).then(function () {
+          _this4.form["delete"]("api/user/" + id).then(function () {
             _this4.$Progress.start();
 
-            Swal.fire('Deleted!', 'User deleted.', 'success');
-            Fire.$emit('refresh');
+            Swal.fire("Deleted!", "User deleted.", "success");
+            Fire.$emit("refresh");
 
             _this4.$Progress.finish();
           })["catch"](function () {
             _this4.$Progress.fail();
 
             Swal.fire({
-              icon: 'error',
-              title: 'Oops...',
-              text: 'Something went wrong!'
+              icon: "error",
+              title: "Oops...",
+              text: "Something went wrong!"
             });
           });
         }
@@ -2329,7 +2383,7 @@ __webpack_require__.r(__webpack_exports__);
 
     this.$Progress.start();
     this.loadUsers();
-    Fire.$on('refresh', function () {
+    Fire.$on("refresh", function () {
       _this5.loadUsers();
     });
     this.$Progress.finish();
@@ -59676,6 +59730,8 @@ var render = function() {
                   return _c("tr", { key: user.id }, [
                     _c("td", [_vm._v(_vm._s(user.id))]),
                     _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(user.student_id))]),
+                    _vm._v(" "),
                     _c("td", [_vm._v(_vm._s(user.name))]),
                     _vm._v(" "),
                     _c("td", [_vm._v(_vm._s(user.email))]),
@@ -59805,6 +59861,55 @@ var render = function() {
                         _vm._v(" "),
                         _c("has-error", {
                           attrs: { form: _vm.form, field: "name" }
+                        })
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "form-group" },
+                      [
+                        _c("label", { attrs: { for: "studentId" } }, [
+                          _vm._v("Student ID:")
+                        ]),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.form.student_id,
+                              expression: "form.student_id"
+                            }
+                          ],
+                          staticClass: "form-control",
+                          class: {
+                            "is-invalid": _vm.form.errors.has("student_id")
+                          },
+                          attrs: {
+                            type: "integer",
+                            id: "studentId",
+                            placeholder: "Student ID",
+                            field: "student_id"
+                          },
+                          domProps: { value: _vm.form.student_id },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.form,
+                                "student_id",
+                                $event.target.value
+                              )
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c("has-error", {
+                          attrs: { form: _vm.form, field: "student_id" }
                         })
                       ],
                       1
@@ -59983,12 +60088,7 @@ var render = function() {
                           },
                           attrs: { type: "submit" }
                         },
-                        [
-                          _vm._v(
-                            "\n                " +
-                              _vm._s(_vm.editMode ? "Update" : "Create")
-                          )
-                        ]
+                        [_vm._v(_vm._s(_vm.editMode ? "Update" : "Create"))]
                       )
                     ]
                   )
@@ -60009,6 +60109,8 @@ var staticRenderFns = [
     return _c("thead", [
       _c("tr", [
         _c("th", [_vm._v("ID")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Student ID")]),
         _vm._v(" "),
         _c("th", [_vm._v("Name")]),
         _vm._v(" "),

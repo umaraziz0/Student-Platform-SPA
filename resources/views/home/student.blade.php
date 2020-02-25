@@ -10,7 +10,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <meta http-equiv="x-ua-compatible" content="ie=edge">
 
   <title>
-    Home - Student Platform
+   Student Platform | Home
   </title>
   <link rel="icon" href="/img/professor.png" type="image/x-icon">
   <link rel="stylesheet" href="/css/app.css">

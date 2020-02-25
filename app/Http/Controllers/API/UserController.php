@@ -29,7 +29,7 @@ class UserController extends Controller
     {
         $this->validate($request, [
             'name' => 'required|string|max:255',
-            'student_id' => 'required|integer|max:255|unique:users',
+            'student_id' => 'required|integer|max:11|unique:users',
             'email' => 'nullable|email|max:255|unique:users',
             'password' => 'required|string|min:6'
         ]);
@@ -38,7 +38,7 @@ class UserController extends Controller
             'name' => $request['name'],
             'student_id' => $request['student_id'],
             'email' => $request['email'],
-            'password'=> Hash::make($request['password']),
+            'password' => Hash::make($request['password']),
             'is_admin' => $request['is_admin']
         ]);
     }
@@ -68,9 +68,9 @@ class UserController extends Controller
 
         $this->validate($request, [
             'name' => 'required|string|max:255',
-            'student_id'=> 'required|integer|max:255|unique:users,student_id,'.$user->id,
-            'email' => 'nullable|max:255|unique:users,email,'.$user->id,
-            'password' => 'sometimes|min:6'
+            'student_id' => 'required|integer|max:11|unique:users,student_id,' . $user->id,
+            'email' => 'nullable|max:255|unique:users,email,' . $user->id,
+            'password' => 'sometimes|min:6',
         ]);
 
         $user->update($request->all());

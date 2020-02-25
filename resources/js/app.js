@@ -9,7 +9,11 @@ require('./bootstrap');
 window.Vue = require('vue');
 
 import moment from 'moment';
-import { Form, HasError, AlertError } from 'vform';
+import {
+    Form,
+    HasError,
+    AlertError
+} from 'vform';
 import VueProgressBar from 'vue-progressbar';
 
 Vue.use(VueProgressBar, {
@@ -17,7 +21,7 @@ Vue.use(VueProgressBar, {
     failedColor: 'red',
     height: '3px',
     location: 'top'
-  })
+})
 
 window.Swal = require('sweetalert2');
 
@@ -41,13 +45,31 @@ Vue.component(AlertError.name, AlertError)
 import VueRouter from 'vue-router'
 Vue.use(VueRouter)
 
-let routes = [
-    { path: '/dashboard', component: require('./components/Dashboard.vue').default },
-    { path: '/profile', component: require('./components/Profile.vue').default },
-    { path: '/users', component: require('./components/Users.vue').default },
-    { path: '/assignments', component: require('./components/Assignments.vue').default },
-    { path: '/todo', component: require('./components/Todo.vue').default }
-  ]
+let routes = [{
+        path: '/dashboard',
+        component: require('./components/Dashboard.vue').default
+    },
+    {
+        path: '/profile',
+        component: require('./components/Profile.vue').default
+    },
+    {
+        path: '/users',
+        component: require('./components/Users.vue').default
+    },
+    {
+        path: '/assignments',
+        component: require('./components/Assignments.vue').default
+    },
+    {
+        path: '/todo',
+        component: require('./components/Todo.vue').default
+    },
+    {
+        path: '/editprofile',
+        component: require('./components/EditProfile.vue').default
+    }
+]
 
 const router = new VueRouter({
     mode: 'history',
@@ -57,11 +79,11 @@ const router = new VueRouter({
 
 // Global vue filters
 // to uppercase first letter in text
-Vue.filter('upText', function(text){
+Vue.filter('upText', function (text) {
     return text.charAt(0).toUpperCase() + text.slice(1)
 });
 // reformat date
-Vue.filter('myDate', function(created){
+Vue.filter('myDate', function (created) {
     return moment(created).format('MMMM Do YYYY, h:mm a')
 });
 

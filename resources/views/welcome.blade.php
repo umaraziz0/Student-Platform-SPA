@@ -1,13 +1,17 @@
 @extends('layouts.basic')
 
-@section('toplinks')
+{{-- @section('toplinks')
 <div class="top-right links">
 
 </div>
-@endsection
+@endsection --}}
 
 @section('icon')
     <img src="img/professor.png" style="max-width:100%; height: 5em" alt="logo">
+@endsection
+
+@section('title')
+    Student Portal
 @endsection
 
 @section('heading')

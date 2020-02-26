@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Laravel\Passport\Passport;
+
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -16,7 +18,8 @@ class AppServiceProvider extends ServiceProvider
         if ($this->app->environment() !== 'production') {
             $this->app->register(\Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
         }
-        // ...
+
+        Passport::ignoreMigrations();
     }
 
     /**
@@ -28,5 +31,4 @@ class AppServiceProvider extends ServiceProvider
     {
         //
     }
-
 }

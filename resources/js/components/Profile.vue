@@ -112,6 +112,12 @@
                     </div>
                   </div>
                   <div class="form-group row">
+                    <label for="photo" class="col-sm-2 col-form-label">Profile Picture</label>
+                    <div class="col-sm-10">
+                      <input type="file" @change="updateProfile" name="photo" class="form-input" />
+                    </div>
+                  </div>
+                  <div class="form-group row">
                     <div class="offset-sm-2 col-sm-10">
                       <button type="submit" class="btn btn-danger">Submit</button>
                     </div>

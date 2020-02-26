@@ -187,7 +187,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <router-link to="/editprofile" class="nav-link">
                 <i class="fas fa-user nav-icon"></i>
                 <p>
-                    Profile
+                    Profiles
                 </p>
                 </router-link>
             </li>

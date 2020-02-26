@@ -138,8 +138,32 @@
 
 <script>
 export default {
+  data() {
+    return {
+      form: new Form({
+        id: "",
+        student_id: "",
+        name: "",
+        email: "",
+        password: "",
+        is_admin: false
+      })
+      //   form2: new Form({
+      //     photo: "",
+      //     major: "",
+      //     year: "",
+      //     phone: ""
+      //   })
+    };
+  },
+
   mounted() {
     console.log("Component mounted.");
+  },
+
+  created() {
+    axios.get("api/profile").then(({ data }) => this.form.fill(data));
+    // axios.get("api/profile").then(({ data }) => {this.form2.fill(data)});
   }
 };
 </script>

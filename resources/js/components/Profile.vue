@@ -146,7 +146,10 @@ export default {
         name: "",
         email: "",
         password: "",
-        is_admin: false
+        photo: "",
+        major: "",
+        year: "",
+        phone: ""
       })
     };
   },

@@ -2308,7 +2308,10 @@ __webpack_require__.r(__webpack_exports__);
         name: "",
         email: "",
         password: "",
-        is_admin: false
+        photo: "",
+        major: "",
+        year: "",
+        phone: ""
       })
     };
   },

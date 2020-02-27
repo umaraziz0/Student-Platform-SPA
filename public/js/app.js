@@ -2343,6 +2343,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     infos: {}
@@ -2366,16 +2370,36 @@ __webpack_require__.r(__webpack_exports__);
   mounted: function mounted() {
     console.log("Component mounted.");
   },
+  methods: {
+    updatePhoto: function updatePhoto(e) {
+      var _this = this;
+
+      // console.log("uploading");
+      var file = e.target.files[0];
+      var reader = new FileReader();
+
+      reader.onloadend = function (file) {
+        // console.log("RESULT", reader.result);
+        _this.form2.photo = reader.result;
+      };
+
+      reader.readAsDataURL(file);
+    },
+    updateInfo: function updateInfo() {
+      this.form.put("api/profile");
+      this.form2.put("api/extra").then(function () {})["catch"](function () {});
+    }
+  },
   created: function created() {
-    var _this = this;
+    var _this2 = this;
 
     axios.get("api/profile").then(function (_ref) {
       var data = _ref.data;
-      return _this.form.fill(data);
+      return _this2.form.fill(data);
     });
     axios.get("api/extra").then(function (_ref2) {
       var data = _ref2.data;
-      return _this.form2.fill(data);
+      return _this2.form2.fill(data);
     }); // axios.get("api/profile").then(({ data }) => {this.form2.fill(data)});
   }
 });
@@ -62000,9 +62024,43 @@ var render = function() {
                       ])
                     ]),
                     _vm._v(" "),
-                    _vm._m(2),
+                    _c("div", { staticClass: "form-group row" }, [
+                      _c(
+                        "label",
+                        {
+                          staticClass: "col-sm-2 col-form-label",
+                          attrs: { for: "photo" }
+                        },
+                        [_vm._v("Profile Picture")]
+                      ),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-sm-10" }, [
+                        _c("input", {
+                          staticClass: "form-input",
+                          attrs: { type: "file", name: "photo" },
+                          on: { change: _vm.updatePhoto }
+                        })
+                      ])
+                    ]),
                     _vm._v(" "),
-                    _vm._m(3)
+                    _c("div", { staticClass: "form-group row" }, [
+                      _c("div", { staticClass: "offset-sm-2 col-sm-10" }, [
+                        _c(
+                          "button",
+                          {
+                            staticClass: "btn btn-danger",
+                            attrs: { type: "submit" },
+                            on: {
+                              click: function($event) {
+                                $event.preventDefault()
+                                return _vm.updateInfo($event)
+                              }
+                            }
+                          },
+                          [_vm._v("Submit")]
+                        )
+                      ])
+                    ])
                   ])
                 ]
               )
@@ -62032,39 +62090,6 @@ var staticRenderFns = [
     return _c("div", { staticClass: "col-sm-3 border-right" }, [
       _c("div", { staticClass: "description-block" }, [
         _c("h5", { staticClass: "description-header" }, [_vm._v("2016")])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "form-group row" }, [
-      _c(
-        "label",
-        { staticClass: "col-sm-2 col-form-label", attrs: { for: "photo" } },
-        [_vm._v("Profile Picture")]
-      ),
-      _vm._v(" "),
-      _c("div", { staticClass: "col-sm-10" }, [
-        _c("input", {
-          staticClass: "form-input",
-          attrs: { type: "file", name: "photo" }
-        })
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "form-group row" }, [
-      _c("div", { staticClass: "offset-sm-2 col-sm-10" }, [
-        _c(
-          "button",
-          { staticClass: "btn btn-danger", attrs: { type: "submit" } },
-          [_vm._v("Submit")]
-        )
       ])
     ])
   }

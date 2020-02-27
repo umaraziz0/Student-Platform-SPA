@@ -93,12 +93,16 @@
                   <div class="form-group row">
                     <label for="photo" class="col-sm-2 col-form-label">Profile Picture</label>
                     <div class="col-sm-10">
-                      <input type="file" name="photo" class="form-input" />
+                      <input type="file" @change="updatePhoto" name="photo" class="form-input" />
                     </div>
                   </div>
                   <div class="form-group row">
                     <div class="offset-sm-2 col-sm-10">
-                      <button type="submit" class="btn btn-danger">Submit</button>
+                      <button
+                        type="submit"
+                        @click.prevent="updateInfo"
+                        class="btn btn-danger"
+                      >Submit</button>
                     </div>
                   </div>
                 </form>
@@ -139,6 +143,27 @@ export default {
 
   mounted() {
     console.log("Component mounted.");
+  },
+
+  methods: {
+    updatePhoto(e) {
+      // console.log("uploading");
+      let file = e.target.files[0];
+      let reader = new FileReader();
+      reader.onloadend = file => {
+        // console.log("RESULT", reader.result);
+        this.form2.photo = reader.result;
+      };
+      reader.readAsDataURL(file);
+    },
+
+    updateInfo() {
+      this.form.put("api/profile");
+      this.form2
+        .put("api/extra")
+        .then(() => {})
+        .catch(() => {});
+    }
   },
 
   created() {

@@ -31,4 +31,7 @@ Route::group(['middleware' => 'auth:api'], function () {
 // Route::apiResource('user', 'API\UserController');
 
 Route::get('profile', 'API\UserController@profile');
+Route::put('profile', 'API\UserController@updateProfile');
+
 Route::get('extra', 'API\StudentController@profile');
+Route::put('extra', 'API\StudentController@updateProfile');

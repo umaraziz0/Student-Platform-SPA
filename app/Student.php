@@ -7,10 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 class Student extends Model
 {
     protected $fillable = [
-        'photo', 'major', 'year', 'phone'
+        'student_id', 'photo', 'major', 'year', 'phone'
     ];
 
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
     protected $hidden = [
-        'password'
+        'password', 'remember_token',
     ];
 }

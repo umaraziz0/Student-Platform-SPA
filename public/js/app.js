@@ -2312,6 +2312,13 @@ __webpack_require__.r(__webpack_exports__);
         major: "",
         year: "",
         phone: ""
+      }),
+      form2: new Form({
+        student_id: "",
+        photo: "",
+        major: "",
+        year: "",
+        phone: ""
       })
     };
   },
@@ -2324,6 +2331,10 @@ __webpack_require__.r(__webpack_exports__);
     axios.get("api/profile").then(function (_ref) {
       var data = _ref.data;
       return _this.form.fill(data);
+    });
+    axios.get("api/extra").then(function (_ref2) {
+      var data = _ref2.data;
+      return _this.form2.fill(data);
     }); // axios.get("api/profile").then(({ data }) => {this.form2.fill(data)});
   }
 });

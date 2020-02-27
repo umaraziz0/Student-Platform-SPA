@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Student;
 
 class StudentController extends Controller
 {
@@ -33,10 +35,18 @@ class StudentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+    public function show($id)
+    {
+        //
+    }
+
     public function profile()
     {
-        // return authenticated user info
-        return auth('api')->user();
+        //return authenticated user info
+        $user =  auth('api')->user();
+        $student = Student::where('student_id', $user->student_id)->firstOrFail();
+
+        return $student;
     }
 
     /**

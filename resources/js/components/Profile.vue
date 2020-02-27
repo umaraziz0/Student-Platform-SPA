@@ -150,6 +150,13 @@ export default {
         major: "",
         year: "",
         phone: ""
+      }),
+      form2: new Form({
+        student_id: "",
+        photo: "",
+        major: "",
+        year: "",
+        phone: ""
       })
     };
   },
@@ -160,6 +167,7 @@ export default {
 
   created() {
     axios.get("api/profile").then(({ data }) => this.form.fill(data));
+    axios.get("api/extra").then(({ data }) => this.form2.fill(data));
     // axios.get("api/profile").then(({ data }) => {this.form2.fill(data)});
   }
 };

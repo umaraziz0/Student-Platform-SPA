@@ -14,27 +14,27 @@
           </div>
           <div class="card-footer">
             <div class="row justify-content-center">
-              <div class="col-sm-3 border-right">
+              <div class="col-sm-3 border-right" v-if="form2.year">
                 <div class="description-block">
-                  <h5 class="description-header">2016</h5>
+                  <h5 class="description-header">{{ form2.year }}</h5>
                 </div>
                 <!-- /.description-block -->
               </div>
               <!-- /.col -->
               <div class="col-sm-3">
-                <div class="description-block">
+                <div class="description-block" v-if="form2.major">
                   <h5 class="description-header">{{ form2.major }}</h5>
                 </div>
                 <!-- /.description-block -->
               </div>
               <!-- /.col -->
-              <div class="col-sm-3">
+              <div class="col-sm-3" v-if="form.email">
                 <div class="description-block">
                   <h5 class="description-header">{{ form.email }}</h5>
                 </div>
                 <!-- /.description-block -->
               </div>
-              <div class="col-sm-3">
+              <div class="col-sm-3" v-if="form2.phone">
                 <div class="description-block">
                   <h5 class="description-header">{{ form2.phone }}</h5>
                 </div>
@@ -46,7 +46,7 @@
         </div>
       </div>
       <!-- /.widget-user -->
-      <div class="col-md-8">
+      <div class="col-md-10">
         <div class="card">
           <div class="card-header p-2 pl-3">Edit Profile</div>
           <!-- /.card-header -->
@@ -55,15 +55,74 @@
               <div class="tab-pane active" id="settings">
                 <form class="form-horizontal">
                   <div class="form-group row">
+                    <label for="inputName" class="col-sm-2 col-form-label">Name</label>
+                    <div class="col-sm-10">
+                      <input
+                        type="text"
+                        v-model="form.name"
+                        class="form-control"
+                        :class="{ 'is-invalid': form.errors.has('name') }"
+                        id="inputName"
+                        placeholder="Name"
+                      />
+                      <has-error :form="form" field="name"></has-error>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label for="studentId" class="col-sm-2 col-form-label">Student ID</label>
+                    <div class="col-sm-10">
+                      <input
+                        type="number"
+                        v-model="form.student_id"
+                        class="form-control"
+                        :class="{ 'is-invalid': form.errors.has('student_id') }"
+                        id="studentId"
+                        placeholder="Student ID"
+                      />
+                      <has-error :form="form" field="student_id"></has-error>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label for="inputYear" class="col-sm-2 col-form-label">Year</label>
+                    <div class="col-sm-10">
+                      <input
+                        type="number"
+                        v-model="form2.year"
+                        class="form-control"
+                        :class="{ 'is-invalid': form2.errors.has('year') }"
+                        id="inputYear"
+                        placeholder="Year"
+                      />
+                      <has-error :form="form2" field="year"></has-error>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label for="inputMajor" class="col-sm-2 col-form-label">Major</label>
+                    <div class="col-sm-10">
+                      <select
+                        v-model="form2.major"
+                        class="custom-select"
+                        id="inputMajor"
+                        name="major"
+                      >
+                        <option value="Computer Science">Computer Science</option>
+                        <option value="Software Engineering">Software Engineering</option>
+                        <option value="Computer Engineering">Computer Engineering</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-group row">
                     <label for="inputEmail" class="col-sm-2 col-form-label">Email</label>
                     <div class="col-sm-10">
                       <input
                         type="email"
                         class="form-control"
+                        :class="{ 'is-invalid': form.errors.has('email') }"
                         id="inputEmail"
                         v-model="form.email"
                         placeholder="Email"
                       />
+                      <has-error :form="form" field="email"></has-error>
                     </div>
                   </div>
                   <div class="form-group row">
@@ -79,15 +138,20 @@
                     </div>
                   </div>
                   <div class="form-group row">
-                    <label for="inputPhone" class="col-sm-2 col-form-label">Password</label>
+                    <label
+                      for="inputPhone"
+                      class="col-sm-2 col-form-label"
+                    >Password (leave empty if not changing)</label>
                     <div class="col-sm-10">
                       <input
                         type="password"
                         class="form-control"
+                        :class="{ 'is-invalid': form.errors.has('password') }"
                         v-model="form.password"
                         id="inputPassword"
                         placeholder="Password"
                       />
+                      <has-error :form="form" field="password"></has-error>
                     </div>
                   </div>
                   <div class="form-group row">

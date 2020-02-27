@@ -54,6 +54,11 @@ class StudentController extends Controller
     {
         $user =  auth('api')->user();
         $student = Student::where('student_id', $user->student_id)->firstOrFail();
+
+        $this->validate($request, [
+            'year' => 'sometimes|integer|min:1950|max:2020'
+        ]);
+
         $currentPhoto = $student->photo;
 
         if ($request->photo != $currentPhoto) {
@@ -63,6 +68,11 @@ class StudentController extends Controller
             \Image::make($request->photo)->save(public_path('img/profile/') . $name);
 
             $request->merge(['photo' => $name]);
+
+            $userPhoto = public_path('img/profile/') . $currentPhoto;
+            if (file_exists($userPhoto)) {
+                @unlink($userPhoto);
+            }
         }
 
         $student->update($request->all());

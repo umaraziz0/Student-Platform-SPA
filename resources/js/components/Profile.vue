@@ -10,7 +10,7 @@
             <h5 class="widget-user-desc">{{ form.student_id }}</h5>
           </div>
           <div class="widget-user-image">
-            <img class="img-circle elevation-2" src="/img/me-cropped.png" alt />
+            <img class="img-circle elevation-2" :src="getPhoto()" @error="defaultPhoto" />
           </div>
           <div class="card-footer">
             <div class="row justify-content-center">
@@ -158,6 +158,7 @@
                     <label for="photo" class="col-sm-2 col-form-label">Profile Picture</label>
                     <div class="col-sm-10">
                       <input type="file" @change="updatePhoto" name="photo" class="form-input" />
+                      <!-- <button class="btn btn-sm btn-danger" @click.prevent="@removePhoto">Remove Photo</button> -->
                     </div>
                   </div>
                   <div class="form-group row">
@@ -210,6 +211,18 @@ export default {
   },
 
   methods: {
+    getPhoto() {
+      return "img/profile/" + this.form2.photo;
+    },
+
+    defaultPhoto(e) {
+      e.target.src = "/img/profile/default.png";
+    },
+
+    // removePhoto(){
+    //     .delete()
+    // }
+
     updatePhoto(e) {
       let file = e.target.files[0];
       let reader = new FileReader();
@@ -236,6 +249,7 @@ export default {
         .put("api/extra")
         .then(() => {
           this.$Progress.finish();
+          this.getPhoto();
         })
         .catch(() => {
           this.$Progress.fail();

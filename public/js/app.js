@@ -2411,6 +2411,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     infos: {}
@@ -2435,6 +2436,15 @@ __webpack_require__.r(__webpack_exports__);
     console.log("Component mounted.");
   },
   methods: {
+    getPhoto: function getPhoto() {
+      return "img/profile/" + this.form2.photo;
+    },
+    defaultPhoto: function defaultPhoto(e) {
+      e.target.src = "/img/profile/default.png";
+    },
+    // removePhoto(){
+    //     .delete()
+    // }
     updatePhoto: function updatePhoto(e) {
       var _this = this;
 
@@ -2464,6 +2474,8 @@ __webpack_require__.r(__webpack_exports__);
       this.form.put("api/profile");
       this.form2.put("api/extra").then(function () {
         _this2.$Progress.finish();
+
+        _this2.getPhoto();
       })["catch"](function () {
         _this2.$Progress.fail();
       });
@@ -61937,7 +61949,13 @@ var render = function() {
             ])
           ]),
           _vm._v(" "),
-          _vm._m(0),
+          _c("div", { staticClass: "widget-user-image" }, [
+            _c("img", {
+              staticClass: "img-circle elevation-2",
+              attrs: { src: _vm.getPhoto() },
+              on: { error: _vm.defaultPhoto }
+            })
+          ]),
           _vm._v(" "),
           _c("div", { staticClass: "card-footer" }, [
             _c("div", { staticClass: "row justify-content-center" }, [
@@ -62414,19 +62432,7 @@ var render = function() {
     ])
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "widget-user-image" }, [
-      _c("img", {
-        staticClass: "img-circle elevation-2",
-        attrs: { src: "/img/me-cropped.png", alt: "" }
-      })
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 

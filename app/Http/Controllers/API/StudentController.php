@@ -61,6 +61,11 @@ class StudentController extends Controller
 
         $currentPhoto = $student->photo;
 
+        // $thePhoto =  public_path('img/profile/') . $currentPhoto;
+        // if (!file_exists($thePhoto)) {
+        //     $request->merge(['photo' => 'default.png']);
+        // }
+
         if ($request->photo != $currentPhoto) {
             // get the file and save it to a local directory
             $name = time() . '.' . explode('/', explode(":", substr($request->photo, 0, strpos($request->photo, ";")))[1])[1];

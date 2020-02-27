@@ -147,22 +147,35 @@ export default {
 
   methods: {
     updatePhoto(e) {
-      // console.log("uploading");
       let file = e.target.files[0];
       let reader = new FileReader();
-      reader.onloadend = file => {
-        // console.log("RESULT", reader.result);
-        this.form2.photo = reader.result;
-      };
-      reader.readAsDataURL(file);
+      if (file["size"] < 2111775) {
+        //change the file to base64
+        reader.onloadend = file => {
+          // console.log("RESULT", reader.result);
+          this.form2.photo = reader.result;
+        };
+        reader.readAsDataURL(file);
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "File size too large. Maximum size is 2MB."
+        });
+      }
     },
 
     updateInfo() {
+      this.$Progress.start();
       this.form.put("api/profile");
       this.form2
         .put("api/extra")
-        .then(() => {})
-        .catch(() => {});
+        .then(() => {
+          this.$Progress.finish();
+        })
+        .catch(() => {
+          this.$Progress.fail();
+        });
     }
   },
 

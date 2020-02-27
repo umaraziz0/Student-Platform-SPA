@@ -53,13 +53,20 @@ class StudentController extends Controller
     public function updateProfile(Request $request)
     {
         $user =  auth('api')->user();
+        $student = Student::where('student_id', $user->student_id)->firstOrFail();
+        $currentPhoto = $student->photo;
 
-        if ($request->photo) {
-            // function to get the extension of the file
+        if ($request->photo != $currentPhoto) {
+            // get the file and save it to a local directory
             $name = time() . '.' . explode('/', explode(":", substr($request->photo, 0, strpos($request->photo, ";")))[1])[1];
 
             \Image::make($request->photo)->save(public_path('img/profile/') . $name);
+
+            $request->merge(['photo' => $name]);
         }
+
+        $student->update($request->all());
+        return ['message' => 'success'];
     }
 
     /**

@@ -2374,32 +2374,47 @@ __webpack_require__.r(__webpack_exports__);
     updatePhoto: function updatePhoto(e) {
       var _this = this;
 
-      // console.log("uploading");
       var file = e.target.files[0];
       var reader = new FileReader();
 
-      reader.onloadend = function (file) {
-        // console.log("RESULT", reader.result);
-        _this.form2.photo = reader.result;
-      };
+      if (file["size"] < 2111775) {
+        //change the file to base64
+        reader.onloadend = function (file) {
+          // console.log("RESULT", reader.result);
+          _this.form2.photo = reader.result;
+        };
 
-      reader.readAsDataURL(file);
+        reader.readAsDataURL(file);
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "File size too large. Maximum size is 2MB."
+        });
+      }
     },
     updateInfo: function updateInfo() {
+      var _this2 = this;
+
+      this.$Progress.start();
       this.form.put("api/profile");
-      this.form2.put("api/extra").then(function () {})["catch"](function () {});
+      this.form2.put("api/extra").then(function () {
+        _this2.$Progress.finish();
+      })["catch"](function () {
+        _this2.$Progress.fail();
+      });
     }
   },
   created: function created() {
-    var _this2 = this;
+    var _this3 = this;
 
     axios.get("api/profile").then(function (_ref) {
       var data = _ref.data;
-      return _this2.form.fill(data);
+      return _this3.form.fill(data);
     });
     axios.get("api/extra").then(function (_ref2) {
       var data = _ref2.data;
-      return _this2.form2.fill(data);
+      return _this3.form2.fill(data);
     }); // axios.get("api/profile").then(({ data }) => {this.form2.fill(data)});
   }
 });

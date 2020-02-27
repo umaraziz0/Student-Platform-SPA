@@ -2472,6 +2472,7 @@ __webpack_require__.r(__webpack_exports__);
   created: function created() {
     var _this3 = this;
 
+    this.$Progress.start();
     axios.get("api/profile").then(function (_ref) {
       var data = _ref.data;
       return _this3.form.fill(data);
@@ -2479,7 +2480,8 @@ __webpack_require__.r(__webpack_exports__);
     axios.get("api/extra").then(function (_ref2) {
       var data = _ref2.data;
       return _this3.form2.fill(data);
-    }); // axios.get("api/profile").then(({ data }) => {this.form2.fill(data)});
+    });
+    this.$Progress.finish();
   }
 });
 
@@ -61949,18 +61951,18 @@ var render = function() {
                   ])
                 : _vm._e(),
               _vm._v(" "),
-              _c("div", { staticClass: "col-sm-3" }, [
-                _vm.form2.major
-                  ? _c("div", { staticClass: "description-block" }, [
+              _vm.form2.major
+                ? _c("div", { staticClass: "col-sm-3 border-right" }, [
+                    _c("div", { staticClass: "description-block" }, [
                       _c("h5", { staticClass: "description-header" }, [
                         _vm._v(_vm._s(_vm.form2.major))
                       ])
                     ])
-                  : _vm._e()
-              ]),
+                  ])
+                : _vm._e(),
               _vm._v(" "),
               _vm.form.email
-                ? _c("div", { staticClass: "col-sm-3" }, [
+                ? _c("div", { staticClass: "col-sm-3 border-right" }, [
                     _c("div", { staticClass: "description-block" }, [
                       _c("h5", { staticClass: "description-header" }, [
                         _vm._v(_vm._s(_vm.form.email))

@@ -21,14 +21,14 @@
                 <!-- /.description-block -->
               </div>
               <!-- /.col -->
-              <div class="col-sm-3">
-                <div class="description-block" v-if="form2.major">
+              <div class="col-sm-3 border-right" v-if="form2.major">
+                <div class="description-block">
                   <h5 class="description-header">{{ form2.major }}</h5>
                 </div>
                 <!-- /.description-block -->
               </div>
               <!-- /.col -->
-              <div class="col-sm-3" v-if="form.email">
+              <div class="col-sm-3 border-right" v-if="form.email">
                 <div class="description-block">
                   <h5 class="description-header">{{ form.email }}</h5>
                 </div>
@@ -244,9 +244,10 @@ export default {
   },
 
   created() {
+    this.$Progress.start();
     axios.get("api/profile").then(({ data }) => this.form.fill(data));
     axios.get("api/extra").then(({ data }) => this.form2.fill(data));
-    // axios.get("api/profile").then(({ data }) => {this.form2.fill(data)});
+    this.$Progress.finish();
   }
 };
 </script>

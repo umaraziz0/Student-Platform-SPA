@@ -56,7 +56,7 @@ class StudentController extends Controller
         $student = Student::where('student_id', $user->student_id)->firstOrFail();
 
         $this->validate($request, [
-            'year' => 'sometimes|integer|min:1950|max:2020'
+            'year' => 'nullable|integer|min:1950|max:2020'
         ]);
 
         $currentPhoto = $student->photo;

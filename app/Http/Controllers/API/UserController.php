@@ -66,9 +66,9 @@ class UserController extends Controller
 
         $this->validate($request, [
             'name' => 'required|string|max:255',
-            'student_id' => 'required|integer|max:11|unique:users,student_id,' . $user->id,
+            'student_id' => 'integer|required|digits_between:1,12|unique:users,student_id,' . $user->id,
             'email' => 'nullable|max:255|unique:users,email,' . $user->id,
-            'password' => 'sometimes|min:6',
+            'password' => 'nullable|min:6',
         ]);
 
         if (!empty($request->password)) {

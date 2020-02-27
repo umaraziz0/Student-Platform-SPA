@@ -6,8 +6,8 @@
         <div class="card card-widget widget-user">
           <!-- Add the bg color to the header using any of the bg-* classes -->
           <div class="widget-user-header bg-info">
-            <h3 class="widget-user-username">Full Name</h3>
-            <h5 class="widget-user-desc">Student ID</h5>
+            <h3 class="widget-user-username">{{ form.name }}</h3>
+            <h5 class="widget-user-desc">{{ form.student_id }}</h5>
           </div>
           <div class="widget-user-image">
             <img class="img-circle elevation-2" src="/img/me-cropped.png" alt />
@@ -23,20 +23,20 @@
               <!-- /.col -->
               <div class="col-sm-3">
                 <div class="description-block">
-                  <h5 class="description-header">Computer Science and Technology</h5>
+                  <h5 class="description-header">{{ form2.major }}</h5>
                 </div>
                 <!-- /.description-block -->
               </div>
               <!-- /.col -->
               <div class="col-sm-3">
                 <div class="description-block">
-                  <h5 class="description-header">mu.aziz97@yahoo.com</h5>
+                  <h5 class="description-header">{{ form.email }}</h5>
                 </div>
                 <!-- /.description-block -->
               </div>
               <div class="col-sm-3">
                 <div class="description-block">
-                  <h5 class="description-header">+86 15851820879</h5>
+                  <h5 class="description-header">{{ form2.phone }}</h5>
                 </div>
                 <!-- /.description-block -->
               </div>
@@ -57,7 +57,13 @@
                   <div class="form-group row">
                     <label for="inputEmail" class="col-sm-2 col-form-label">Email</label>
                     <div class="col-sm-10">
-                      <input type="email" class="form-control" id="inputEmail" placeholder="Email" />
+                      <input
+                        type="email"
+                        class="form-control"
+                        id="inputEmail"
+                        v-model="form.email"
+                        placeholder="Email"
+                      />
                     </div>
                   </div>
                   <div class="form-group row">
@@ -66,6 +72,7 @@
                       <input
                         type="number"
                         class="form-control"
+                        v-model="form2.phone"
                         id="inputPhone"
                         placeholder="Phone Number"
                       />
@@ -75,8 +82,9 @@
                     <label for="inputPhone" class="col-sm-2 col-form-label">Password</label>
                     <div class="col-sm-10">
                       <input
-                        type="number"
+                        type="password"
                         class="form-control"
+                        v-model="form.password"
                         id="inputPassword"
                         placeholder="Password"
                       />
@@ -110,6 +118,8 @@
 <script>
 export default {
   data() {
+    infos: {
+    }
     return {
       form: new Form({
         id: "",

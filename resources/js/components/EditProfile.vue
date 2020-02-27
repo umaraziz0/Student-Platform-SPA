@@ -34,43 +34,79 @@
             <div class="form-group row">
               <label for="inputName" class="col-sm-2 col-form-label">Name</label>
               <div class="col-sm-10">
-                <input type="email" class="form-control" id="inputName" placeholder="Name" />
+                <input
+                  type="text"
+                  v-model="form.name"
+                  class="form-control"
+                  id="inputName"
+                  placeholder="Name"
+                />
               </div>
             </div>
             <div class="form-group row">
               <label for="studentId" class="col-sm-2 col-form-label">Student ID</label>
               <div class="col-sm-10">
-                <input type="number" class="form-control" id="studentId" placeholder="Student ID" />
+                <input
+                  type="number"
+                  v-model="form.student_id"
+                  class="form-control"
+                  id="studentId"
+                  placeholder="Student ID"
+                />
               </div>
             </div>
             <div class="form-group row">
               <label for="inputYear" class="col-sm-2 col-form-label">Year</label>
               <div class="col-sm-10">
-                <input type="number" class="form-control" id="inputYear" placeholder="Year" />
+                <input
+                  type="number"
+                  v-model="form2.year"
+                  class="form-control"
+                  id="inputYear"
+                  placeholder="Year"
+                />
               </div>
             </div>
             <div class="form-group row">
               <label for="inputMajor" class="col-sm-2 col-form-label">Major</label>
               <div class="col-sm-10">
-                <input type="text" class="form-control" id="inputMajor" placeholder="Major" />
+                <input
+                  type="text"
+                  v-model="form2.major"
+                  class="form-control"
+                  id="inputMajor"
+                  placeholder="Major"
+                />
               </div>
             </div>
             <div class="form-group row">
               <label for="inputEmail" class="col-sm-2 col-form-label">Email</label>
               <div class="col-sm-10">
-                <input type="email" class="form-control" id="inputEmail" placeholder="Email" />
+                <input
+                  type="email"
+                  v-model="form.email"
+                  class="form-control"
+                  id="inputEmail"
+                  placeholder="Email"
+                />
               </div>
             </div>
             <div class="form-group row">
               <label for="inputPhone" class="col-sm-2 col-form-label">Phone Number</label>
               <div class="col-sm-10">
-                <input type="text" class="form-control" id="inputPhone" placeholder="Phone Number" />
+                <input
+                  type="number"
+                  v-model="form2.phone"
+                  class="form-control"
+                  id="inputPhone"
+                  placeholder="Phone Number"
+                />
               </div>
             </div>
             <div class="form-group row">
               <label for="photo" class="col-sm-2 col-form-label">Profile Picture</label>
               <div class="col-sm-10">
-                <input type="file" @change="updateProfile" name="photo" class="form-input" />
+                <input type="file" name="photo" class="form-input" />
               </div>
             </div>
             <div class="form-group row">

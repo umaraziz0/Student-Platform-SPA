@@ -2112,8 +2112,37 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      form: new Form({
+        id: "",
+        student_id: "",
+        name: "",
+        email: "",
+        password: ""
+      }),
+      form2: new Form({
+        photo: "",
+        major: "",
+        year: "",
+        phone: ""
+      })
+    };
+  },
   mounted: function mounted() {
     console.log("Component mounted.");
+  },
+  created: function created() {
+    var _this = this;
+
+    axios.get("api/profile").then(function (_ref) {
+      var data = _ref.data;
+      return _this.form.fill(data);
+    });
+    axios.get("api/extra").then(function (_ref2) {
+      var data = _ref2.data;
+      return _this.form2.fill(data);
+    }); // axios.get("api/profile").then(({ data }) => {this.form2.fill(data)});
   }
 });
 
@@ -2270,35 +2299,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2307,14 +2307,9 @@ __webpack_require__.r(__webpack_exports__);
         student_id: "",
         name: "",
         email: "",
-        password: "",
-        photo: "",
-        major: "",
-        year: "",
-        phone: ""
+        password: ""
       }),
       form2: new Form({
-        student_id: "",
         photo: "",
         major: "",
         year: "",
@@ -61755,94 +61750,6 @@ var staticRenderFns = [
                   { staticClass: "tab-pane active", attrs: { id: "settings" } },
                   [
                     _c("form", { staticClass: "form-horizontal" }, [
-                      _c("div", { staticClass: "form-group row" }, [
-                        _c(
-                          "label",
-                          {
-                            staticClass: "col-sm-2 col-form-label",
-                            attrs: { for: "inputName" }
-                          },
-                          [_vm._v("Name")]
-                        ),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "col-sm-10" }, [
-                          _c("input", {
-                            staticClass: "form-control",
-                            attrs: {
-                              type: "email",
-                              id: "inputName",
-                              placeholder: "Name"
-                            }
-                          })
-                        ])
-                      ]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "form-group row" }, [
-                        _c(
-                          "label",
-                          {
-                            staticClass: "col-sm-2 col-form-label",
-                            attrs: { for: "studentId" }
-                          },
-                          [_vm._v("Student ID")]
-                        ),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "col-sm-10" }, [
-                          _c("input", {
-                            staticClass: "form-control",
-                            attrs: {
-                              type: "number",
-                              id: "studentId",
-                              placeholder: "Student ID"
-                            }
-                          })
-                        ])
-                      ]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "form-group row" }, [
-                        _c(
-                          "label",
-                          {
-                            staticClass: "col-sm-2 col-form-label",
-                            attrs: { for: "inputYear" }
-                          },
-                          [_vm._v("Year")]
-                        ),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "col-sm-10" }, [
-                          _c("input", {
-                            staticClass: "form-control",
-                            attrs: {
-                              type: "number",
-                              id: "inputYear",
-                              placeholder: "Year"
-                            }
-                          })
-                        ])
-                      ]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "form-group row" }, [
-                        _c(
-                          "label",
-                          {
-                            staticClass: "col-sm-2 col-form-label",
-                            attrs: { for: "inputMajor" }
-                          },
-                          [_vm._v("Major")]
-                        ),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "col-sm-10" }, [
-                          _c("input", {
-                            staticClass: "form-control",
-                            attrs: {
-                              type: "text",
-                              id: "inputMajor",
-                              placeholder: "Major"
-                            }
-                          })
-                        ])
-                      ]),
-                      _vm._v(" "),
                       _c("div", { staticClass: "form-group row" }, [
                         _c(
                           "label",

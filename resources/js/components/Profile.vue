@@ -55,35 +55,6 @@
               <div class="tab-pane active" id="settings">
                 <form class="form-horizontal">
                   <div class="form-group row">
-                    <label for="inputName" class="col-sm-2 col-form-label">Name</label>
-                    <div class="col-sm-10">
-                      <input type="email" class="form-control" id="inputName" placeholder="Name" />
-                    </div>
-                  </div>
-                  <div class="form-group row">
-                    <label for="studentId" class="col-sm-2 col-form-label">Student ID</label>
-                    <div class="col-sm-10">
-                      <input
-                        type="number"
-                        class="form-control"
-                        id="studentId"
-                        placeholder="Student ID"
-                      />
-                    </div>
-                  </div>
-                  <div class="form-group row">
-                    <label for="inputYear" class="col-sm-2 col-form-label">Year</label>
-                    <div class="col-sm-10">
-                      <input type="number" class="form-control" id="inputYear" placeholder="Year" />
-                    </div>
-                  </div>
-                  <div class="form-group row">
-                    <label for="inputMajor" class="col-sm-2 col-form-label">Major</label>
-                    <div class="col-sm-10">
-                      <input type="text" class="form-control" id="inputMajor" placeholder="Major" />
-                    </div>
-                  </div>
-                  <div class="form-group row">
                     <label for="inputEmail" class="col-sm-2 col-form-label">Email</label>
                     <div class="col-sm-10">
                       <input type="email" class="form-control" id="inputEmail" placeholder="Email" />
@@ -145,14 +116,9 @@ export default {
         student_id: "",
         name: "",
         email: "",
-        password: "",
-        photo: "",
-        major: "",
-        year: "",
-        phone: ""
+        password: ""
       }),
       form2: new Form({
-        student_id: "",
         photo: "",
         major: "",
         year: "",

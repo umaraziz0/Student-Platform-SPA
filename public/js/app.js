@@ -2504,10 +2504,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
-    infos: {}
-
     return {
       form: new Form({
         id: "",
@@ -2526,8 +2527,12 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     getPhoto: function getPhoto() {
-      var photo = this.form2.photo.length > 100 ? this.form2.photo : "img/profile/" + this.form2.photo;
-      return photo;
+      //   let photo =
+      //     this.form2.photo.length > 100
+      //       ? this.form2.photo
+      //       : "img/profile/" + this.form2.photo;
+      //   return photo;
+      return "img/profile/" + this.form2.photo;
     },
     getInfo: function getInfo() {
       var _this = this;
@@ -2543,13 +2548,31 @@ __webpack_require__.r(__webpack_exports__);
       this.getPhoto();
     },
     defaultPhoto: function defaultPhoto(e) {
-      e.target.src = "/img/profile/default.png";
+      e.target.src = "img/profile/default.png";
     },
-    // removePhoto(){
-    //     .delete()
-    // }
-    updatePhoto: function updatePhoto(e) {
+    removePhoto: function removePhoto() {
       var _this2 = this;
+
+      this.$Progress.start();
+      this.form2.put("api/removePhoto").then(function () {
+        _this2.$Progress.finish();
+
+        Toast.fire({
+          icon: "success",
+          title: "Picture removed."
+        });
+        Fire.$emit("refresh");
+      })["catch"](function () {
+        _this2.$Progress.fail();
+
+        Toast.fire({
+          icon: "error",
+          title: "An error occurred."
+        });
+      });
+    },
+    updatePhoto: function updatePhoto(e) {
+      var _this3 = this;
 
       var file = e.target.files[0];
       var reader = new FileReader();
@@ -2558,7 +2581,7 @@ __webpack_require__.r(__webpack_exports__);
         //change the file to base64
         reader.onloadend = function (file) {
           // console.log("RESULT", reader.result);
-          _this2.form2.photo = reader.result;
+          _this3.form2.photo = reader.result;
         };
 
         reader.readAsDataURL(file);
@@ -2571,37 +2594,29 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     updateInfo: function updateInfo() {
-      var _this3 = this;
+      var _this4 = this;
 
       this.$Progress.start();
       this.form.put("api/profile").then(this.form2.put("api/extra")).then(function () {
-        _this3.$Progress.finish();
+        _this4.$Progress.finish();
 
-        Fire.$emit("refresh");
         Swal.fire({
           icon: "success",
           title: "Profile updated."
-        }); // window.scrollTo(0, 0);
+        });
+        Fire.$emit("refresh"); // window.scrollTo(0, 0);
       })["catch"](function () {
-        _this3.$Progress.fail();
+        _this4.$Progress.fail();
       });
     }
   },
   created: function created() {
-    var _this4 = this;
+    var _this5 = this;
 
     this.$Progress.start();
     this.getInfo();
     Fire.$on("refresh", function () {
-      _this4.form.reset();
-
-      _this4.form2.reset();
-
-      _this4.form.clear();
-
-      _this4.form2.clear();
-
-      _this4.getInfo();
+      _this5.getInfo();
     });
     this.$Progress.finish();
   }
@@ -62623,7 +62638,21 @@ var render = function() {
                           staticClass: "form-input",
                           attrs: { type: "file", name: "photo" },
                           on: { change: _vm.updatePhoto }
-                        })
+                        }),
+                        _vm._v(" "),
+                        _c(
+                          "button",
+                          {
+                            staticClass: "btn btn-sm btn-danger",
+                            on: {
+                              click: function($event) {
+                                $event.preventDefault()
+                                return _vm.removePhoto($event)
+                              }
+                            }
+                          },
+                          [_vm._v("Remove Photo")]
+                        )
                       ])
                     ]),
                     _vm._v(" "),

@@ -158,7 +158,10 @@
                     <label for="photo" class="col-sm-2 col-form-label">Profile Picture</label>
                     <div class="col-sm-10">
                       <input type="file" @change="updatePhoto" name="photo" class="form-input" />
-                      <!-- <button class="btn btn-sm btn-danger" @click.prevent="@removePhoto">Remove Photo</button> -->
+                      <button
+                        class="btn btn-sm btn-danger"
+                        @click.prevent="removePhoto"
+                      >Remove Photo</button>
                     </div>
                   </div>
                   <div class="form-group row">
@@ -187,8 +190,6 @@
 <script>
 export default {
   data() {
-    infos: {
-    }
     return {
       form: new Form({
         id: "",
@@ -208,12 +209,13 @@ export default {
 
   methods: {
     getPhoto() {
-      let photo =
-        this.form2.photo.length > 100
-          ? this.form2.photo
-          : "img/profile/" + this.form2.photo;
+      //   let photo =
+      //     this.form2.photo.length > 100
+      //       ? this.form2.photo
+      //       : "img/profile/" + this.form2.photo;
 
-      return photo;
+      //   return photo;
+      return "img/profile/" + this.form2.photo;
     },
 
     getInfo() {
@@ -223,12 +225,29 @@ export default {
     },
 
     defaultPhoto(e) {
-      e.target.src = "/img/profile/default.png";
+      e.target.src = "img/profile/default.png";
     },
 
-    // removePhoto(){
-    //     .delete()
-    // }
+    removePhoto() {
+      this.$Progress.start();
+      this.form2
+        .put("api/removePhoto")
+        .then(() => {
+          this.$Progress.finish();
+          Toast.fire({
+            icon: "success",
+            title: "Picture removed."
+          });
+          Fire.$emit("refresh");
+        })
+        .catch(() => {
+          this.$Progress.fail();
+          Toast.fire({
+            icon: "error",
+            title: "An error occurred."
+          });
+        });
+    },
 
     updatePhoto(e) {
       let file = e.target.files[0];
@@ -256,11 +275,11 @@ export default {
         .then(this.form2.put("api/extra"))
         .then(() => {
           this.$Progress.finish();
-          Fire.$emit("refresh");
           Swal.fire({
             icon: "success",
             title: "Profile updated."
           });
+          Fire.$emit("refresh");
           // window.scrollTo(0, 0);
         })
         .catch(() => {
@@ -273,10 +292,6 @@ export default {
     this.$Progress.start();
     this.getInfo();
     Fire.$on("refresh", () => {
-      this.form.reset();
-      this.form2.reset();
-      this.form.clear();
-      this.form2.clear();
       this.getInfo();
     });
     this.$Progress.finish();

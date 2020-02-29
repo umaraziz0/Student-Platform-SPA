@@ -43,7 +43,7 @@ class StudentController extends Controller
 
     public function profile()
     {
-        //return authenticated user info
+        //get authenticated user info
         $user =  auth('api')->user();
         $student = Student::where('student_id', $user->student_id)->firstOrFail();
 
@@ -104,5 +104,22 @@ class StudentController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function removePhoto()
+    {
+        $user =  auth('api')->user();
+        $photo = Student::where('student_id', $user->student_id)->firstOrFail();
+
+        $userPhoto = public_path('img/profile/') . $photo->photo;
+        if (file_exists($userPhoto)) {
+            @unlink($userPhoto);
+        }
+
+        $photo->update(['photo' => null]);
+
+        return [
+            'message' => 'photo deleted.'
+        ];
     }
 }

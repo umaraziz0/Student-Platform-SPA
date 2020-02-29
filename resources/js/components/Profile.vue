@@ -206,10 +206,6 @@ export default {
     };
   },
 
-  mounted() {
-    console.log("Component mounted.");
-  },
-
   methods: {
     getInfo() {
       axios.get("api/profile").then(({ data }) => this.form.fill(data));

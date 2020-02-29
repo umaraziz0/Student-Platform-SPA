@@ -74,7 +74,7 @@ let routes = [{
 const router = new VueRouter({
     mode: 'history',
     routes, // short for `routes: routes`
-    linkActiveClass: 'active' // sets element tab class to 'active' if on current page
+    linkActiveClass: 'active', // sets element tab class to 'active' if on current page
 })
 
 // Global vue filters

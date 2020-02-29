@@ -2436,8 +2436,21 @@ __webpack_require__.r(__webpack_exports__);
     console.log("Component mounted.");
   },
   methods: {
+    getInfo: function getInfo() {
+      var _this = this;
+
+      axios.get("api/profile").then(function (_ref) {
+        var data = _ref.data;
+        return _this.form.fill(data);
+      });
+      axios.get("api/extra").then(function (_ref2) {
+        var data = _ref2.data;
+        return _this.form2.fill(data);
+      });
+    },
     getPhoto: function getPhoto() {
-      return "img/profile/" + this.form2.photo;
+      var photo = this.form2.photo.length > 100 ? this.form2.photo : "img/profile/" + this.form2.photo;
+      return photo;
     },
     defaultPhoto: function defaultPhoto(e) {
       e.target.src = "/img/profile/default.png";
@@ -2446,7 +2459,7 @@ __webpack_require__.r(__webpack_exports__);
     //     .delete()
     // }
     updatePhoto: function updatePhoto(e) {
-      var _this = this;
+      var _this2 = this;
 
       var file = e.target.files[0];
       var reader = new FileReader();
@@ -2455,7 +2468,7 @@ __webpack_require__.r(__webpack_exports__);
         //change the file to base64
         reader.onloadend = function (file) {
           // console.log("RESULT", reader.result);
-          _this.form2.photo = reader.result;
+          _this2.form2.photo = reader.result;
         };
 
         reader.readAsDataURL(file);
@@ -2468,30 +2481,40 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     updateInfo: function updateInfo() {
-      var _this2 = this;
+      var _this3 = this;
 
       this.$Progress.start();
       this.form.put("api/profile");
       this.form2.put("api/extra").then(function () {
-        _this2.$Progress.finish();
+        _this3.$Progress.finish();
 
-        _this2.getPhoto();
+        _this3.getPhoto();
+
+        Fire.$emit("refresh");
+        Swal.fire({
+          icon: "success",
+          title: "Profile updated."
+        }); // window.scrollTo(0, 0);
       })["catch"](function () {
-        _this2.$Progress.fail();
+        _this3.$Progress.fail();
       });
     }
   },
   created: function created() {
-    var _this3 = this;
+    var _this4 = this;
 
     this.$Progress.start();
-    axios.get("api/profile").then(function (_ref) {
-      var data = _ref.data;
-      return _this3.form.fill(data);
-    });
-    axios.get("api/extra").then(function (_ref2) {
-      var data = _ref2.data;
-      return _this3.form2.fill(data);
+    this.getInfo();
+    Fire.$on("refresh", function () {
+      _this4.form.reset();
+
+      _this4.form2.reset();
+
+      _this4.form.clear();
+
+      _this4.form2.clear();
+
+      _this4.getInfo();
     });
     this.$Progress.finish();
   }

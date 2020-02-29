@@ -27,22 +27,17 @@ class HomeController extends Controller
     {
         $isAdmin = Auth::user()->is_admin;
 
-        if($isAdmin){
-            return view('home.admin');
-        } else {
-            return view('home.student');
-        }
+        return view($isAdmin ? 'home.admin' : 'home.student');
     }
 
     public function admin()
     {
         $isAdmin = Auth::user()->is_admin;
 
-        if($isAdmin){
+        if ($isAdmin) {
             return view('home.admin');
         } else {
             abort(401);
         }
-
     }
 }

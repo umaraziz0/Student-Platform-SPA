@@ -211,8 +211,18 @@ export default {
   },
 
   methods: {
+    getInfo() {
+      axios.get("api/profile").then(({ data }) => this.form.fill(data));
+      axios.get("api/extra").then(({ data }) => this.form2.fill(data));
+    },
+
     getPhoto() {
-      return "img/profile/" + this.form2.photo;
+      let photo =
+        this.form2.photo.length > 100
+          ? this.form2.photo
+          : "img/profile/" + this.form2.photo;
+
+      return photo;
     },
 
     defaultPhoto(e) {
@@ -250,6 +260,12 @@ export default {
         .then(() => {
           this.$Progress.finish();
           this.getPhoto();
+          Fire.$emit("refresh");
+          Swal.fire({
+            icon: "success",
+            title: "Profile updated."
+          });
+          // window.scrollTo(0, 0);
         })
         .catch(() => {
           this.$Progress.fail();
@@ -259,8 +275,14 @@ export default {
 
   created() {
     this.$Progress.start();
-    axios.get("api/profile").then(({ data }) => this.form.fill(data));
-    axios.get("api/extra").then(({ data }) => this.form2.fill(data));
+    this.getInfo();
+    Fire.$on("refresh", () => {
+      this.form.reset();
+      this.form2.reset();
+      this.form.clear();
+      this.form2.clear();
+      this.getInfo();
+    });
     this.$Progress.finish();
   }
 };

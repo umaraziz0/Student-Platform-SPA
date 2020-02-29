@@ -81,7 +81,6 @@ class StudentController extends Controller
         }
 
         $student->update($request->all());
-        return ['message' => 'success'];
     }
 
     /**

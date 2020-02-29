@@ -207,11 +207,6 @@ export default {
   },
 
   methods: {
-    getInfo() {
-      axios.get("api/profile").then(({ data }) => this.form.fill(data));
-      axios.get("api/extra").then(({ data }) => this.form2.fill(data));
-    },
-
     getPhoto() {
       let photo =
         this.form2.photo.length > 100
@@ -219,6 +214,12 @@ export default {
           : "img/profile/" + this.form2.photo;
 
       return photo;
+    },
+
+    getInfo() {
+      axios.get("api/profile").then(({ data }) => this.form.fill(data));
+      axios.get("api/extra").then(({ data }) => this.form2.fill(data));
+      this.getPhoto();
     },
 
     defaultPhoto(e) {
@@ -250,12 +251,11 @@ export default {
 
     updateInfo() {
       this.$Progress.start();
-      this.form.put("api/profile");
-      this.form2
-        .put("api/extra")
+      this.form
+        .put("api/profile")
+        .then(this.form2.put("api/extra"))
         .then(() => {
           this.$Progress.finish();
-          this.getPhoto();
           Fire.$emit("refresh");
           Swal.fire({
             icon: "success",

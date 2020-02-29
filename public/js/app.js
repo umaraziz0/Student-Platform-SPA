@@ -2525,6 +2525,10 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
+    getPhoto: function getPhoto() {
+      var photo = this.form2.photo.length > 100 ? this.form2.photo : "img/profile/" + this.form2.photo;
+      return photo;
+    },
     getInfo: function getInfo() {
       var _this = this;
 
@@ -2536,10 +2540,7 @@ __webpack_require__.r(__webpack_exports__);
         var data = _ref2.data;
         return _this.form2.fill(data);
       });
-    },
-    getPhoto: function getPhoto() {
-      var photo = this.form2.photo.length > 100 ? this.form2.photo : "img/profile/" + this.form2.photo;
-      return photo;
+      this.getPhoto();
     },
     defaultPhoto: function defaultPhoto(e) {
       e.target.src = "/img/profile/default.png";
@@ -2573,11 +2574,8 @@ __webpack_require__.r(__webpack_exports__);
       var _this3 = this;
 
       this.$Progress.start();
-      this.form.put("api/profile");
-      this.form2.put("api/extra").then(function () {
+      this.form.put("api/profile").then(this.form2.put("api/extra")).then(function () {
         _this3.$Progress.finish();
-
-        _this3.getPhoto();
 
         Fire.$emit("refresh");
         Swal.fire({

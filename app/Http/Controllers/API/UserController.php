@@ -75,8 +75,11 @@ class UserController extends Controller
             $request->merge(['password' =>  Hash::make($request['password'])]);
         }
 
+        if (empty($request->password)) {
+            $request->merge(['password' => $user->password]);
+        }
+
         $user->update($request->all());
-        return ['message' => 'success'];
     }
 
     /**
@@ -95,8 +98,16 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'student_id' => 'required|integer|max:11|unique:users,student_id,' . $user->id,
             'email' => 'nullable|max:255|unique:users,email,' . $user->id,
-            'password' => 'sometimes|min:6',
+            'password' => 'nullable|min:6',
         ]);
+
+        if (!empty($request->password)) {
+            $request->merge(['password' =>  Hash::make($request['password'])]);
+        }
+
+        if (empty($request->password)) {
+            $request->merge(['password' => $user->password]);
+        }
 
         $user->update($request->all());
     }

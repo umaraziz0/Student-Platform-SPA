@@ -18,7 +18,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <body class="hold-transition sidebar-mini">
 <div class="wrapper" id="app">
 
-  <!-- Navbar -->
+  {{-- <!-- Navbar -->
   <nav class="main-header navbar navbar-expand navbar-white navbar-light">
     <!-- Left navbar links -->
     <ul class="navbar-nav">
@@ -138,7 +138,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
       </li>
     </ul>
   </nav>
-  <!-- /.navbar -->
+  <!-- /.navbar --> --}}
 
   <!-- Main Sidebar Container -->
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
@@ -171,7 +171,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                with font-awesome or any other icon font library -->
           <li class="nav-item has-treeview menu-open nav-child-indent">
             <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-book"></i>
+              <i class="nav-icon fas fa-address-book"></i>
               <p>
                 Student Planner
                 <i class="right fas fa-angle-left"></i>
@@ -186,7 +186,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   </p>
                 </router-link>
               </li>
-              <li class="nav-item has-treeview menu-open">
+              <li class="nav-item has-treeview">
                 <a href="#" class="nav-link">
                   <i class="fas fa-clipboard-list nav-icon"></i>
                   <p>
@@ -248,7 +248,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
               </p>
             </a>
             <ul class="nav nav-treeview">
-                <li class="nav-item">
+                {{-- <li class="nav-item">
                     <a href="#" class="nav-link">
                       <i class="fas fa-envelope nav-icon"></i>
                       <p>
@@ -256,7 +256,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                       </p>
                     </a>
                   </li>
-                <li class="nav-item">
+                <li class="nav-item"> --}}
                   <a href="#" class="nav-link">
                     <i class="fas fa-star nav-icon"></i>
                     <p>

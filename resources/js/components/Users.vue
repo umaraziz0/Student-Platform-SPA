@@ -199,8 +199,8 @@ export default {
       this.$Progress.start();
       this.form
         .post("api/user")
-        .then(this.form.post("api/student"))
         .then(() => {
+          this.form.post("api/student");
           $("#addNew").modal("hide");
           Toast.fire({
             icon: "success",

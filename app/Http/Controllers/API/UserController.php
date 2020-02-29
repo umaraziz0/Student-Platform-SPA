@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\User;
+use App\Student;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
@@ -29,7 +30,7 @@ class UserController extends Controller
     {
         $this->validate($request, [
             'name' => 'required|string|max:255',
-            'student_id' => 'required|integer|max:11|unique:users',
+            'student_id' => 'required|integer|digits_between:1,12|unique:users',
             'email' => 'nullable|email|max:255|unique:users',
             'password' => 'required|string|min:6'
         ]);
@@ -66,7 +67,7 @@ class UserController extends Controller
 
         $this->validate($request, [
             'name' => 'required|string|max:255',
-            'student_id' => 'integer|required|digits_between:1,12|unique:users,student_id,' . $user->id,
+            'student_id' => 'required|integer|digits_between:1,12|unique:users,student_id,' . $user->id,
             'email' => 'nullable|max:255|unique:users,email,' . $user->id,
             'password' => 'nullable|min:6',
         ]);
@@ -96,7 +97,7 @@ class UserController extends Controller
 
         $this->validate($request, [
             'name' => 'required|string|max:255',
-            'student_id' => 'required|integer|max:11|unique:users,student_id,' . $user->id,
+            'student_id' => 'required|integer|digits_between:1,12|unique:users,student_id,' . $user->id,
             'email' => 'nullable|max:255|unique:users,email,' . $user->id,
             'password' => 'nullable|min:6',
         ]);
@@ -122,6 +123,10 @@ class UserController extends Controller
     {
         // deletes the user
         $user = User::findOrFail($id);
+
+        $profile = Student::where('student_id', $user->student_id)->firstOrFail();
+        $profile->delete();
+
         $user->delete();
     }
 }

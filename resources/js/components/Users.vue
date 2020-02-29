@@ -199,6 +199,7 @@ export default {
       this.$Progress.start();
       this.form
         .post("api/user")
+        .then(this.form.post("api/student"))
         .then(() => {
           $("#addNew").modal("hide");
           Toast.fire({

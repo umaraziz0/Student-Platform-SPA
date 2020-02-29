@@ -27,7 +27,9 @@ class StudentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        return Student::create([
+            'student_id' => $request['student_id'],
+        ]);
     }
 
     /**

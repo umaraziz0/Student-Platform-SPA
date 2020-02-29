@@ -2867,7 +2867,7 @@ __webpack_require__.r(__webpack_exports__);
       var _this2 = this;
 
       this.$Progress.start();
-      this.form.post("api/user").then(function () {
+      this.form.post("api/user").then(this.form.post("api/student")).then(function () {
         $("#addNew").modal("hide");
         Toast.fire({
           icon: "success",

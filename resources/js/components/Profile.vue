@@ -221,7 +221,7 @@ export default {
 
     getInfo() {
       axios.get("api/profile").then(({ data }) => this.form.fill(data));
-      this.getPhoto();
+      // this.getPhoto();
     },
 
     defaultPhoto(e) {

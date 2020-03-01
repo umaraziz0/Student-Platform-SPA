@@ -179,7 +179,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
             </a>
             <ul class="nav nav-treeview">
              <li class="nav-item">
-                <router-link to="/dashboard" class="nav-link">
+                <router-link to="/home" class="nav-link">
                   <i class="fas fa-home nav-icon"></i>
                   <p>
                       Dashboard

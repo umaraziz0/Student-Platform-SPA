@@ -2052,6 +2052,21 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2080,15 +2095,90 @@ __webpack_require__.r(__webpack_exports__);
       this.editMode = false;
       this.form.clear();
       this.form.reset();
-      $("#newAssignment").modal("show");
+      $("#newModal").modal("show");
     },
-    createAssignment: function createAssignment() {},
-    editAssignment: function editAssignment() {},
-    created: function created() {
+    editModal: function editModal(assignment) {
+      this.editMode = true;
+      this.form.clear();
+      this.form.reset();
+      $("#newModal").modal("show");
+      this.form.fill(assignment);
+    },
+    createAssignment: function createAssignment() {
+      var _this2 = this;
+
       this.$Progress.start();
-      this.loadAssignments();
-      this.$Progress.finish();
+      this.form.post("api/assignment").then(function () {
+        $("#newModal").modal("hide");
+        Toast.fire({
+          icon: "success",
+          title: "Assignment created successfully"
+        });
+        Fire.$emit("refresh");
+
+        _this2.$Progress.finish();
+      })["catch"](function () {
+        _this2.$Progress.fail();
+      });
+    },
+    editAssignment: function editAssignment() {
+      var _this3 = this;
+
+      this.$Progress.start();
+      this.form.put("api/assignment/" + this.form.id).then(function () {
+        $("#newModal").modal("hide");
+        Toast.fire({
+          icon: "success",
+          title: "Update success"
+        });
+        Fire.$emit("refresh");
+
+        _this3.$Progress.finish();
+      })["catch"](function () {
+        _this3.$Progress.fail();
+      });
+    },
+    deleteAssignment: function deleteAssignment(id) {
+      var _this4 = this;
+
+      Swal.fire({
+        title: "Are you sure?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!"
+      }).then(function (result) {
+        if (result.value) {
+          _this4.form["delete"]("api/assignment/" + id).then(function () {
+            _this4.$Progress.start();
+
+            Swal.fire("Deleted!", "Assignment deleted.", "success");
+            Fire.$emit("refresh");
+
+            _this4.$Progress.finish();
+          })["catch"](function () {
+            _this4.$Progress.fail();
+
+            Swal.fire({
+              icon: "error",
+              title: "Oops...",
+              text: "Something went wrong!"
+            });
+          });
+        }
+      });
     }
+  },
+  created: function created() {
+    var _this5 = this;
+
+    this.$Progress.start();
+    this.loadAssignments();
+    Fire.$on("refresh", function () {
+      _this5.loadAssignments();
+    });
+    this.$Progress.finish();
   }
 });
 
@@ -61694,11 +61784,43 @@ var render = function() {
                   return _c("tr", { key: assignment.id }, [
                     _c("td", [_vm._v(_vm._s(assignment.name))]),
                     _vm._v(" "),
-                    _c("td", [_vm._v(_vm._s(assignment.course))]),
+                    _c("td", [_vm._v(_vm._s(assignment.course_name))]),
                     _vm._v(" "),
                     _c("td", [_vm._v(_vm._s(assignment.due_date))]),
                     _vm._v(" "),
-                    _c("td", [_vm._v(_vm._s(assignment.details))])
+                    _c("td", [_vm._v(_vm._s(assignment.details))]),
+                    _vm._v(" "),
+                    _c("td", [
+                      _c("div", { staticClass: "btn-group" }, [
+                        _c(
+                          "button",
+                          {
+                            staticClass: "btn btn-info",
+                            attrs: { type: "button" },
+                            on: {
+                              click: function($event) {
+                                return _vm.editModal(assignment)
+                              }
+                            }
+                          },
+                          [_c("i", { staticClass: "fas fa-edit text-white" })]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "button",
+                          {
+                            staticClass: "btn btn-danger",
+                            attrs: { type: "button" },
+                            on: {
+                              click: function($event) {
+                                return _vm.deleteAssignment(assignment.id)
+                              }
+                            }
+                          },
+                          [_c("i", { staticClass: "fas fa-trash" })]
+                        )
+                      ])
+                    ])
                   ])
                 }),
                 0
@@ -61714,10 +61836,10 @@ var render = function() {
       {
         staticClass: "modal fade",
         attrs: {
-          id: "newAssignment",
+          id: "newModal",
           tabindex: "-1",
           role: "dialog",
-          "aria-labelledby": "newAssignmentLabel",
+          "aria-labelledby": "newModalLabel",
           "aria-hidden": "true"
         }
       },
@@ -61811,8 +61933,8 @@ var render = function() {
                               {
                                 name: "model",
                                 rawName: "v-model",
-                                value: _vm.form.course,
-                                expression: "form.course"
+                                value: _vm.form.course_name,
+                                expression: "form.course_name"
                               }
                             ],
                             staticClass: "custom-select",
@@ -61832,7 +61954,7 @@ var render = function() {
                                   })
                                 _vm.$set(
                                   _vm.form,
-                                  "course",
+                                  "course_name",
                                   $event.target.multiple
                                     ? $$selectedVal
                                     : $$selectedVal[0]
@@ -61854,7 +61976,7 @@ var render = function() {
                             _c(
                               "option",
                               { attrs: { value: "Intro to Python" } },
-                              [_vm._v("Python")]
+                              [_vm._v("Intro to Python")]
                             )
                           ]
                         ),
@@ -62008,7 +62130,9 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", [_vm._v("Due Date")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Details")])
+        _c("th", [_vm._v("Details")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Options")])
       ])
     ])
   },

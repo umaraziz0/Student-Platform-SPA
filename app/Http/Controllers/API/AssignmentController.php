@@ -65,16 +65,16 @@ class AssignmentController extends Controller
      * @param  \App\Assignment  $assignment
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Assignment $assignment)
+    public function update(Request $request, $id)
     {
-        $user = auth('api')->user();
-        $studentId = $user->student_id;
-        $request->merge(['student_id' => $studentId]);
+        $assignment = Assignment::findOrFail($id);
 
         $this->validate($request, [
             'name' => 'required|string|max:255',
             'course_name' => 'required|string'
         ]);
+
+        $assignment->update($request->all());
     }
 
     /**
@@ -83,7 +83,9 @@ class AssignmentController extends Controller
      * @param  \App\Assignment  $assignment
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Assignment $assignment)
+    public function destroy($id)
     {
+        $assignment = Assignment::findOrFail($id);
+        $assignment->delete();
     }
 }

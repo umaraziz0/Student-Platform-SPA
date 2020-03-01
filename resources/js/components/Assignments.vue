@@ -21,14 +21,29 @@
                   <th>Course</th>
                   <th>Due Date</th>
                   <th>Details</th>
+                  <th>Options</th>
                 </tr>
               </thead>
               <tbody>
                 <tr v-for="assignment in assignments" :key="assignment.id">
-                  <td>{{ assignment.name}}</td>
-                  <td>{{ assignment.course }}</td>
+                  <td>{{ assignment.name }}</td>
+                  <td>{{ assignment.course_name }}</td>
                   <td>{{ assignment.due_date }}</td>
                   <td>{{ assignment.details }}</td>
+                  <td>
+                    <div class="btn-group">
+                      <button type="button" class="btn btn-info" v-on:click="editModal(assignment)">
+                        <i class="fas fa-edit text-white"></i>
+                      </button>
+                      <button
+                        type="button"
+                        class="btn btn-danger"
+                        v-on:click="deleteAssignment(assignment.id)"
+                      >
+                        <i class="fas fa-trash"></i>
+                      </button>
+                    </div>
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -40,10 +55,10 @@
     <!-- Modal -->
     <div
       class="modal fade"
-      id="newAssignment"
+      id="newModal"
       tabindex="-1"
       role="dialog"
-      aria-labelledby="newAssignmentLabel"
+      aria-labelledby="newModalLabel"
       aria-hidden="true"
     >
       <div class="modal-dialog" role="document">
@@ -72,7 +87,7 @@
               <div class="form-group">
                 <label for="inputCourse">Course Name:</label>
                 <select
-                  v-model="form.course"
+                  v-model="form.course_name"
                   class="custom-select"
                   :class="{ 'is-invalid': form.errors.has('course_name') }"
                   id="inputCourse"
@@ -80,7 +95,7 @@
                 >
                   <option value="Data Structures">Data Structures</option>
                   <option value="Algorithms">Algorithms</option>
-                  <option value="Intro to Python">Python</option>
+                  <option value="Intro to Python">Intro to Python</option>
                 </select>
                 <has-error :form="form" field="course_name"></has-error>
               </div>
@@ -153,18 +168,91 @@ export default {
       this.editMode = false;
       this.form.clear();
       this.form.reset();
-      $("#newAssignment").modal("show");
+      $("#newModal").modal("show");
     },
 
-    createAssignment() {},
+    editModal(assignment) {
+      this.editMode = true;
+      this.form.clear();
+      this.form.reset();
+      $("#newModal").modal("show");
+      this.form.fill(assignment);
+    },
 
-    editAssignment() {},
-
-    created() {
+    createAssignment() {
       this.$Progress.start();
-      this.loadAssignments();
-      this.$Progress.finish();
+      this.form
+        .post("api/assignment")
+        .then(() => {
+          $("#newModal").modal("hide");
+          Toast.fire({
+            icon: "success",
+            title: "Assignment created successfully"
+          });
+          Fire.$emit("refresh");
+          this.$Progress.finish();
+        })
+        .catch(() => {
+          this.$Progress.fail();
+        });
+    },
+
+    editAssignment() {
+      this.$Progress.start();
+      this.form
+        .put("api/assignment/" + this.form.id)
+        .then(() => {
+          $("#newModal").modal("hide");
+          Toast.fire({
+            icon: "success",
+            title: "Update success"
+          });
+          Fire.$emit("refresh");
+          this.$Progress.finish();
+        })
+        .catch(() => {
+          this.$Progress.fail();
+        });
+    },
+
+    deleteAssignment(id) {
+      Swal.fire({
+        title: "Are you sure?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!"
+      }).then(result => {
+        if (result.value) {
+          this.form
+            .delete("api/assignment/" + id)
+            .then(() => {
+              this.$Progress.start();
+              Swal.fire("Deleted!", "Assignment deleted.", "success");
+              Fire.$emit("refresh");
+              this.$Progress.finish();
+            })
+            .catch(() => {
+              this.$Progress.fail();
+              Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Something went wrong!"
+              });
+            });
+        }
+      });
     }
+  },
+
+  created() {
+    this.$Progress.start();
+    this.loadAssignments();
+    Fire.$on("refresh", () => {
+      this.loadAssignments();
+    });
+    this.$Progress.finish();
   }
 };
 </script>

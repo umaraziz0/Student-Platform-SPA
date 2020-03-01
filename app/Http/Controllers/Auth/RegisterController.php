@@ -52,7 +52,7 @@ class RegisterController extends Controller
     {
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
-            'student_id' => ['required', 'integer', 'max:255', 'unique:users'],
+            'student_id' => 'required|integer|digits_between:1,12|unique:users',
             // 'email' => ['sometimes', 'required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
@@ -74,10 +74,10 @@ class RegisterController extends Controller
         ]);
     }
 
-    protected function createProfile(array $data)
-    {
-        return Student::create([
-            'student_id' => $data['student_id']
-        ]);
-    }
+    // protected function createProfile(array $data)
+    // {
+    //     return Student::create([
+    //         'student_id' => $data['student_id']
+    //     ]);
+    // }
 }

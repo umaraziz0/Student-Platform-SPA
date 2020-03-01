@@ -14,16 +14,16 @@
           </div>
           <div class="card-footer">
             <div class="row justify-content-center">
-              <div class="col-sm-3 border-right" v-if="form2.year">
+              <div class="col-sm-3 border-right" v-if="form.year">
                 <div class="description-block">
-                  <h5 class="description-header">{{ form2.year }}</h5>
+                  <h5 class="description-header">{{ form.year }}</h5>
                 </div>
                 <!-- /.description-block -->
               </div>
               <!-- /.col -->
-              <div class="col-sm-3 border-right" v-if="form2.major">
+              <div class="col-sm-3 border-right" v-if="form.major">
                 <div class="description-block">
-                  <h5 class="description-header">{{ form2.major }}</h5>
+                  <h5 class="description-header">{{ form.major }}</h5>
                 </div>
                 <!-- /.description-block -->
               </div>
@@ -34,9 +34,9 @@
                 </div>
                 <!-- /.description-block -->
               </div>
-              <div class="col-sm-3" v-if="form2.phone">
+              <div class="col-sm-3" v-if="form.phone">
                 <div class="description-block">
-                  <h5 class="description-header">{{ form2.phone }}</h5>
+                  <h5 class="description-header">{{ form.phone }}</h5>
                 </div>
                 <!-- /.description-block -->
               </div>
@@ -87,20 +87,20 @@
                     <div class="col-sm-10">
                       <input
                         type="number"
-                        v-model="form2.year"
+                        v-model="form.year"
                         class="form-control"
-                        :class="{ 'is-invalid': form2.errors.has('year') }"
+                        :class="{ 'is-invalid': form.errors.has('year') }"
                         id="inputYear"
                         placeholder="Year"
                       />
-                      <has-error :form="form2" field="year"></has-error>
+                      <has-error :form="form" field="year"></has-error>
                     </div>
                   </div>
                   <div class="form-group row">
                     <label for="inputMajor" class="col-sm-2 col-form-label">Major</label>
                     <div class="col-sm-10">
                       <select
-                        v-model="form2.major"
+                        v-model="form.major"
                         class="custom-select"
                         id="inputMajor"
                         name="major"
@@ -131,10 +131,12 @@
                       <input
                         type="number"
                         class="form-control"
-                        v-model="form2.phone"
+                        :class="{ 'is-invalid': form.errors.has('phone') }"
+                        v-model="form.phone"
                         id="inputPhone"
                         placeholder="Phone Number"
                       />
+                      <has-error :form="form" field="phone"></has-error>
                     </div>
                   </div>
                   <div class="form-group row">
@@ -196,9 +198,7 @@ export default {
         student_id: "",
         name: "",
         email: "",
-        password: ""
-      }),
-      form2: new Form({
+        password: "",
         photo: "",
         major: "",
         year: "",
@@ -210,17 +210,17 @@ export default {
   methods: {
     getPhoto() {
       //   let photo =
-      //     this.form2.photo.length > 100
-      //       ? this.form2.photo
-      //       : "img/profile/" + this.form2.photo;
+      //     this.form.photo.length > 100
+      //       ? this.form.photo
+      //       : "img/profile/" + this.form.photo;
 
       //   return photo;
-      return "img/profile/" + this.form2.photo;
+
+      return "img/profile/" + this.form.photo;
     },
 
     getInfo() {
       axios.get("api/profile").then(({ data }) => this.form.fill(data));
-      axios.get("api/extra").then(({ data }) => this.form2.fill(data));
       this.getPhoto();
     },
 
@@ -230,8 +230,8 @@ export default {
 
     removePhoto() {
       this.$Progress.start();
-      this.form2
-        .put("api/removePhoto")
+      this.form
+        .delete("api/removePhoto")
         .then(() => {
           this.$Progress.finish();
           Toast.fire({
@@ -256,7 +256,7 @@ export default {
         //change the file to base64
         reader.onloadend = file => {
           // console.log("RESULT", reader.result);
-          this.form2.photo = reader.result;
+          this.form.photo = reader.result;
         };
         reader.readAsDataURL(file);
       } else {
@@ -272,7 +272,6 @@ export default {
       this.$Progress.start();
       this.form
         .put("api/profile")
-        .then(this.form2.put("api/extra"))
         .then(() => {
           this.$Progress.finish();
           Swal.fire({

@@ -2179,9 +2179,7 @@ __webpack_require__.r(__webpack_exports__);
         student_id: "",
         name: "",
         email: "",
-        password: ""
-      }),
-      form2: new Form({
+        password: "",
         photo: "",
         major: "",
         year: "",
@@ -2507,6 +2505,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2515,9 +2515,7 @@ __webpack_require__.r(__webpack_exports__);
         student_id: "",
         name: "",
         email: "",
-        password: ""
-      }),
-      form2: new Form({
+        password: "",
         photo: "",
         major: "",
         year: "",
@@ -2528,11 +2526,11 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     getPhoto: function getPhoto() {
       //   let photo =
-      //     this.form2.photo.length > 100
-      //       ? this.form2.photo
-      //       : "img/profile/" + this.form2.photo;
+      //     this.form.photo.length > 100
+      //       ? this.form.photo
+      //       : "img/profile/" + this.form.photo;
       //   return photo;
-      return "img/profile/" + this.form2.photo;
+      return "img/profile/" + this.form.photo;
     },
     getInfo: function getInfo() {
       var _this = this;
@@ -2540,10 +2538,6 @@ __webpack_require__.r(__webpack_exports__);
       axios.get("api/profile").then(function (_ref) {
         var data = _ref.data;
         return _this.form.fill(data);
-      });
-      axios.get("api/extra").then(function (_ref2) {
-        var data = _ref2.data;
-        return _this.form2.fill(data);
       });
       this.getPhoto();
     },
@@ -2554,7 +2548,7 @@ __webpack_require__.r(__webpack_exports__);
       var _this2 = this;
 
       this.$Progress.start();
-      this.form2.put("api/removePhoto").then(function () {
+      this.form["delete"]("api/removePhoto").then(function () {
         _this2.$Progress.finish();
 
         Toast.fire({
@@ -2581,7 +2575,7 @@ __webpack_require__.r(__webpack_exports__);
         //change the file to base64
         reader.onloadend = function (file) {
           // console.log("RESULT", reader.result);
-          _this3.form2.photo = reader.result;
+          _this3.form.photo = reader.result;
         };
 
         reader.readAsDataURL(file);
@@ -2597,7 +2591,7 @@ __webpack_require__.r(__webpack_exports__);
       var _this4 = this;
 
       this.$Progress.start();
-      this.form.put("api/profile").then(this.form2.put("api/extra")).then(function () {
+      this.form.put("api/profile").then(function () {
         _this4.$Progress.finish();
 
         Swal.fire({
@@ -2868,8 +2862,6 @@ __webpack_require__.r(__webpack_exports__);
 
       this.$Progress.start();
       this.form.post("api/user").then(function () {
-        _this2.form.post("api/student");
-
         $("#addNew").modal("hide");
         Toast.fire({
           icon: "success",
@@ -62199,21 +62191,21 @@ var render = function() {
           _vm._v(" "),
           _c("div", { staticClass: "card-footer" }, [
             _c("div", { staticClass: "row justify-content-center" }, [
-              _vm.form2.year
+              _vm.form.year
                 ? _c("div", { staticClass: "col-sm-3 border-right" }, [
                     _c("div", { staticClass: "description-block" }, [
                       _c("h5", { staticClass: "description-header" }, [
-                        _vm._v(_vm._s(_vm.form2.year))
+                        _vm._v(_vm._s(_vm.form.year))
                       ])
                     ])
                   ])
                 : _vm._e(),
               _vm._v(" "),
-              _vm.form2.major
+              _vm.form.major
                 ? _c("div", { staticClass: "col-sm-3 border-right" }, [
                     _c("div", { staticClass: "description-block" }, [
                       _c("h5", { staticClass: "description-header" }, [
-                        _vm._v(_vm._s(_vm.form2.major))
+                        _vm._v(_vm._s(_vm.form.major))
                       ])
                     ])
                   ])
@@ -62229,11 +62221,11 @@ var render = function() {
                   ])
                 : _vm._e(),
               _vm._v(" "),
-              _vm.form2.phone
+              _vm.form.phone
                 ? _c("div", { staticClass: "col-sm-3" }, [
                     _c("div", { staticClass: "description-block" }, [
                       _c("h5", { staticClass: "description-header" }, [
-                        _vm._v(_vm._s(_vm.form2.phone))
+                        _vm._v(_vm._s(_vm.form.phone))
                       ])
                     ])
                   ])
@@ -62381,32 +62373,32 @@ var render = function() {
                               {
                                 name: "model",
                                 rawName: "v-model",
-                                value: _vm.form2.year,
-                                expression: "form2.year"
+                                value: _vm.form.year,
+                                expression: "form.year"
                               }
                             ],
                             staticClass: "form-control",
                             class: {
-                              "is-invalid": _vm.form2.errors.has("year")
+                              "is-invalid": _vm.form.errors.has("year")
                             },
                             attrs: {
                               type: "number",
                               id: "inputYear",
                               placeholder: "Year"
                             },
-                            domProps: { value: _vm.form2.year },
+                            domProps: { value: _vm.form.year },
                             on: {
                               input: function($event) {
                                 if ($event.target.composing) {
                                   return
                                 }
-                                _vm.$set(_vm.form2, "year", $event.target.value)
+                                _vm.$set(_vm.form, "year", $event.target.value)
                               }
                             }
                           }),
                           _vm._v(" "),
                           _c("has-error", {
-                            attrs: { form: _vm.form2, field: "year" }
+                            attrs: { form: _vm.form, field: "year" }
                           })
                         ],
                         1
@@ -62431,8 +62423,8 @@ var render = function() {
                               {
                                 name: "model",
                                 rawName: "v-model",
-                                value: _vm.form2.major,
-                                expression: "form2.major"
+                                value: _vm.form.major,
+                                expression: "form.major"
                               }
                             ],
                             staticClass: "custom-select",
@@ -62448,7 +62440,7 @@ var render = function() {
                                     return val
                                   })
                                 _vm.$set(
-                                  _vm.form2,
+                                  _vm.form,
                                   "major",
                                   $event.target.multiple
                                     ? $$selectedVal
@@ -62541,33 +62533,45 @@ var render = function() {
                         [_vm._v("Phone Number")]
                       ),
                       _vm._v(" "),
-                      _c("div", { staticClass: "col-sm-10" }, [
-                        _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: _vm.form2.phone,
-                              expression: "form2.phone"
-                            }
-                          ],
-                          staticClass: "form-control",
-                          attrs: {
-                            type: "number",
-                            id: "inputPhone",
-                            placeholder: "Phone Number"
-                          },
-                          domProps: { value: _vm.form2.phone },
-                          on: {
-                            input: function($event) {
-                              if ($event.target.composing) {
-                                return
+                      _c(
+                        "div",
+                        { staticClass: "col-sm-10" },
+                        [
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.form.phone,
+                                expression: "form.phone"
                               }
-                              _vm.$set(_vm.form2, "phone", $event.target.value)
+                            ],
+                            staticClass: "form-control",
+                            class: {
+                              "is-invalid": _vm.form.errors.has("phone")
+                            },
+                            attrs: {
+                              type: "number",
+                              id: "inputPhone",
+                              placeholder: "Phone Number"
+                            },
+                            domProps: { value: _vm.form.phone },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(_vm.form, "phone", $event.target.value)
+                              }
                             }
-                          }
-                        })
-                      ])
+                          }),
+                          _vm._v(" "),
+                          _c("has-error", {
+                            attrs: { form: _vm.form, field: "phone" }
+                          })
+                        ],
+                        1
+                      )
                     ]),
                     _vm._v(" "),
                     _c("div", { staticClass: "form-group row" }, [
@@ -79479,7 +79483,7 @@ Vue.component(vform__WEBPACK_IMPORTED_MODULE_1__["AlertError"].name, vform__WEBP
 
 Vue.use(vue_router__WEBPACK_IMPORTED_MODULE_3__["default"]);
 var routes = [{
-  path: '/dashboard',
+  path: '/home',
   component: __webpack_require__(/*! ./components/Dashboard.vue */ "./resources/js/components/Dashboard.vue")["default"]
 }, {
   path: '/profile',

@@ -5,7 +5,6 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\User;
-use App\Student;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
@@ -70,7 +69,25 @@ class UserController extends Controller
             'student_id' => 'required|integer|digits_between:1,12|unique:users,student_id,' . $user->id,
             'email' => 'nullable|max:255|unique:users,email,' . $user->id,
             'password' => 'nullable|min:6',
+            'year' => 'nullable|integer|min:1900|max:2020',
+            'phone' => 'nullable|integer|unique:users,phone,' . $user->id
         ]);
+
+        $currentPhoto = $user->photo;
+
+        if ($request->photo != $currentPhoto) {
+            // get the file and save it to a local directory
+            $name = time() . '.' . explode('/', explode(":", substr($request->photo, 0, strpos($request->photo, ";")))[1])[1];
+
+            \Image::make($request->photo)->save(public_path('img/profile/') . $name);
+
+            $request->merge(['photo' => $name]);
+
+            $userPhoto = public_path('img/profile/') . $currentPhoto;
+            if (file_exists($userPhoto)) {
+                @unlink($userPhoto);
+            }
+        }
 
         if (!empty($request->password)) {
             $request->merge(['password' =>  Hash::make($request['password'])]);
@@ -81,6 +98,8 @@ class UserController extends Controller
         }
 
         $user->update($request->all());
+
+        return ['message' => 'success'];
     }
 
     /**
@@ -123,10 +142,22 @@ class UserController extends Controller
     {
         // deletes the user
         $user = User::findOrFail($id);
-
-        $profile = Student::where('student_id', $user->student_id)->firstOrFail();
-        $profile->delete();
-
         $user->delete();
+    }
+
+    public function removePhoto()
+    {
+        $user =  auth('api')->user();
+
+        $userPhoto = public_path('img/profile/') . $user->photo;
+        if (file_exists($userPhoto)) {
+            @unlink($userPhoto);
+        }
+
+        $user->update(['photo' => null]);
+
+        return [
+            'message' => 'photo deleted.'
+        ];
     }
 }

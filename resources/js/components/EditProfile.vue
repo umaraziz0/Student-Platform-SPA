@@ -158,9 +158,7 @@ export default {
         student_id: "",
         name: "",
         email: "",
-        password: ""
-      }),
-      form2: new Form({
+        password: "",
         photo: "",
         major: "",
         year: "",

@@ -200,7 +200,6 @@ export default {
       this.form
         .post("api/user")
         .then(() => {
-          this.form.post("api/student");
           $("#addNew").modal("hide");
           Toast.fire({
             icon: "success",

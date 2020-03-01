@@ -109,6 +109,7 @@
                         <option value="Software Engineering">Software Engineering</option>
                         <option value="Computer Engineering">Computer Engineering</option>
                       </select>
+                      <has-error :form="form" field="major"></has-error>
                     </div>
                   </div>
                   <div class="form-group row">

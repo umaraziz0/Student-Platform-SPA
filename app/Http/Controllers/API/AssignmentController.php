@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
+use App\Http\Controllers\Controller;
 use App\Assignment;
 use Illuminate\Http\Request;
 
@@ -12,9 +13,12 @@ class AssignmentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
     public function index()
     {
-        //
+        $user = auth('api')->user();
+
+        return Assignment::where('student_id', $user->student_id)->latest()->paginate(10);
     }
 
     /**
@@ -25,7 +29,22 @@ class AssignmentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $user = auth('api')->user();
+        $studentId = $user->student_id;
+        $request->merge(['student_id' => $studentId]);
+
+        $this->validate($request, [
+            'name' => 'required|string|max:255',
+            'course_name' => 'required|string'
+        ]);
+
+        return Assignment::create([
+            'student_id' => $request['student_id'],
+            'name' => $request['name'],
+            'course_name' => $request['course_name'],
+            'due_date' => $request['due_date'],
+            'details' => $request['details']
+        ]);
     }
 
     /**
@@ -48,7 +67,14 @@ class AssignmentController extends Controller
      */
     public function update(Request $request, Assignment $assignment)
     {
-        //
+        $user = auth('api')->user();
+        $studentId = $user->student_id;
+        $request->merge(['student_id' => $studentId]);
+
+        $this->validate($request, [
+            'name' => 'required|string|max:255',
+            'course_name' => 'required|string'
+        ]);
     }
 
     /**
@@ -59,6 +85,5 @@ class AssignmentController extends Controller
      */
     public function destroy(Assignment $assignment)
     {
-        //
     }
 }

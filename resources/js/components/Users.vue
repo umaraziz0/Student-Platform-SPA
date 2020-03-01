@@ -270,8 +270,6 @@ export default {
       this.loadUsers();
     });
     this.$Progress.finish();
-  },
-
-  mounted() {}
+  }
 };
 </script>

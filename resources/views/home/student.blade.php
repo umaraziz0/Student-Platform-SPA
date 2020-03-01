@@ -154,7 +154,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
         <div class="image">
-          <img src="/img/me-cropped.png" class="img-circle elevation-2" alt="">
+          <img src="img/profile/{{{ Auth::user()->photo }}}" class="img-circle elevation-2" onerror="this.src='img/profile/default.png'">
         </div>
         <div class="info">
           <router-link to="/profile" class="d-block">

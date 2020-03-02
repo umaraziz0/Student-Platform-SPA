@@ -15,6 +15,12 @@ class CreateExamsTable extends Migration
     {
         Schema::create('exams', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->string('name');
+            $table->date('date');
+            $table->time('time', 0);
+            $table->string('room')->nullable();
+            $table->string('building')->nullable();
+            $table->text('details')->nullable();
             $table->timestamps();
         });
     }

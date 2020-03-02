@@ -68,6 +68,10 @@ let routes = [{
     {
         path: '/developer',
         component: require('./components/Developer.vue').default
+    },
+    {
+        path: '/exams',
+        component: require('./components/Exams.vue').default
     }
 ]
 

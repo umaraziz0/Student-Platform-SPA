@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Exam;
 use Illuminate\Http\Request;
+use App\Course;
+use JamesDordoy\LaravelVueDatatable\Http\Resources\DataTableCollectionResource;
 
-class ExamController extends Controller
+
+class CourseController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,14 +17,16 @@ class ExamController extends Controller
      */
     public function index(Request $request)
     {
-        $columns = ['id', 'name', 'student_id', 'course_name', 'date', 'time', 'room', 'building', 'details'];
-
         $length = $request->input('length');
-        $column = $request->input('column'); //Index
-        $dir = $request->input('dir');
+        $sortBy = $request->input('column');
+        $orderBy = $request->input('dir');
         $searchValue = $request->input('search');
 
-        $query = Exam::select('id', 'name', 'student_id', 'course_name', 'date', 'time', 'room', 'building', 'details')->orderBy($columns[$column], $dir);
+        $query = Course::eloquentQuery($sortBy, $orderBy, $searchValue);
+
+        $data = $query->paginate($length);
+
+        return new DataTableCollectionResource($data);
     }
 
     /**
@@ -39,10 +43,10 @@ class ExamController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Exam  $exam
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Exam $exam)
+    public function show($id)
     {
         //
     }
@@ -51,10 +55,10 @@ class ExamController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Exam  $exam
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Exam $exam)
+    public function update(Request $request, $id)
     {
         //
     }
@@ -62,10 +66,10 @@ class ExamController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Exam  $exam
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Exam $exam)
+    public function destroy($id)
     {
         //
     }

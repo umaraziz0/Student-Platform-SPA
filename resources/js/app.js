@@ -4,96 +4,95 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-require('./bootstrap');
-require('bootstrap-table/dist/bootstrap-table.js');
-require("bootstrap-table/dist/extensions/filter-control/bootstrap-table-filter-control.min.js");
+require("./bootstrap");
 
-window.Vue = require('vue');
+window.Vue = require("vue");
 
-import BootstrapTable from 'bootstrap-table/dist/bootstrap-table-vue.esm.js';
-window.BootstrapTable = BootstrapTable;
+import DataTable from "laravel-vue-datatable";
+Vue.use(DataTable);
 
-import moment from 'moment';
-import {
-    Form,
-    HasError,
-    AlertError
-} from 'vform';
-import VueProgressBar from 'vue-progressbar';
+import moment from "moment";
+import { Form, HasError, AlertError } from "vform";
+import VueProgressBar from "vue-progressbar";
 
 Vue.use(VueProgressBar, {
-    color: 'rgb(143, 255, 199)',
-    failedColor: 'red',
-    height: '3px',
-    location: 'top'
-})
+    color: "rgb(143, 255, 199)",
+    failedColor: "red",
+    height: "3px",
+    location: "top"
+});
 
-window.Swal = require('sweetalert2');
+window.Swal = require("sweetalert2");
 
 window.Toast = Swal.mixin({
     toast: true,
-    position: 'top-end',
+    position: "top-end",
     showConfirmButton: false,
     timer: 3000,
-    timerProgressBar: false,
-})
+    timerProgressBar: false
+});
 
 // VForm
 window.Form = Form;
-Vue.component(HasError.name, HasError)
-Vue.component(AlertError.name, AlertError)
+Vue.component(HasError.name, HasError);
+Vue.component(AlertError.name, AlertError);
 
-import VueRouter from 'vue-router'
-Vue.use(VueRouter)
+import VueRouter from "vue-router";
+Vue.use(VueRouter);
 
-let routes = [{
-        path: '/home',
-        component: require('./components/Dashboard.vue').default
+let routes = [
+    {
+        path: "/home",
+        component: require("./components/Dashboard.vue").default
     },
     {
-        path: '/profile',
-        component: require('./components/Profile.vue').default
+        path: "/profile",
+        component: require("./components/Profile.vue").default
     },
     {
-        path: '/users',
-        component: require('./components/Users.vue').default
+        path: "/users",
+        component: require("./components/Users.vue").default
     },
     {
-        path: '/assignments',
-        component: require('./components/Assignments.vue').default
+        path: "/assignments",
+        component: require("./components/Assignments.vue").default
     },
     {
-        path: '/editprofile',
-        component: require('./components/EditProfile.vue').default
+        path: "/editprofile",
+        component: require("./components/EditProfile.vue").default
     },
     {
-        path: '/developer',
-        component: require('./components/Developer.vue').default
+        path: "/developer",
+        component: require("./components/Developer.vue").default
     },
     {
-        path: '/exams',
-        component: require('./components/Exams.vue').default
+        path: "/exams",
+        component: require("./components/Exams.vue").default
     },
     {
-        path: '*',
-        component: require('./components/404.vue').default
+        path: "/courses",
+        component: require("./components/Courses.vue").default
+    },
+    {
+        path: "*",
+        component: require("./components/404.vue").default
     }
-]
+];
 
 const router = new VueRouter({
-    mode: 'history',
+    mode: "history",
     routes, // short for `routes: routes`
-    linkActiveClass: 'active', // sets element tab class to 'active' if on current page
-})
+    linkActiveClass: "active" // sets element tab class to 'active' if on current page
+});
 
 // Global vue filters
 // to uppercase first letter in text
-Vue.filter('upText', function (text) {
-    return text.charAt(0).toUpperCase() + text.slice(1)
+Vue.filter("upText", function(text) {
+    return text.charAt(0).toUpperCase() + text.slice(1);
 });
 // reformat date
-Vue.filter('myDate', function (created) {
-    return moment(created).format('MMMM Do YYYY, h:mm a')
+Vue.filter("myDate", function(created) {
+    return moment(created).format("MMMM Do YYYY, h:mm a");
 });
 
 window.Fire = new Vue(); // custom global event
@@ -110,21 +109,24 @@ window.Fire = new Vue(); // custom global event
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
 Vue.component(
-    'passport-clients',
-    require('./components/passport/Clients.vue').default
+    "passport-clients",
+    require("./components/passport/Clients.vue").default
 );
 
 Vue.component(
-    'passport-authorized-clients',
-    require('./components/passport/AuthorizedClients.vue').default
+    "passport-authorized-clients",
+    require("./components/passport/AuthorizedClients.vue").default
 );
 
 Vue.component(
-    'passport-personal-access-tokens',
-    require('./components/passport/PersonalAccessTokens.vue').default
+    "passport-personal-access-tokens",
+    require("./components/passport/PersonalAccessTokens.vue").default
 );
 
-Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+Vue.component(
+    "example-component",
+    require("./components/ExampleComponent.vue").default
+);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -133,6 +135,6 @@ Vue.component('example-component', require('./components/ExampleComponent.vue').
  */
 
 const app = new Vue({
-    el: '#app',
+    el: "#app",
     router
 });

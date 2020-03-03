@@ -1,87 +1,99 @@
 <template>
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-md-8">
-        <data-table :data="data" :columns="columns" @onTablePropsChanged="reloadTable"></data-table>
-        <tbody slot="body" slot-scope="{ data }">
-          <tr :key="item.id" @click="showRowNumber(item.id)" v-for="item in data">
-            <td :key="column.name" v-for="column in columns">
-              <data-table-cell
-                :value="item"
-                :name="column.name"
-                :meta="column.meta"
-                :comp="column.component"
-                :classes="column.classes"
-              ></data-table-cell>
-            </td>
-          </tr>
-        </tbody>
-      </div>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Courses Taken</h3>
+                        <div class="card-tools"></div>
+                    </div>
+                    <div class="card-body table-responsive p-0">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Course ID</th>
+                                    <th>Course Name</th>
+                                    <th>Credits</th>
+                                    <th>Teacher</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr
+                                    v-for="course in coursesTaken"
+                                    :key="course.id"
+                                >
+                                    <td>{{ course.course_id }}</td>
+                                    <td>{{ course.course_name }}</td>
+                                    <td>{{ course.credits }}</td>
+                                    <td>{{ course.teacher }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- card -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Courses List</h3>
+                        <div class="card-tools"></div>
+                    </div>
+                    <div class="card-body table-responsive p-0">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Course ID</th>
+                                    <th>Course Name</th>
+                                    <th>Credits</th>
+                                    <th>Teacher</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="course in courses" :key="course.id">
+                                    <td>{{ course.course_id }}</td>
+                                    <td>{{ course.course_name }}</td>
+                                    <td>{{ course.credits }}</td>
+                                    <td>{{ course.teacher }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- card -->
+            </div>
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
 export default {
-  data() {
-    return {
-      url: "api/course",
-      data: {},
-      tableProps: {
-        search: "",
-        length: 10,
-        column: "id",
-        dir: "asc"
-      },
-      columns: [
-        {
-          label: "ID",
-          name: "id",
-          orderable: true
-        },
-        {
-          label: "Course ID",
-          name: "course_id",
-          orderable: true
-        },
-        {
-          label: "Course Name",
-          name: "course_name",
-          orderable: true
-        },
-        {
-          label: "Credits",
-          name: "credits",
-          orderable: true
-        },
-        {
-          label: "Teacher",
-          name: "teacher",
-          orderable: true
-        }
-      ]
-    };
-  },
-  created() {
-    this.getData(this.url);
-  },
-  methods: {
-    getData(url = this.url, options = this.tableProps) {
-      axios
-        .get(url, {
-          params: options
-        })
-        .then(response => {
-          this.data.data = response.data;
-        })
-        // eslint-disable-next-line
-        .catch(errors => {
-          //Handle Errors
-        });
+    data() {
+        return {
+            courses: {},
+            coursesTaken: {},
+            form: new Form({
+                id: "",
+                course_id: "",
+                course_name: "",
+                credits: "",
+                teacher: ""
+            })
+        };
     },
-    reloadTable(tableProps) {
-      this.getData(this.url, tableProps);
+
+    methods: {
+        loadAssignments() {
+            axios
+                .get("api/course")
+                .then(({ data }) => (this.courses = data.data));
+        }
+    },
+
+    created() {
+        this.$Progress.start();
+        this.loadAssignments();
+        this.$Progress.finish();
     }
-  }
 };
 </script>

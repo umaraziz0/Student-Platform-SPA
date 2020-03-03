@@ -16,7 +16,9 @@ class CourseController extends Controller
      */
     public function index(Request $request)
     {
-        //
+        $user = auth('api')->user();
+
+        return Course::latest()->paginate(10);
     }
 
     /**

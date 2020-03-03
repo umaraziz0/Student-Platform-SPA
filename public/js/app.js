@@ -2259,60 +2259,79 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      url: "api/course",
-      data: {},
-      tableProps: {
-        search: "",
-        length: 10,
-        column: "id",
-        dir: "asc"
-      },
-      columns: [{
-        label: "ID",
-        name: "id",
-        orderable: true
-      }, {
-        label: "Course ID",
-        name: "course_id",
-        orderable: true
-      }, {
-        label: "Course Name",
-        name: "course_name",
-        orderable: true
-      }, {
-        label: "Credits",
-        name: "credits",
-        orderable: true
-      }, {
-        label: "Teacher",
-        name: "teacher",
-        orderable: true
-      }]
+      courses: {},
+      coursesTaken: {},
+      form: new Form({
+        id: "",
+        course_id: "",
+        course_name: "",
+        credits: "",
+        teacher: ""
+      })
     };
   },
-  created: function created() {
-    this.getData(this.url);
-  },
   methods: {
-    getData: function getData() {
+    loadAssignments: function loadAssignments() {
       var _this = this;
 
-      var url = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.url;
-      var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.tableProps;
-      axios.get(url, {
-        params: options
-      }).then(function (response) {
-        _this.data.data = response.data;
-      }) // eslint-disable-next-line
-      ["catch"](function (errors) {//Handle Errors
+      axios.get("api/course").then(function (_ref) {
+        var data = _ref.data;
+        return _this.courses = data.data;
       });
-    },
-    reloadTable: function reloadTable(tableProps) {
-      this.getData(this.url, tableProps);
     }
+  },
+  created: function created() {
+    this.$Progress.start();
+    this.loadAssignments();
+    this.$Progress.finish();
   }
 });
 
@@ -62370,68 +62389,116 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "container" }, [
     _c("div", { staticClass: "row justify-content-center" }, [
-      _c(
-        "div",
-        {
-          staticClass: "col-md-8",
-          scopedSlots: _vm._u([
-            {
-              key: "body",
-              fn: function(ref) {
-                var data = ref.data
-                return _c(
-                  "tbody",
-                  {},
-                  _vm._l(data, function(item) {
-                    return _c(
-                      "tr",
-                      {
-                        key: item.id,
-                        on: {
-                          click: function($event) {
-                            return _vm.showRowNumber(item.id)
-                          }
-                        }
-                      },
-                      _vm._l(_vm.columns, function(column) {
-                        return _c(
-                          "td",
-                          { key: column.name },
-                          [
-                            _c("data-table-cell", {
-                              attrs: {
-                                value: item,
-                                name: column.name,
-                                meta: column.meta,
-                                comp: column.component,
-                                classes: column.classes
-                              }
-                            })
-                          ],
-                          1
-                        )
-                      }),
-                      0
-                    )
-                  }),
-                  0
-                )
-              }
-            }
+      _c("div", { staticClass: "col-md-10" }, [
+        _c("div", { staticClass: "card" }, [
+          _vm._m(0),
+          _vm._v(" "),
+          _c("div", { staticClass: "card-body table-responsive p-0" }, [
+            _c("table", { staticClass: "table table-hover" }, [
+              _vm._m(1),
+              _vm._v(" "),
+              _c(
+                "tbody",
+                _vm._l(_vm.coursesTaken, function(course) {
+                  return _c("tr", { key: course.id }, [
+                    _c("td", [_vm._v(_vm._s(course.course_id))]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(course.course_name))]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(course.credits))]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(course.teacher))])
+                  ])
+                }),
+                0
+              )
+            ])
           ])
-        },
-        [
-          _c("data-table", {
-            attrs: { data: _vm.data, columns: _vm.columns },
-            on: { onTablePropsChanged: _vm.reloadTable }
-          })
-        ],
-        1
-      )
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "card" }, [
+          _vm._m(2),
+          _vm._v(" "),
+          _c("div", { staticClass: "card-body table-responsive p-0" }, [
+            _c("table", { staticClass: "table table-hover" }, [
+              _vm._m(3),
+              _vm._v(" "),
+              _c(
+                "tbody",
+                _vm._l(_vm.courses, function(course) {
+                  return _c("tr", { key: course.id }, [
+                    _c("td", [_vm._v(_vm._s(course.course_id))]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(course.course_name))]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(course.credits))]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(course.teacher))])
+                  ])
+                }),
+                0
+              )
+            ])
+          ])
+        ])
+      ])
     ])
   ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "card-header" }, [
+      _c("h3", { staticClass: "card-title" }, [_vm._v("Courses Taken")]),
+      _vm._v(" "),
+      _c("div", { staticClass: "card-tools" })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("th", [_vm._v("Course ID")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Course Name")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Credits")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Teacher")])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "card-header" }, [
+      _c("h3", { staticClass: "card-title" }, [_vm._v("Courses List")]),
+      _vm._v(" "),
+      _c("div", { staticClass: "card-tools" })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("th", [_vm._v("Course ID")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Course Name")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Credits")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Teacher")])
+      ])
+    ])
+  }
+]
 render._withStripped = true
 
 

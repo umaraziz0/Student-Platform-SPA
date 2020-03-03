@@ -5,8 +5,13 @@
  */
 
 require('./bootstrap');
+require('bootstrap-table/dist/bootstrap-table.js');
+require("bootstrap-table/dist/extensions/filter-control/bootstrap-table-filter-control.min.js");
 
 window.Vue = require('vue');
+
+import BootstrapTable from 'bootstrap-table/dist/bootstrap-table-vue.esm.js';
+window.BootstrapTable = BootstrapTable;
 
 import moment from 'moment';
 import {
@@ -58,10 +63,6 @@ let routes = [{
         component: require('./components/Assignments.vue').default
     },
     {
-        path: '/todo',
-        component: require('./components/Todo.vue').default
-    },
-    {
         path: '/editprofile',
         component: require('./components/EditProfile.vue').default
     },
@@ -95,7 +96,7 @@ Vue.filter('myDate', function (created) {
     return moment(created).format('MMMM Do YYYY, h:mm a')
 });
 
-window.Fire = new Vue();
+window.Fire = new Vue(); // custom global event
 
 /**
  * The following block of code may be used to automatically register your

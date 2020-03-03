@@ -4,7 +4,7 @@
       <div class="col-md-12">
         <div class="card">
           <div class="card-header">
-            <h3 class="card-title">Users Table</h3>
+            <h2 class="card-title">Users Table</h2>
 
             <div class="card-tools">
               <button type="button" class="btn btn-block btn-success" v-on:click="createModal">

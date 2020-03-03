@@ -16,6 +16,8 @@ class CreateExamsTable extends Migration
         Schema::create('exams', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name');
+            $table->string('course_name');
+            $table->foreign('course_name')->references('course_name')->on('courses')->onDelete('cascade')->onUpdate('cascade');
             $table->date('date');
             $table->time('time', 0);
             $table->string('room')->nullable();

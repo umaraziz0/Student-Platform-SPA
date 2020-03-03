@@ -212,12 +212,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         </router-link>
                     </li>
                     <li class="nav-item">
-                        <a href="#" class="nav-link">
+                       <router-link to="/exams" class="nav-link">
                             <i class="fas fa-book nav-icon"></i>
                             <p>
                                 Exams
                             </p>
-                        </a>
+                        </router-link>
                     </li>
                 </ul>
               </li>

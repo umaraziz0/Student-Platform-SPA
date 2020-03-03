@@ -14,6 +14,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
   </title>
   <link rel="icon" href="/img/professor.png" type="image/x-icon">
   <link rel="stylesheet" href="/css/app.css">
+
 </head>
 <body class="hold-transition sidebar-mini">
 <div class="wrapper" id="app">
@@ -192,7 +193,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 </router-link>
             </li>
             <li class="nav-item">
-                <router-link to="/courses" class="nav-link">
+                <router-link to="/testcourses" class="nav-link">
                 <i class="fas fa-graduation-cap nav-icon"></i>
                 <p>
                     Courses

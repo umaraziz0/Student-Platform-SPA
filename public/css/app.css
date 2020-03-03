@@ -51295,3 +51295,66 @@ readers do not read off random characters that represent icons */
   font-weight: 400;
 }
 
+.courses-style {
+  width: 90%;
+  margin: auto;
+  margin-top: 20px;
+}
+
+.courses-style .table-style {
+  margin-bottom: 10px;
+}
+
+.courses-style .table-style input {
+  width: 175px;
+}
+
+.courses-style .table-style .control {
+  float: right;
+}
+
+.courses-style .table {
+  width: 100%;
+}
+
+.courses-style .table .sorting {
+  background-image: url(/images/sort_both.png?9a6486086d09bb38cf66a57cc559ade3);
+  background-repeat: no-repeat;
+  background-position: center right;
+}
+
+.courses-style .table .sorting_asc {
+  background-image: url(/images/sort_asc.png?9326ad44ae4bebdedd141e7a53c2a730);
+  background-repeat: no-repeat;
+  background-position: center right;
+}
+
+.courses-style .table .sorting_desc {
+  background-image: url(/images/sort_desc.png?1fc418e33fd5a687290258b23fac4e98);
+  background-repeat: no-repeat;
+  background-position: center right;
+}
+
+.courses-style nav a {
+  color: white !important;
+  margin-right: 10px;
+}
+
+h1 {
+  text-align: center;
+  font-size: 30px;
+}
+
+.pagination {
+  justify-content: flex-end !important;
+}
+
+.pagination .page-stats {
+  align-items: center;
+  margin-right: 5px;
+}
+
+.pagination i {
+  color: #3273dc !important;
+}
+

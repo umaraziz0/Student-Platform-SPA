@@ -239,7 +239,7 @@ export default {
     data() {
         return {
             editMode: false,
-            url: "api/exam/",
+            url: "/api/exam/",
             data: {},
             formData: {},
             tableProps: {

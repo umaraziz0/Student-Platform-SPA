@@ -192,7 +192,7 @@ export default {
     data() {
         return {
             editMode: false,
-            url: "api/assignment/",
+            url: "/api/assignment/",
             data: {},
             formData: {},
             tableProps: {

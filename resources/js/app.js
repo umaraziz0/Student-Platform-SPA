@@ -62,7 +62,7 @@ let routes = [{
         component: require("./components/Users.vue").default
     },
     {
-        path: "/assignments",
+        path: "/agenda/assignments",
         component: require("./components/Assignments.vue").default
     },
     {
@@ -74,7 +74,7 @@ let routes = [{
         component: require("./components/Developer.vue").default
     },
     {
-        path: "/exams",
+        path: "/agenda/exams",
         component: require("./components/Exams.vue").default
     },
     {

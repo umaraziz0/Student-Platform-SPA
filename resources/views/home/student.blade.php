@@ -204,7 +204,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         </router-link>
                     </li>
                     <li class="nav-item">
-                        <router-link to="/assignments" class="nav-link">
+                        <router-link to="/agenda/assignments" class="nav-link">
                             <i class="fas fa-clipboard nav-icon"></i>
                             <p>
                                 Assignments
@@ -212,7 +212,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         </router-link>
                     </li>
                     <li class="nav-item">
-                       <router-link to="/exams" class="nav-link">
+                       <router-link to="/agenda/exams" class="nav-link">
                             <i class="fas fa-book nav-icon"></i>
                             <p>
                                 Exams

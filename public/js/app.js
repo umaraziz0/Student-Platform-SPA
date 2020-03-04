@@ -2166,7 +2166,7 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       editMode: false,
-      url: "api/assignment/",
+      url: "/api/assignment/",
       data: {},
       formData: {},
       tableProps: {
@@ -3538,7 +3538,7 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       editMode: false,
-      url: "api/exam/",
+      url: "/api/exam/",
       data: {},
       formData: {},
       tableProps: {
@@ -3753,6 +3753,118 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -73368,7 +73480,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "container" }, [
     _c("div", { staticClass: "row justify-content-center" }, [
-      _c("div", { staticClass: "col-md-8" }, [
+      _c("div", { staticClass: "col-md-7" }, [
         _c("div", { staticClass: "card card-widget widget-user" }, [
           _c("div", { staticClass: "widget-user-header bg-info" }, [
             _c("h3", { staticClass: "widget-user-username" }, [
@@ -73394,7 +73506,11 @@ var render = function() {
                 ? _c("div", { staticClass: "col-sm-3 border-right" }, [
                     _c("div", { staticClass: "description-block" }, [
                       _c("h5", { staticClass: "description-header" }, [
-                        _vm._v(_vm._s(_vm.form.year))
+                        _vm._v(
+                          "\n                                    " +
+                            _vm._s(_vm.form.year) +
+                            "\n                                "
+                        )
                       ])
                     ])
                   ])
@@ -73404,7 +73520,11 @@ var render = function() {
                 ? _c("div", { staticClass: "col-sm-3 border-right" }, [
                     _c("div", { staticClass: "description-block" }, [
                       _c("h5", { staticClass: "description-header" }, [
-                        _vm._v(_vm._s(_vm.form.major))
+                        _vm._v(
+                          "\n                                    " +
+                            _vm._s(_vm.form.major) +
+                            "\n                                "
+                        )
                       ])
                     ])
                   ])
@@ -73414,7 +73534,11 @@ var render = function() {
                 ? _c("div", { staticClass: "col-sm-3 border-right" }, [
                     _c("div", { staticClass: "description-block" }, [
                       _c("h5", { staticClass: "description-header" }, [
-                        _vm._v(_vm._s(_vm.form.email))
+                        _vm._v(
+                          "\n                                    " +
+                            _vm._s(_vm.form.email) +
+                            "\n                                "
+                        )
                       ])
                     ])
                   ])
@@ -73424,7 +73548,11 @@ var render = function() {
                 ? _c("div", { staticClass: "col-sm-3" }, [
                     _c("div", { staticClass: "description-block" }, [
                       _c("h5", { staticClass: "description-header" }, [
-                        _vm._v(_vm._s(_vm.form.phone))
+                        _vm._v(
+                          "\n                                    " +
+                            _vm._s(_vm.form.phone) +
+                            "\n                                "
+                        )
                       ])
                     ])
                   ])
@@ -73662,13 +73790,21 @@ var render = function() {
                               _c(
                                 "option",
                                 { attrs: { value: "Software Engineering" } },
-                                [_vm._v("Software Engineering")]
+                                [
+                                  _vm._v(
+                                    "Software\n                                                Engineering"
+                                  )
+                                ]
                               ),
                               _vm._v(" "),
                               _c(
                                 "option",
                                 { attrs: { value: "Computer Engineering" } },
-                                [_vm._v("Computer Engineering")]
+                                [
+                                  _vm._v(
+                                    "Computer\n                                                Engineering"
+                                  )
+                                ]
                               )
                             ]
                           ),
@@ -73790,7 +73926,11 @@ var render = function() {
                           staticClass: "col-sm-2 col-form-label",
                           attrs: { for: "inputPhone" }
                         },
-                        [_vm._v("Password (leave empty if not changing)")]
+                        [
+                          _vm._v(
+                            "Password (leave empty if not\n                                        changing)"
+                          )
+                        ]
                       ),
                       _vm._v(" "),
                       _c(
@@ -73866,7 +74006,11 @@ var render = function() {
                               }
                             }
                           },
-                          [_vm._v("Remove Photo")]
+                          [
+                            _vm._v(
+                              "\n                                            Remove Photo\n                                        "
+                            )
+                          ]
                         )
                       ])
                     ]),
@@ -73885,7 +74029,11 @@ var render = function() {
                               }
                             }
                           },
-                          [_vm._v("Submit")]
+                          [
+                            _vm._v(
+                              "\n                                            Submit\n                                        "
+                            )
+                          ]
                         )
                       ])
                     ])
@@ -90664,7 +90812,7 @@ var routes = [{
   path: "/users",
   component: __webpack_require__(/*! ./components/Users.vue */ "./resources/js/components/Users.vue")["default"]
 }, {
-  path: "/assignments",
+  path: "/agenda/assignments",
   component: __webpack_require__(/*! ./components/Assignments.vue */ "./resources/js/components/Assignments.vue")["default"]
 }, {
   path: "/editprofile",
@@ -90673,7 +90821,7 @@ var routes = [{
   path: "/developer",
   component: __webpack_require__(/*! ./components/Developer.vue */ "./resources/js/components/Developer.vue")["default"]
 }, {
-  path: "/exams",
+  path: "/agenda/exams",
   component: __webpack_require__(/*! ./components/Exams.vue */ "./resources/js/components/Exams.vue")["default"]
 }, {
   path: "/courses",

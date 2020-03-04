@@ -2290,8 +2290,6 @@ __webpack_require__.r(__webpack_exports__);
         _this3.$Progress.finish();
       })["catch"](function (errors) {
         _this3.$Progress.fail();
-
-        console.log(errors);
       });
     },
     editModal: function editModal(formData) {
@@ -2301,11 +2299,11 @@ __webpack_require__.r(__webpack_exports__);
       $("#newModal").modal("show");
       this.form.fill(formData);
     },
-    editAssignment: function editAssignment() {
+    editAssignment: function editAssignment(data) {
       var _this4 = this;
 
       this.$Progress.start();
-      this.form.put(this.url + this.form.id).then(function () {
+      this.form.put(this.url + "".concat(data.id)).then(function () {
         $("#newModal").modal("hide");
         Toast.fire({
           icon: "success",
@@ -2319,7 +2317,7 @@ __webpack_require__.r(__webpack_exports__);
         _this4.$Progress.fail();
       });
     },
-    deleteAssignment: function deleteAssignment() {
+    deleteAssignment: function deleteAssignment(data) {
       var _this5 = this;
 
       Swal.fire({
@@ -2331,7 +2329,7 @@ __webpack_require__.r(__webpack_exports__);
         confirmButtonText: "Yes, delete it!"
       }).then(function (result) {
         if (result.value) {
-          _this5.form["delete"](_this5.url + _this5.form.id).then(function () {
+          _this5.form["delete"](_this5.url + "".concat(data.id)).then(function () {
             _this5.$Progress.start();
 
             Swal.fire("Deleted!", "Assignment deleted.", "success");
@@ -2344,7 +2342,7 @@ __webpack_require__.r(__webpack_exports__);
 
             Swal.fire({
               icon: "error",
-              title: "Oops...",
+              title: "An error occurred.",
               text: "".concat(errors)
             });
           });
@@ -2940,11 +2938,11 @@ __webpack_require__.r(__webpack_exports__);
       $("#newModal").modal("show");
       this.form.fill(formData);
     },
-    editCourse: function editCourse() {
+    editCourse: function editCourse(data) {
       var _this4 = this;
 
       this.$Progress.start();
-      this.form.put(this.url + this.form.id).then(function () {
+      this.form.put(this.url + "".concat(data.id)).then(function () {
         $("#newModal").modal("hide");
         Toast.fire({
           icon: "success",
@@ -2958,7 +2956,7 @@ __webpack_require__.r(__webpack_exports__);
         _this4.$Progress.fail();
       });
     },
-    deleteCourse: function deleteCourse() {
+    deleteCourse: function deleteCourse(data) {
       var _this5 = this;
 
       Swal.fire({
@@ -2970,7 +2968,7 @@ __webpack_require__.r(__webpack_exports__);
         confirmButtonText: "Yes, delete it!"
       }).then(function (result) {
         if (result.value) {
-          _this5.form["delete"](_this5.url + _this5.form.id).then(function () {
+          _this5.form["delete"](_this5.url + "".concat(data.id)).then(function () {
             _this5.$Progress.start();
 
             Swal.fire("Deleted!", "Course deleted.", "success");
@@ -2983,7 +2981,7 @@ __webpack_require__.r(__webpack_exports__);
 
             Swal.fire({
               icon: "error",
-              title: "Oops...",
+              title: "An error occurred.",
               text: "".concat(errors)
             });
           });

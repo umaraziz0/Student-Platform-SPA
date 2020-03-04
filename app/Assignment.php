@@ -10,12 +10,18 @@ class Assignment extends Model
     use LaravelVueDatatableTrait;
     //
     protected $fillable = [
-        'student_id', 'name', 'course_name', 'due_date', 'details'
+        'student_id', 'name', 'course_name', 'due_date', 'details',
     ];
 
     protected $dataTableColumns = [
-        'name' => [
+        'id' => [
             'searchable' => false,
+        ],
+        'student_id' => [
+            'searchable' => false,
+        ],
+        'name' => [
+            'searchable' => true,
         ],
         'course_name' => [
             'searchable' => true,
@@ -25,6 +31,6 @@ class Assignment extends Model
         ],
         'details' => [
             'searchable' => true,
-        ]
+        ],
     ];
 }

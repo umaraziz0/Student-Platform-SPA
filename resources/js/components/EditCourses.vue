@@ -330,10 +330,10 @@ export default {
             this.form.fill(formData);
         },
 
-        editCourse() {
+        editCourse(data) {
             this.$Progress.start();
             this.form
-                .put(this.url + this.form.id)
+                .put(this.url + `${data.id}`)
                 .then(() => {
                     $("#newModal").modal("hide");
                     Toast.fire({
@@ -348,7 +348,7 @@ export default {
                 });
         },
 
-        deleteCourse() {
+        deleteCourse(data) {
             Swal.fire({
                 title: "Are you sure?",
                 icon: "warning",
@@ -359,7 +359,7 @@ export default {
             }).then(result => {
                 if (result.value) {
                     this.form
-                        .delete(this.url + this.form.id)
+                        .delete(this.url + `${data.id}`)
                         .then(() => {
                             this.$Progress.start();
                             Swal.fire("Deleted!", "Course deleted.", "success");
@@ -370,7 +370,7 @@ export default {
                             this.$Progress.fail();
                             Swal.fire({
                                 icon: "error",
-                                title: "Oops...",
+                                title: "An error occurred.",
                                 text: `${errors}`
                             });
                         });

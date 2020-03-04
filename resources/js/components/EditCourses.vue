@@ -54,7 +54,7 @@
 export default {
     data() {
         return {
-            url: "api/test",
+            url: "api/course",
             data: {},
             tableProps: {
                 search: "",

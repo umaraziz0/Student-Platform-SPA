@@ -82,8 +82,8 @@ let routes = [{
         component: require("./components/Courses.vue").default
     },
     {
-        path: "/test",
-        component: require("./components/test.vue").default
+        path: "/editcourses",
+        component: require("./components/EditCourses.vue").default
     },
     {
         path: "*",

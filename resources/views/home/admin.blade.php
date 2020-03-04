@@ -193,7 +193,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 </router-link>
             </li>
             <li class="nav-item">
-                <router-link to="/test" class="nav-link">
+                <router-link to="/editcourses" class="nav-link">
                 <i class="fas fa-graduation-cap nav-icon"></i>
                 <p>
                     Courses

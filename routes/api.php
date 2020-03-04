@@ -33,6 +33,3 @@ Route::group(['middleware' => 'auth:api'], function () {
 Route::get('profile', 'API\UserController@profile');
 Route::put('profile', 'API\UserController@updateProfile');
 Route::delete('removePhoto', 'API\UserController@removePhoto');
-
-Route::get('/testcourses', 'API\CourseController@getCourses');
-Route::get('/test', 'API\TestController@index');

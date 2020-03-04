@@ -124,6 +124,112 @@
                                     </div>
                                     <div class="form-group row">
                                         <label
+                                            for="sex"
+                                            class="col-sm-2 col-form-label"
+                                            >Gender</label
+                                        >
+                                        <div class="col-sm-10">
+                                            <div
+                                                class="custom-control custom-radio custom-control-inline"
+                                            >
+                                                <input
+                                                    type="radio"
+                                                    v-model="form.sex"
+                                                    id="male"
+                                                    value="male"
+                                                    name="sex"
+                                                    class="custom-control-input"
+                                                    :class="{
+                                                        'is-invalid': form.errors.has(
+                                                            'sex'
+                                                        )
+                                                    }"
+                                                />
+                                                <label
+                                                    class="custom-control-label"
+                                                    for="male"
+                                                    >Male</label
+                                                >
+                                            </div>
+                                            <div
+                                                class="custom-control custom-radio custom-control-inline"
+                                            >
+                                                <input
+                                                    type="radio"
+                                                    v-model="form.sex"
+                                                    id="female"
+                                                    value="female"
+                                                    name="sex"
+                                                    class="custom-control-input"
+                                                    :class="{
+                                                        'is-invalid': form.errors.has(
+                                                            'sex'
+                                                        )
+                                                    }"
+                                                />
+                                                <label
+                                                    class="custom-control-label"
+                                                    for="female"
+                                                    >Female</label
+                                                >
+                                            </div>
+                                            <has-error
+                                                :form="form"
+                                                field="sex"
+                                            ></has-error>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label
+                                            for="inputBirthdate"
+                                            class="col-sm-2 col-form-label"
+                                            >Birth Date:</label
+                                        >
+                                        <div class="col-sm-10">
+                                            <input
+                                                type="date"
+                                                v-model="form.birthdate"
+                                                class="form-control"
+                                                :class="{
+                                                    'is-invalid': form.errors.has(
+                                                        'birthdate'
+                                                    )
+                                                }"
+                                                id="inputBirthdate"
+                                            />
+                                            <has-error
+                                                :form="form"
+                                                field="birthdate"
+                                            ></has-error>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label
+                                            for="inputBirthplace"
+                                            class="col-sm-2 col-form-label"
+                                            >Birth Place:</label
+                                        >
+                                        <div class="col-sm-10">
+                                            <input
+                                                type="text"
+                                                v-model="form.birthplace"
+                                                class="form-control"
+                                                :class="{
+                                                    'is-invalid': form.errors.has(
+                                                        'birthplace'
+                                                    )
+                                                }"
+                                                id="inputBirthplace"
+                                            />
+                                            <has-error
+                                                :form="form"
+                                                field="birthplace"
+                                            ></has-error>
+                                        </div>
+                                    </div>
+                                    <hr />
+                                    <div class="form-group row">
+                                        <label
                                             for="inputYear"
                                             class="col-sm-2 col-form-label"
                                             >Year</label
@@ -315,7 +421,10 @@ export default {
                 photo: "",
                 major: "",
                 year: "",
-                phone: ""
+                phone: "",
+                sex: "",
+                birthdate: "",
+                birthplace: ""
             })
         };
     },

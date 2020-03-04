@@ -204,6 +204,19 @@ export default {
                     name: "teacher",
                     columnName: "teacher",
                     orderable: true
+                },
+                {
+                    label: "Take Course",
+                    name: "take_course",
+                    orderable: false,
+                    classes: {
+                        btn: true,
+                        "btn-primary": true,
+                        "btn-sm": true
+                    },
+                    event: "click",
+                    handler: this.takeCourse,
+                    component: ButtonCheck
                 }
             ],
             columnsTaken: [
@@ -233,7 +246,7 @@ export default {
                 },
                 {
                     label: "Delete",
-                    name: "Delete",
+                    name: "delete",
                     orderable: false,
                     classes: {
                         btn: true,
@@ -254,7 +267,7 @@ export default {
     },
 
     components: {
-        ButtonEdit,
+        ButtonCheck,
         ButtonDelete
     },
 
@@ -293,6 +306,7 @@ export default {
 
         reloadTable(tableProps) {
             this.getData(this.url, tableProps);
+            this.getDataTaken(this.urlTaken, tableProps);
         },
 
         displayRow(data) {
@@ -351,7 +365,30 @@ export default {
                 });
         },
 
-        deleteCourse(data) {
+        takeCourse(formData) {
+            this.form.fill(formData);
+            this.form
+                .post(this.urlTaken)
+                .then(() => {
+                    this.$Progress.start();
+                    Swal.fire({
+                        icon: "success",
+                        title: "Course taken."
+                    });
+                    this.reloadTable();
+                    this.$Progress.finish();
+                })
+                .catch(errors => {
+                    this.$Progress.fail();
+                    Swal.fire({
+                        icon: "error",
+                        title: "An error occurred.",
+                        text: `${errors}`
+                    });
+                });
+        },
+
+        deleteCourse(dataTaken) {
             Swal.fire({
                 title: "Are you sure?",
                 icon: "warning",
@@ -362,7 +399,7 @@ export default {
             }).then(result => {
                 if (result.value) {
                     this.form
-                        .delete(this.url + `${data.id}`)
+                        .delete(this.urlTaken + `${dataTaken.id}`)
                         .then(() => {
                             this.$Progress.start();
                             Swal.fire("Deleted!", "Course deleted.", "success");

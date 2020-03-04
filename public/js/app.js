@@ -2354,6 +2354,46 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ButtonCheck.vue?vue&type=script&lang=js&":
+/*!**********************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ButtonCheck.vue?vue&type=script&lang=js& ***!
+  \**********************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: {
+    data: {},
+    name: {},
+    click: {
+      type: Function,
+      "default": function _default() {}
+    },
+    classes: {
+      type: Object,
+      "default": function _default() {
+        return {
+          btn: true,
+          "btn-primary": true,
+          "btn-sm": true
+        };
+      }
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ButtonDelete.vue?vue&type=script&lang=js&":
 /*!***********************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ButtonDelete.vue?vue&type=script&lang=js& ***!
@@ -2644,6 +2684,18 @@ __webpack_require__.r(__webpack_exports__);
         name: "teacher",
         columnName: "teacher",
         orderable: true
+      }, {
+        label: "Take Course",
+        name: "take_course",
+        orderable: false,
+        classes: {
+          btn: true,
+          "btn-primary": true,
+          "btn-sm": true
+        },
+        event: "click",
+        handler: this.takeCourse,
+        component: ButtonCheck
       }],
       columnsTaken: [{
         label: "Course ID",
@@ -2667,7 +2719,7 @@ __webpack_require__.r(__webpack_exports__);
         orderable: true
       }, {
         label: "Delete",
-        name: "Delete",
+        name: "delete",
         orderable: false,
         classes: {
           btn: true,
@@ -2686,7 +2738,7 @@ __webpack_require__.r(__webpack_exports__);
     this.getForm(this.url);
   },
   components: {
-    ButtonEdit: ButtonEdit,
+    ButtonCheck: ButtonCheck,
     ButtonDelete: ButtonDelete
   },
   methods: {
@@ -2727,6 +2779,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     reloadTable: function reloadTable(tableProps) {
       this.getData(this.url, tableProps);
+      this.getDataTaken(this.urlTaken, tableProps);
     },
     displayRow: function displayRow(data) {
       alert("You clicked course ".concat(data.id));
@@ -2782,8 +2835,33 @@ __webpack_require__.r(__webpack_exports__);
         _this5.$Progress.fail();
       });
     },
-    deleteCourse: function deleteCourse(data) {
+    takeCourse: function takeCourse(formData) {
       var _this6 = this;
+
+      this.form.fill(formData);
+      this.form.post(this.urlTaken).then(function () {
+        _this6.$Progress.start();
+
+        Swal.fire({
+          icon: "success",
+          title: "Course taken."
+        });
+
+        _this6.reloadTable();
+
+        _this6.$Progress.finish();
+      })["catch"](function (errors) {
+        _this6.$Progress.fail();
+
+        Swal.fire({
+          icon: "error",
+          title: "An error occurred.",
+          text: "".concat(errors)
+        });
+      });
+    },
+    deleteCourse: function deleteCourse(dataTaken) {
+      var _this7 = this;
 
       Swal.fire({
         title: "Are you sure?",
@@ -2794,16 +2872,16 @@ __webpack_require__.r(__webpack_exports__);
         confirmButtonText: "Yes, delete it!"
       }).then(function (result) {
         if (result.value) {
-          _this6.form["delete"](_this6.url + "".concat(data.id)).then(function () {
-            _this6.$Progress.start();
+          _this7.form["delete"](_this7.urlTaken + "".concat(dataTaken.id)).then(function () {
+            _this7.$Progress.start();
 
             Swal.fire("Deleted!", "Course deleted.", "success");
 
-            _this6.reloadTable();
+            _this7.reloadTable();
 
-            _this6.$Progress.finish();
+            _this7.$Progress.finish();
           })["catch"](function (errors) {
-            _this6.$Progress.fail();
+            _this7.$Progress.fail();
 
             Swal.fire({
               icon: "error",
@@ -72022,6 +72100,44 @@ render._withStripped = true
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ButtonCheck.vue?vue&type=template&id=30c10cdb&":
+/*!**************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ButtonCheck.vue?vue&type=template&id=30c10cdb& ***!
+  \**************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "btn-group" }, [
+    _c(
+      "button",
+      {
+        staticClass: "btn btn-info",
+        attrs: { type: "button" },
+        on: {
+          click: function($event) {
+            return _vm.click(_vm.data)
+          }
+        }
+      },
+      [_c("i", { staticClass: "fas fa-check text-white" })]
+    )
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ButtonDelete.vue?vue&type=template&id=721358e8&":
 /*!***************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ButtonDelete.vue?vue&type=template&id=721358e8& ***!
@@ -91578,13 +91694,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var laravel_vue_datatable__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(laravel_vue_datatable__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _components_ButtonEdit_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components/ButtonEdit.vue */ "./resources/js/components/ButtonEdit.vue");
 /* harmony import */ var _components_ButtonDelete_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/ButtonDelete.vue */ "./resources/js/components/ButtonDelete.vue");
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var vform__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! vform */ "./node_modules/vform/dist/vform.common.js");
-/* harmony import */ var vform__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(vform__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var vue_progressbar__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! vue-progressbar */ "./node_modules/vue-progressbar/dist/vue-progressbar.js");
-/* harmony import */ var vue_progressbar__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(vue_progressbar__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var vue_router__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! vue-router */ "./node_modules/vue-router/dist/vue-router.esm.js");
+/* harmony import */ var _components_ButtonCheck_vue__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./components/ButtonCheck.vue */ "./resources/js/components/ButtonCheck.vue");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var vform__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! vform */ "./node_modules/vform/dist/vform.common.js");
+/* harmony import */ var vform__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(vform__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var vue_progressbar__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! vue-progressbar */ "./node_modules/vue-progressbar/dist/vue-progressbar.js");
+/* harmony import */ var vue_progressbar__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(vue_progressbar__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var vue_router__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! vue-router */ "./node_modules/vue-router/dist/vue-router.esm.js");
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
@@ -91597,12 +91714,14 @@ window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.
 Vue.use(laravel_vue_datatable__WEBPACK_IMPORTED_MODULE_0___default.a);
 
 
+
 window.ButtonEdit = _components_ButtonEdit_vue__WEBPACK_IMPORTED_MODULE_1__["default"];
 window.ButtonDelete = _components_ButtonDelete_vue__WEBPACK_IMPORTED_MODULE_2__["default"];
+window.ButtonCheck = _components_ButtonCheck_vue__WEBPACK_IMPORTED_MODULE_8__["default"];
 
 
 
-Vue.use(vue_progressbar__WEBPACK_IMPORTED_MODULE_5___default.a, {
+Vue.use(vue_progressbar__WEBPACK_IMPORTED_MODULE_6___default.a, {
   color: "rgb(143, 255, 199)",
   failedColor: "red",
   height: "3px",
@@ -91617,11 +91736,11 @@ window.Toast = Swal.mixin({
   timerProgressBar: false
 }); // VForm
 
-window.Form = vform__WEBPACK_IMPORTED_MODULE_4__["Form"];
-Vue.component(vform__WEBPACK_IMPORTED_MODULE_4__["HasError"].name, vform__WEBPACK_IMPORTED_MODULE_4__["HasError"]);
-Vue.component(vform__WEBPACK_IMPORTED_MODULE_4__["AlertError"].name, vform__WEBPACK_IMPORTED_MODULE_4__["AlertError"]);
+window.Form = vform__WEBPACK_IMPORTED_MODULE_5__["Form"];
+Vue.component(vform__WEBPACK_IMPORTED_MODULE_5__["HasError"].name, vform__WEBPACK_IMPORTED_MODULE_5__["HasError"]);
+Vue.component(vform__WEBPACK_IMPORTED_MODULE_5__["AlertError"].name, vform__WEBPACK_IMPORTED_MODULE_5__["AlertError"]);
 
-Vue.use(vue_router__WEBPACK_IMPORTED_MODULE_6__["default"]);
+Vue.use(vue_router__WEBPACK_IMPORTED_MODULE_7__["default"]);
 var routes = [{
   path: "/home",
   component: __webpack_require__(/*! ./components/Dashboard.vue */ "./resources/js/components/Dashboard.vue")["default"]
@@ -91653,7 +91772,7 @@ var routes = [{
   path: "*",
   component: __webpack_require__(/*! ./components/404.vue */ "./resources/js/components/404.vue")["default"]
 }];
-var router = new vue_router__WEBPACK_IMPORTED_MODULE_6__["default"]({
+var router = new vue_router__WEBPACK_IMPORTED_MODULE_7__["default"]({
   mode: "history",
   routes: routes,
   // short for `routes: routes`
@@ -91667,7 +91786,7 @@ Vue.filter("upText", function (text) {
 }); // reformat date
 
 Vue.filter("myDate", function (created) {
-  return moment__WEBPACK_IMPORTED_MODULE_3___default()(created).format("MMMM Do YYYY, h:mm a");
+  return moment__WEBPACK_IMPORTED_MODULE_4___default()(created).format("MMMM Do YYYY, h:mm a");
 });
 window.Fire = new Vue(); // custom global event
 
@@ -91878,6 +91997,75 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Assignments_vue_vue_type_template_id_3e013b2b___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Assignments_vue_vue_type_template_id_3e013b2b___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/ButtonCheck.vue":
+/*!*************************************************!*\
+  !*** ./resources/js/components/ButtonCheck.vue ***!
+  \*************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _ButtonCheck_vue_vue_type_template_id_30c10cdb___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ButtonCheck.vue?vue&type=template&id=30c10cdb& */ "./resources/js/components/ButtonCheck.vue?vue&type=template&id=30c10cdb&");
+/* harmony import */ var _ButtonCheck_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ButtonCheck.vue?vue&type=script&lang=js& */ "./resources/js/components/ButtonCheck.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _ButtonCheck_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _ButtonCheck_vue_vue_type_template_id_30c10cdb___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _ButtonCheck_vue_vue_type_template_id_30c10cdb___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/ButtonCheck.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/ButtonCheck.vue?vue&type=script&lang=js&":
+/*!**************************************************************************!*\
+  !*** ./resources/js/components/ButtonCheck.vue?vue&type=script&lang=js& ***!
+  \**************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ButtonCheck_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./ButtonCheck.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ButtonCheck.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ButtonCheck_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/ButtonCheck.vue?vue&type=template&id=30c10cdb&":
+/*!********************************************************************************!*\
+  !*** ./resources/js/components/ButtonCheck.vue?vue&type=template&id=30c10cdb& ***!
+  \********************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ButtonCheck_vue_vue_type_template_id_30c10cdb___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./ButtonCheck.vue?vue&type=template&id=30c10cdb& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ButtonCheck.vue?vue&type=template&id=30c10cdb&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ButtonCheck_vue_vue_type_template_id_30c10cdb___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ButtonCheck_vue_vue_type_template_id_30c10cdb___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

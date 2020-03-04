@@ -13,8 +13,10 @@ Vue.use(DataTable);
 
 import ButtonEdit from "./components/ButtonEdit.vue";
 import ButtonDelete from "./components/ButtonDelete.vue";
+import ButtonCheck from "./components/ButtonCheck.vue";
 window.ButtonEdit = ButtonEdit;
 window.ButtonDelete = ButtonDelete;
+window.ButtonCheck = ButtonCheck;
 
 import moment from "moment";
 import {

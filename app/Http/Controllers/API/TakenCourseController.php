@@ -39,7 +39,17 @@ class TakenCourseController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $user = auth('api')->user();
+        $studentId = $user->student_id;
+        $request->merge(['student_id' => $studentId]);
+
+        return TakenCourse::create([
+            'student_id' => $request['student_id'],
+            'course_id' => $request['course_id'],
+            'course_name' => $request['course_name'],
+            'credits' => $request['credits'],
+            'teacher' => $request['teacher']
+        ]);
     }
 
     /**
@@ -71,8 +81,9 @@ class TakenCourseController extends Controller
      * @param  \App\TakenCourse  $takenCourse
      * @return \Illuminate\Http\Response
      */
-    public function destroy(TakenCourse $takenCourse)
+    public function destroy($id)
     {
-        //
+        $course = TakenCourse::findOrFail($id);
+        $course->delete();
     }
 }

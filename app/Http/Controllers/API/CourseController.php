@@ -89,7 +89,7 @@ class CourseController extends Controller
      */
     public function destroy($id)
     {
-        $assignment = Course::findOrFail($id);
-        $assignment->delete();
+        $course = Course::findOrFail($id);
+        $course->delete();
     }
 }

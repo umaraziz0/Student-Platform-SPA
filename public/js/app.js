@@ -2856,8 +2856,9 @@ __webpack_require__.r(__webpack_exports__);
         Swal.fire({
           icon: "error",
           title: "An error occurred.",
-          text: "".concat(errors)
+          text: "Course has already been taken."
         });
+        console.log(errors);
       });
     },
     deleteCourse: function deleteCourse(dataTaken) {

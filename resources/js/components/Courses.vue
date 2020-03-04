@@ -383,8 +383,9 @@ export default {
                     Swal.fire({
                         icon: "error",
                         title: "An error occurred.",
-                        text: `${errors}`
+                        text: "Course has already been taken."
                     });
+                    console.log(errors);
                 });
         },
 

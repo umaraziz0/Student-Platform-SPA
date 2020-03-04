@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\TakenCourse;
 use Illuminate\Http\Request;
 use JamesDordoy\LaravelVueDatatable\Http\Resources\DataTableCollectionResource;
+use Illuminate\Support\Facades\Validator;
 
 class TakenCourseController extends Controller
 {
@@ -42,6 +43,11 @@ class TakenCourseController extends Controller
         $user = auth('api')->user();
         $studentId = $user->student_id;
         $request->merge(['student_id' => $studentId]);
+
+        $validatedData = $request->validate([
+            'course_id' => 'required|unique:taken_courses',
+            'course_name' => 'required|unique:taken_courses'
+        ]);
 
         return TakenCourse::create([
             'student_id' => $request['student_id'],

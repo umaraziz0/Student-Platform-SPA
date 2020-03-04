@@ -11,6 +11,11 @@ window.Vue = require("vue");
 import DataTable from 'laravel-vue-datatable';
 Vue.use(DataTable);
 
+import ButtonEdit from "./components/ButtonEdit.vue";
+import ButtonDelete from "./components/ButtonDelete.vue";
+window.ButtonEdit = ButtonEdit;
+window.ButtonDelete = ButtonDelete;
+
 import moment from "moment";
 import {
     Form,

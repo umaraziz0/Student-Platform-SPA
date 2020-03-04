@@ -23,7 +23,7 @@ Route::group(['middleware' => 'auth:api'], function () {
         'user' => 'API\UserController',
         'assignment' => 'API\AssignmentController',
         'exam' => 'API\ExamController',
-        'course' => 'API\CourseController'
+        'course' => 'API\CourseController',
     ]);
 });
 
@@ -35,3 +35,4 @@ Route::put('profile', 'API\UserController@updateProfile');
 Route::delete('removePhoto', 'API\UserController@removePhoto');
 
 Route::get('/testcourses', 'API\CourseController@getCourses');
+Route::get('/test', 'API\TestController@index');

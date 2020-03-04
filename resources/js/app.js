@@ -8,6 +8,9 @@ require("./bootstrap");
 
 window.Vue = require("vue");
 
+import DataTable from 'laravel-vue-datatable';
+Vue.use(DataTable);
+
 import moment from "moment";
 import {
     Form,
@@ -74,8 +77,8 @@ let routes = [{
         component: require("./components/Courses.vue").default
     },
     {
-        path: "/testcourses",
-        component: require("./components/testcourses.vue").default
+        path: "/test",
+        component: require("./components/test.vue").default
     },
     {
         path: "*",

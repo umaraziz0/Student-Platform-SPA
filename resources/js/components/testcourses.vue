@@ -41,7 +41,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="course in paginatedCourses" :key="course.id">
+                <tr v-for="course in paginatedCourses" :key="course.course_id">
                     <td>{{ course.course_id }}</td>
                     <td>{{ course.course_name }}</td>
                     <td>{{ course.credits }}</td>
@@ -146,7 +146,7 @@ export default {
     data() {
         let sortOrders = {};
         let columns = [
-            { label: "ID", name: "id" },
+            { label: "ID", name: "course_id" },
             { label: "Course Name", name: "course_name" },
             { label: "Credits", name: "credits" },
             { label: "Teacher", name: "teacher" }
@@ -158,7 +158,7 @@ export default {
         return {
             courses: [],
             columns: columns,
-            sortKey: "credits",
+            sortKey: "course_id",
             sortOrders: sortOrders,
             length: 10,
             search: "",

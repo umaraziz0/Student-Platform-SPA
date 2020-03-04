@@ -4277,7 +4277,7 @@ __webpack_require__.r(__webpack_exports__);
     var sortOrders = {};
     var columns = [{
       label: "ID",
-      name: "id"
+      name: "course_id"
     }, {
       label: "Course Name",
       name: "course_name"
@@ -4294,7 +4294,7 @@ __webpack_require__.r(__webpack_exports__);
     return {
       courses: [],
       columns: columns,
-      sortKey: "credits",
+      sortKey: "course_id",
       sortOrders: sortOrders,
       length: 10,
       search: "",
@@ -65712,7 +65712,7 @@ var render = function() {
       _c(
         "tbody",
         _vm._l(_vm.paginatedCourses, function(course) {
-          return _c("tr", { key: course.id }, [
+          return _c("tr", { key: course.course_id }, [
             _c("td", [_vm._v(_vm._s(course.course_id))]),
             _vm._v(" "),
             _c("td", [_vm._v(_vm._s(course.course_name))]),

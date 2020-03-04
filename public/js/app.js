@@ -2540,17 +2540,155 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      url: "api/course",
+      editMode: false,
+      url: "api/course/",
       data: {},
+      formData: {},
       tableProps: {
         search: "",
         length: 10,
         column: "course_id",
         dir: "asc"
       },
+      form: new Form({
+        id: "",
+        course_id: "",
+        course_name: "",
+        credits: "",
+        teacher: ""
+      }),
       columns: [{
         label: "Course ID",
         name: "course_id",
@@ -2582,7 +2720,7 @@ __webpack_require__.r(__webpack_exports__);
           "btn-sm": true
         },
         event: "click",
-        handler: this.displayRow,
+        handler: this.editModal,
         component: ButtonEdit
       }, {
         label: "Delete",
@@ -2594,13 +2732,14 @@ __webpack_require__.r(__webpack_exports__);
           "btn-sm": true
         },
         event: "click",
-        handler: this.deleteAssignment,
+        handler: this.deleteCourse,
         component: ButtonDelete
       }]
     };
   },
   created: function created() {
     this.getData(this.url);
+    this.getForm(this.url);
   },
   components: {
     ButtonEdit: ButtonEdit,
@@ -2620,20 +2759,48 @@ __webpack_require__.r(__webpack_exports__);
       ["catch"](function (errors) {//Handle Errors
       });
     },
+    getForm: function getForm() {
+      var _this2 = this;
+
+      var url = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.url;
+      axios.get(url).then(function (_ref) {
+        var data = _ref.data;
+        return _this2.formData = data.data;
+      });
+    },
     reloadTable: function reloadTable(tableProps) {
       this.getData(this.url, tableProps);
     },
     displayRow: function displayRow(data) {
       alert("You clicked course ".concat(data.id));
     },
-    logRow: function logRow(data) {
-      console.log("Course' ".concat(data.id));
+    editModal: function editModal(data) {
+      this.editMode = true;
+      this.form.clear();
+      this.form.reset();
+      $("#newModal").modal("show");
+      this.form.fill(data);
     },
-    testFunc: function testFunc() {
-      alert("all good");
+    editCourse: function editCourse(data) {
+      var _this3 = this;
+
+      this.$Progress.start();
+      this.form.put(this.url + this.form.id).then(function () {
+        $("#newModal").modal("hide");
+        Toast.fire({
+          icon: "success",
+          title: "Update success"
+        });
+
+        _this3.reloadTable();
+
+        _this3.$Progress.finish();
+      })["catch"](function () {
+        _this3.$Progress.fail();
+      });
     },
-    deleteAssignment: function deleteAssignment(data) {
-      var _this2 = this;
+    deleteCourse: function deleteCourse(data) {
+      var _this4 = this;
 
       Swal.fire({
         title: "Are you sure?",
@@ -2644,16 +2811,16 @@ __webpack_require__.r(__webpack_exports__);
         confirmButtonText: "Yes, delete it!"
       }).then(function (result) {
         if (result.value) {
-          axios["delete"](_this2.url + "/".concat(data.id)).then(function () {
-            _this2.$Progress.start();
+          axios["delete"](_this4.url + "/".concat(data.id)).then(function () {
+            _this4.$Progress.start();
 
-            Swal.fire("Deleted!", "Assignment deleted.", "success");
+            Swal.fire("Deleted!", "Course deleted.", "success");
 
-            _this2.getData(_this2.url);
+            _this4.reloadTable();
 
-            _this2.$Progress.finish();
+            _this4.$Progress.finish();
           })["catch"](function (errors) {
-            _this2.$Progress.fail();
+            _this4.$Progress.fail();
 
             Swal.fire({
               icon: "error",
@@ -71137,8 +71304,7 @@ var render = function() {
                             "button",
                             {
                               staticClass: "btn btn-block btn-success",
-                              attrs: { type: "button" },
-                              on: { click: _vm.testFunc }
+                              attrs: { type: "button" }
                             },
                             [
                               _c("i", { staticClass: "fas fa-plus" }),
@@ -71182,10 +71348,300 @@ var render = function() {
         ],
         1
       )
-    ])
+    ]),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        staticClass: "modal fade",
+        attrs: {
+          id: "newModal",
+          tabindex: "-1",
+          role: "dialog",
+          "aria-labelledby": "newModalLabel",
+          "aria-hidden": "true"
+        }
+      },
+      [
+        _c(
+          "div",
+          { staticClass: "modal-dialog", attrs: { role: "document" } },
+          [
+            _c("div", { staticClass: "modal-content" }, [
+              _c("div", { staticClass: "modal-header" }, [
+                _c("h4", { staticClass: "modal-title" }, [
+                  _vm._v(
+                    "\n                        " +
+                      _vm._s(
+                        _vm.editMode ? "Edit Course" : "Create New Course"
+                      ) +
+                      "\n                    "
+                  )
+                ]),
+                _vm._v(" "),
+                _vm._m(0)
+              ]),
+              _vm._v(" "),
+              _c(
+                "form",
+                {
+                  on: {
+                    submit: function($event) {
+                      $event.preventDefault()
+                      _vm.editMode ? _vm.editCourse() : _vm.createCourse()
+                    }
+                  }
+                },
+                [
+                  _c("div", { staticClass: "modal-body" }, [
+                    _c(
+                      "div",
+                      { staticClass: "form-group" },
+                      [
+                        _c("label", { attrs: { for: "inputCourseID" } }, [
+                          _vm._v("Course ID:")
+                        ]),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.form.course_id,
+                              expression: "form.course_id"
+                            }
+                          ],
+                          staticClass: "form-control",
+                          class: {
+                            "is-invalid": _vm.form.errors.has("course_id")
+                          },
+                          attrs: {
+                            type: "text",
+                            id: "inputCourseID",
+                            placeholder: "Course ID",
+                            field: "course_id"
+                          },
+                          domProps: { value: _vm.form.course_id },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.form,
+                                "course_id",
+                                $event.target.value
+                              )
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c("has-error", {
+                          attrs: { form: _vm.form, field: "course_id" }
+                        })
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "form-group" },
+                      [
+                        _c("label", { attrs: { for: "inputCourseName" } }, [
+                          _vm._v("Course Name:")
+                        ]),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.form.course_name,
+                              expression: "form.course_name"
+                            }
+                          ],
+                          staticClass: "form-control",
+                          class: {
+                            "is-invalid": _vm.form.errors.has("course_name")
+                          },
+                          attrs: {
+                            type: "text",
+                            id: "inputCourseName",
+                            placeholder: "Course Name",
+                            field: "course_name"
+                          },
+                          domProps: { value: _vm.form.course_name },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.form,
+                                "course_name",
+                                $event.target.value
+                              )
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c("has-error", {
+                          attrs: { form: _vm.form, field: "course_name" }
+                        })
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "form-group" },
+                      [
+                        _c("label", { attrs: { for: "inputCredits" } }, [
+                          _vm._v("Credits")
+                        ]),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.form.credits,
+                              expression: "form.credits"
+                            }
+                          ],
+                          staticClass: "custom-select",
+                          class: {
+                            "is-invalid": _vm.form.errors.has("credits")
+                          },
+                          attrs: { id: "inputCredits", name: "credits" },
+                          domProps: { value: _vm.form.credits },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(_vm.form, "credits", $event.target.value)
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c("has-error", {
+                          attrs: { form: _vm.form, field: "credits" }
+                        })
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "form-group" },
+                      [
+                        _c("label", { attrs: { for: "inputTeacher" } }, [
+                          _vm._v("Teacher:")
+                        ]),
+                        _vm._v(" "),
+                        _c("textarea", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.form.teacher,
+                              expression: "form.teacher"
+                            }
+                          ],
+                          staticClass: "form-control",
+                          class: {
+                            "is-invalid": _vm.form.errors.has("credits")
+                          },
+                          attrs: {
+                            name: "teacher",
+                            id: "inputTeacher",
+                            placeholder: ""
+                          },
+                          domProps: { value: _vm.form.teacher },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(_vm.form, "teacher", $event.target.value)
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c("has-error", {
+                          attrs: { form: _vm.form, field: "credits" }
+                        })
+                      ],
+                      1
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    { staticClass: "modal-footer justify-content-between" },
+                    [
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-danger",
+                          attrs: { type: "button", "data-dismiss": "modal" }
+                        },
+                        [
+                          _vm._v(
+                            "\n                            Close\n                        "
+                          )
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn",
+                          class: {
+                            "btn-success": !_vm.editMode,
+                            "btn-primary": _vm.editMode
+                          },
+                          attrs: { type: "submit" }
+                        },
+                        [
+                          _vm._v(
+                            "\n                            " +
+                              _vm._s(_vm.editMode ? "Update" : "Create") +
+                              "\n                        "
+                          )
+                        ]
+                      )
+                    ]
+                  )
+                ]
+              )
+            ])
+          ]
+        )
+      ]
+    )
   ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "button",
+      {
+        staticClass: "close",
+        attrs: {
+          type: "button",
+          "data-dismiss": "modal",
+          "aria-label": "Close"
+        }
+      },
+      [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+    )
+  }
+]
 render._withStripped = true
 
 

@@ -28,7 +28,6 @@
                                     <button
                                         type="button"
                                         class="btn btn-block btn-success"
-                                        v-on:click="testFunc"
                                     >
                                         <i class="fas fa-plus"> </i> Add Course
                                     </button>
@@ -47,6 +46,136 @@
                 </data-table>
             </div>
         </div>
+        <!-- Modal -->
+        <div
+            class="modal fade"
+            id="newModal"
+            tabindex="-1"
+            role="dialog"
+            aria-labelledby="newModalLabel"
+            aria-hidden="true"
+        >
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">
+                            {{ editMode ? "Edit Course" : "Create New Course" }}
+                        </h4>
+                        <button
+                            type="button"
+                            class="close"
+                            data-dismiss="modal"
+                            aria-label="Close"
+                        >
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <form
+                        @submit.prevent="
+                            editMode ? editCourse() : createCourse()
+                        "
+                    >
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="inputCourseID">Course ID:</label>
+                                <input
+                                    type="text"
+                                    v-model="form.course_id"
+                                    class="form-control"
+                                    :class="{
+                                        'is-invalid': form.errors.has(
+                                            'course_id'
+                                        )
+                                    }"
+                                    id="inputCourseID"
+                                    placeholder="Course ID"
+                                    field="course_id"
+                                />
+                                <has-error
+                                    :form="form"
+                                    field="course_id"
+                                ></has-error>
+                            </div>
+                            <div class="form-group">
+                                <label for="inputCourseName"
+                                    >Course Name:</label
+                                >
+                                <input
+                                    type="text"
+                                    v-model="form.course_name"
+                                    class="form-control"
+                                    :class="{
+                                        'is-invalid': form.errors.has(
+                                            'course_name'
+                                        )
+                                    }"
+                                    id="inputCourseName"
+                                    placeholder="Course Name"
+                                    field="course_name"
+                                />
+                                <has-error
+                                    :form="form"
+                                    field="course_name"
+                                ></has-error>
+                            </div>
+                            <div class="form-group">
+                                <label for="inputCredits">Credits</label>
+                                <input
+                                    v-model="form.credits"
+                                    class="custom-select"
+                                    :class="{
+                                        'is-invalid': form.errors.has('credits')
+                                    }"
+                                    id="inputCredits"
+                                    name="credits"
+                                />
+                                <has-error
+                                    :form="form"
+                                    field="credits"
+                                ></has-error>
+                            </div>
+                            <div class="form-group">
+                                <label for="inputTeacher">Teacher:</label>
+                                <textarea
+                                    v-model="form.teacher"
+                                    name="teacher"
+                                    id="inputTeacher"
+                                    placeholder=""
+                                    class="form-control"
+                                    :class="{
+                                        'is-invalid': form.errors.has('credits')
+                                    }"
+                                ></textarea>
+                                <has-error
+                                    :form="form"
+                                    field="credits"
+                                ></has-error>
+                            </div>
+                        </div>
+                        <div class="modal-footer justify-content-between">
+                            <button
+                                type="button"
+                                class="btn btn-danger"
+                                data-dismiss="modal"
+                            >
+                                Close
+                            </button>
+                            <button
+                                type="submit"
+                                class="btn"
+                                :class="{
+                                    'btn-success': !editMode,
+                                    'btn-primary': editMode
+                                }"
+                            >
+                                {{ editMode ? "Update" : "Create" }}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- Modal End -->
     </div>
 </template>
 
@@ -54,14 +183,23 @@
 export default {
     data() {
         return {
-            url: "api/course",
+            editMode: false,
+            url: "api/course/",
             data: {},
+            formData: {},
             tableProps: {
                 search: "",
                 length: 10,
                 column: "course_id",
                 dir: "asc"
             },
+            form: new Form({
+                id: "",
+                course_id: "",
+                course_name: "",
+                credits: "",
+                teacher: ""
+            }),
             columns: [
                 {
                     label: "Course ID",
@@ -98,7 +236,7 @@ export default {
                         "btn-sm": true
                     },
                     event: "click",
-                    handler: this.displayRow,
+                    handler: this.editModal,
                     component: ButtonEdit
                 },
                 {
@@ -111,7 +249,7 @@ export default {
                         "btn-sm": true
                     },
                     event: "click",
-                    handler: this.deleteAssignment,
+                    handler: this.deleteCourse,
                     component: ButtonDelete
                 }
             ]
@@ -119,6 +257,7 @@ export default {
     },
     created() {
         this.getData(this.url);
+        this.getForm(this.url);
     },
 
     components: {
@@ -140,6 +279,11 @@ export default {
                     //Handle Errors
                 });
         },
+
+        getForm(url = this.url) {
+            axios.get(url).then(({ data }) => (this.formData = data.data));
+        },
+
         reloadTable(tableProps) {
             this.getData(this.url, tableProps);
         },
@@ -148,15 +292,33 @@ export default {
             alert(`You clicked course ${data.id}`);
         },
 
-        logRow(data) {
-            console.log(`Course' ${data.id}`);
+        editModal(data) {
+            this.editMode = true;
+            this.form.clear();
+            this.form.reset();
+            $("#newModal").modal("show");
+            this.form.fill(data);
         },
 
-        testFunc() {
-            alert("all good");
+        editCourse(data) {
+            this.$Progress.start();
+            this.form
+                .put(this.url + this.form.id)
+                .then(() => {
+                    $("#newModal").modal("hide");
+                    Toast.fire({
+                        icon: "success",
+                        title: "Update success"
+                    });
+                    this.reloadTable();
+                    this.$Progress.finish();
+                })
+                .catch(() => {
+                    this.$Progress.fail();
+                });
         },
 
-        deleteAssignment(data) {
+        deleteCourse(data) {
             Swal.fire({
                 title: "Are you sure?",
                 icon: "warning",
@@ -170,12 +332,8 @@ export default {
                         .delete(this.url + `/${data.id}`)
                         .then(() => {
                             this.$Progress.start();
-                            Swal.fire(
-                                "Deleted!",
-                                "Assignment deleted.",
-                                "success"
-                            );
-                            this.getData(this.url);
+                            Swal.fire("Deleted!", "Course deleted.", "success");
+                            this.reloadTable();
                             this.$Progress.finish();
                         })
                         .catch(errors => {

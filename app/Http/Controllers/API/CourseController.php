@@ -59,7 +59,15 @@ class CourseController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $course = Course::findOrFail($id);
+
+        $this->validate($request, [
+            'course_id' => 'required|numeric',
+            'course_name' => 'required|string',
+            'credits' => 'required|numeric',
+        ]);
+
+        $course->update($request->all());
     }
 
     /**

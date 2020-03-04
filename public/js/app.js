@@ -2552,7 +2552,7 @@ __webpack_require__.r(__webpack_exports__);
         dir: "asc"
       },
       columns: [{
-        label: "ID",
+        label: "Course ID",
         name: "course_id",
         columnName: "course_id",
         orderable: true
@@ -2594,7 +2594,7 @@ __webpack_require__.r(__webpack_exports__);
           "btn-sm": true
         },
         event: "click",
-        handler: this.logRow,
+        handler: this.deleteAssignment,
         component: ButtonDelete
       }]
     };
@@ -2631,6 +2631,38 @@ __webpack_require__.r(__webpack_exports__);
     },
     testFunc: function testFunc() {
       alert("all good");
+    },
+    deleteAssignment: function deleteAssignment(data) {
+      var _this2 = this;
+
+      Swal.fire({
+        title: "Are you sure?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!"
+      }).then(function (result) {
+        if (result.value) {
+          axios["delete"](_this2.url + "/".concat(data.id)).then(function () {
+            _this2.$Progress.start();
+
+            Swal.fire("Deleted!", "Assignment deleted.", "success");
+
+            _this2.getData(_this2.url);
+
+            _this2.$Progress.finish();
+          })["catch"](function (errors) {
+            _this2.$Progress.fail();
+
+            Swal.fire({
+              icon: "error",
+              title: "Oops...",
+              text: "".concat(errors)
+            });
+          });
+        }
+      });
     }
   }
 });

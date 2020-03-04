@@ -64,7 +64,7 @@ export default {
             },
             columns: [
                 {
-                    label: "ID",
+                    label: "Course ID",
                     name: "course_id",
                     columnName: "course_id",
                     orderable: true
@@ -111,7 +111,7 @@ export default {
                         "btn-sm": true
                     },
                     event: "click",
-                    handler: this.logRow,
+                    handler: this.deleteAssignment,
                     component: ButtonDelete
                 }
             ]
@@ -154,6 +154,40 @@ export default {
 
         testFunc() {
             alert("all good");
+        },
+
+        deleteAssignment(data) {
+            Swal.fire({
+                title: "Are you sure?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, delete it!"
+            }).then(result => {
+                if (result.value) {
+                    axios
+                        .delete(this.url + `/${data.id}`)
+                        .then(() => {
+                            this.$Progress.start();
+                            Swal.fire(
+                                "Deleted!",
+                                "Assignment deleted.",
+                                "success"
+                            );
+                            this.getData(this.url);
+                            this.$Progress.finish();
+                        })
+                        .catch(errors => {
+                            this.$Progress.fail();
+                            Swal.fire({
+                                icon: "error",
+                                title: "Oops...",
+                                text: `${errors}`
+                            });
+                        });
+                }
+            });
         }
     }
 };

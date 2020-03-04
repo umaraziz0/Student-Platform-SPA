@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Exam;
 use Illuminate\Http\Request;
+use JamesDordoy\LaravelVueDatatable\Http\Resources\DataTableCollectionResource;
 
 class ExamController extends Controller
 {
@@ -15,14 +16,16 @@ class ExamController extends Controller
      */
     public function index(Request $request)
     {
-        $columns = ['id', 'name', 'student_id', 'course_name', 'date', 'time', 'room', 'building', 'details'];
-
         $length = $request->input('length');
-        $column = $request->input('column'); //Index
-        $dir = $request->input('dir');
+        $sortBy = $request->input('column');
+        $orderBy = $request->input('dir');
         $searchValue = $request->input('search');
 
-        $query = Exam::select('id', 'name', 'student_id', 'course_name', 'date', 'time', 'room', 'building', 'details')->orderBy($columns[$column], $dir);
+        $query = Exam::eloquentQuery($sortBy, $orderBy, $searchValue);
+
+        $data = $query->paginate($length);
+
+        return new DataTableCollectionResource($data);
     }
 
     /**
@@ -33,7 +36,27 @@ class ExamController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $user = auth('api')->user();
+        $studentId = $user->student_id;
+        $request->merge(['student_id' => $studentId]);
+
+        $this->validate($request, [
+            'name' => 'required|string|max:255',
+            'course_name' => 'required|string',
+            'date' => 'required|date',
+            'time' => 'required'
+        ]);
+
+        return Exam::create([
+            'name' => $request['name'],
+            'student_id' => $request['student_id'],
+            'course_name' => $request['course_name'],
+            'date' => $request['date'],
+            'time' => $request['time'],
+            'room' => $request['room'],
+            'building' => $request['building'],
+            'details' => $request['details']
+        ]);
     }
 
     /**
@@ -54,9 +77,18 @@ class ExamController extends Controller
      * @param  \App\Exam  $exam
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Exam $exam)
+    public function update(Request $request, $id)
     {
-        //
+        $exam = Exam::findOrFail($id);
+
+        $this->validate($request, [
+            'name' => 'required|string|max:255',
+            'course_name' => 'required|string',
+            'date' => 'required|date',
+            'time' => 'required'
+        ]);
+
+        $exam->update($request->all());
     }
 
     /**
@@ -65,8 +97,9 @@ class ExamController extends Controller
      * @param  \App\Exam  $exam
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Exam $exam)
+    public function destroy($id)
     {
-        //
+        $exam = Exam::findOrFail($id);
+        $exam->delete();
     }
 }

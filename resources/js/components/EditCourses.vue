@@ -330,10 +330,10 @@ export default {
             this.form.fill(formData);
         },
 
-        editCourse(data) {
+        editCourse() {
             this.$Progress.start();
             this.form
-                .put(this.url + `${data.id}`)
+                .put(this.url + this.form.id)
                 .then(() => {
                     $("#newModal").modal("hide");
                     Toast.fire({

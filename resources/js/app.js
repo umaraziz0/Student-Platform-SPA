@@ -63,7 +63,7 @@ let routes = [{
     },
     {
         path: "/assignments",
-        component: require("./components/Assignment.vue").default
+        component: require("./components/Assignments.vue").default
     },
     {
         path: "/editprofile",

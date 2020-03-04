@@ -16,12 +16,15 @@ class ExamController extends Controller
      */
     public function index(Request $request)
     {
+        $user = auth('api')->user();
+
         $length = $request->input('length');
         $sortBy = $request->input('column');
         $orderBy = $request->input('dir');
         $searchValue = $request->input('search');
 
-        $query = Exam::eloquentQuery($sortBy, $orderBy, $searchValue);
+        $query = Exam::where('student_id', $user->student_id)
+            ->eloquentQuery($sortBy, $orderBy, $searchValue);
 
         $data = $query->paginate($length);
 

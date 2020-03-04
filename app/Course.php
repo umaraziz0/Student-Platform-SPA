@@ -18,7 +18,7 @@ class Course extends Model
             'searchable' => false,
         ],
         'course_id' => [
-            'searchable' => false,
+            'searchable' => true,
         ],
         'course_name' => [
             'searchable' => true,

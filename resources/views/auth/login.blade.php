@@ -53,9 +53,9 @@
         </div>
         <div class="row">
           <div class="col-8">
-            <div class="icheck-primary">
-              <input type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
-                <label for="remember">
+            <div class="custom-control custom-checkbox">
+              <input class="custom-control-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
+                <label for="remember" class="custom-control-label">
                     {{ __('Remember Me') }}
                 </label>
             </div>

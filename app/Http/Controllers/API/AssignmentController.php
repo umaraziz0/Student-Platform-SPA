@@ -17,12 +17,15 @@ class AssignmentController extends Controller
 
     public function index(Request $request)
     {
+        $user = auth('api')->user();
+
         $length = $request->input('length');
         $sortBy = $request->input('column');
         $orderBy = $request->input('dir');
         $searchValue = $request->input('search');
 
-        $query = Assignment::eloquentQuery($sortBy, $orderBy, $searchValue);
+        $query = Assignment::where('student_id', $user->student_id)
+            ->eloquentQuery($sortBy, $orderBy, $searchValue);
 
         $data = $query->paginate($length);
 

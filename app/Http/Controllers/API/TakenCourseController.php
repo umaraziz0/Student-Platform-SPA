@@ -1,9 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
+use App\Http\Controllers\Controller;
 use App\TakenCourse;
 use Illuminate\Http\Request;
+use JamesDordoy\LaravelVueDatatable\Http\Resources\DataTableCollectionResource;
 
 class TakenCourseController extends Controller
 {
@@ -12,9 +14,21 @@ class TakenCourseController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $user = auth('api')->user();
+
+        $length = $request->input('length');
+        $sortBy = $request->input('column');
+        $orderBy = $request->input('dir');
+        $searchValue = $request->input('search');
+
+        $query = TakenCourse::where('student_id', $user->student_id)
+            ->eloquentQuery($sortBy, $orderBy, $searchValue);
+
+        $data = $query->paginate($length);
+
+        return new DataTableCollectionResource($data);
     }
 
     /**

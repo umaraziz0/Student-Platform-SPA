@@ -2,7 +2,7 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-10">
-                <h2 class="text-center">Courses List</h2>
+                <h2 class="text-center">Assignments List</h2>
                 <hr />
                 <br />
                 <data-table
@@ -31,7 +31,8 @@
                                         class="btn btn-block btn-success"
                                         v-on:click="createModal()"
                                     >
-                                        <i class="fas fa-plus"> </i> Add Course
+                                        <i class="fas fa-plus"> </i> Add
+                                        Assignment
                                     </button>
                                 </div>
                             </div>
@@ -61,7 +62,11 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h4 class="modal-title">
-                            {{ editMode ? "Edit Course" : "Create New Course" }}
+                            {{
+                                editMode
+                                    ? "Edit Assignment"
+                                    : "Create New Assignment"
+                            }}
                         </h4>
                         <button
                             type="button"
@@ -74,28 +79,26 @@
                     </div>
                     <form
                         @submit.prevent="
-                            editMode ? editCourse() : createCourse()
+                            editMode ? editAssignment() : createAssignment()
                         "
                     >
                         <div class="modal-body">
                             <div class="form-group">
-                                <label for="inputCourseID">Course ID:</label>
+                                <label for="inputName">Name:</label>
                                 <input
-                                    type="number"
-                                    v-model="form.course_id"
+                                    type="text"
+                                    v-model="form.name"
                                     class="form-control"
                                     :class="{
-                                        'is-invalid': form.errors.has(
-                                            'course_id'
-                                        )
+                                        'is-invalid': form.errors.has('name')
                                     }"
-                                    id="inputCourseID"
-                                    placeholder="Course ID"
-                                    field="course_id"
+                                    id="inputName"
+                                    placeholder=""
+                                    field="name"
                                 />
                                 <has-error
                                     :form="form"
-                                    field="course_id"
+                                    field="name"
                                 ></has-error>
                             </div>
                             <div class="form-group">
@@ -112,7 +115,7 @@
                                         )
                                     }"
                                     id="inputCourseName"
-                                    placeholder="Course Name"
+                                    placeholder=""
                                     field="course_name"
                                 />
                                 <has-error
@@ -121,38 +124,39 @@
                                 ></has-error>
                             </div>
                             <div class="form-group">
-                                <label for="inputCredits">Credits</label>
+                                <label for="inputDueDate">Due Date:</label>
                                 <input
-                                    type="number"
-                                    v-model="form.credits"
+                                    type="date"
+                                    v-model="form.due_date"
                                     class="custom-select"
                                     :class="{
-                                        'is-invalid': form.errors.has('credits')
+                                        'is-invalid': form.errors.has(
+                                            'due_date'
+                                        )
                                     }"
-                                    id="inputCredits"
-                                    name="credits"
+                                    id="inputDueDate"
+                                    name="due_date"
                                 />
                                 <has-error
                                     :form="form"
-                                    field="credits"
+                                    field="due_date"
                                 ></has-error>
                             </div>
                             <div class="form-group">
-                                <label for="inputTeacher">Teacher:</label>
-                                <input
-                                    type="text"
-                                    v-model="form.teacher"
-                                    name="teacher"
-                                    id="inputTeacher"
+                                <label for="inputDetails">Details:</label>
+                                <textarea
+                                    v-model="form.details"
+                                    name="details"
+                                    id="inputDetails"
                                     placeholder=""
                                     class="form-control"
                                     :class="{
-                                        'is-invalid': form.errors.has('teacher')
+                                        'is-invalid': form.errors.has('details')
                                     }"
-                                />
+                                ></textarea>
                                 <has-error
                                     :form="form"
-                                    field="teacher"
+                                    field="details"
                                 ></has-error>
                             </div>
                         </div>
@@ -188,45 +192,46 @@ export default {
     data() {
         return {
             editMode: false,
-            url: "api/course/",
+            url: "api/assignment/",
             data: {},
             formData: {},
             tableProps: {
                 search: "",
                 length: 10,
-                column: "course_id",
+                column: "due_date",
                 dir: "asc"
             },
             form: new Form({
                 id: "",
-                course_id: "",
+                student_id: "",
+                name: "",
                 course_name: "",
-                credits: "",
-                teacher: ""
+                due_date: "",
+                details: ""
             }),
             columns: [
                 {
-                    label: "Course ID",
-                    name: "course_id",
-                    columnName: "course_id",
+                    label: "Name",
+                    name: "name",
+                    columnName: "name",
                     orderable: true
                 },
                 {
-                    label: "Name",
+                    label: "Course Name",
                     name: "course_name",
                     columnName: "course_name",
                     orderable: true
                 },
                 {
-                    label: "Credits",
-                    name: "credits",
-                    columnName: "credits",
+                    label: "Due Date",
+                    name: "due_date",
+                    columnName: "due_date",
                     orderable: true
                 },
                 {
-                    label: "Teacher",
-                    name: "teacher",
-                    columnName: "teacher",
+                    label: "Details",
+                    name: "details",
+                    columnName: "details",
                     orderable: true
                 },
                 {
@@ -253,7 +258,7 @@ export default {
                         "btn-sm": true
                     },
                     event: "click",
-                    handler: this.deleteCourse,
+                    handler: this.deleteAssignment,
                     component: ButtonDelete
                 }
             ]
@@ -293,7 +298,7 @@ export default {
         },
 
         displayRow(data) {
-            alert(`You clicked course ${data.id}`);
+            alert(`You clicked assignment ${data.id}`);
         },
 
         createModal() {
@@ -303,7 +308,7 @@ export default {
             $("#newModal").modal("show");
         },
 
-        createCourse() {
+        createAssignment() {
             this.$Progress.start();
             this.form
                 .post(this.url)
@@ -311,7 +316,7 @@ export default {
                     $("#newModal").modal("hide");
                     Toast.fire({
                         icon: "success",
-                        title: "Course created successfully"
+                        title: "Assignment created successfully"
                     });
                     this.reloadTable();
                     this.$Progress.finish();
@@ -330,7 +335,7 @@ export default {
             this.form.fill(formData);
         },
 
-        editCourse() {
+        editAssignment() {
             this.$Progress.start();
             this.form
                 .put(this.url + this.form.id)
@@ -348,7 +353,7 @@ export default {
                 });
         },
 
-        deleteCourse() {
+        deleteAssignment() {
             Swal.fire({
                 title: "Are you sure?",
                 icon: "warning",
@@ -362,7 +367,11 @@ export default {
                         .delete(this.url + this.form.id)
                         .then(() => {
                             this.$Progress.start();
-                            Swal.fire("Deleted!", "Course deleted.", "success");
+                            Swal.fire(
+                                "Deleted!",
+                                "Assignment deleted.",
+                                "success"
+                            );
                             this.reloadTable();
                             this.$Progress.finish();
                         })

@@ -222,20 +222,20 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 </ul>
               </li>
               <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="fas fa-calendar-week nav-icon"></i>
-                  <p>
-                      Timetable
-                  </p>
-                </a>
+                <router-link to="/timetable" class="nav-link">
+                    <i class="fas fa-calendar-week nav-icon"></i>
+                    <p>
+                        Timetable
+                    </p>
+                </router-link>
               </li>
               <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="far fa-calendar-alt nav-icon"></i>
-                  <p>
-                      Calendar
-                  </p>
-                </a>
+                <router-link to="/calendar" class="nav-link">
+                    <i class="fas fa-calendar nav-icon"></i>
+                    <p>
+                        Calendar
+                    </p>
+                </router-link>
               </li>
             </ul>
           </li>
@@ -257,12 +257,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     </a>
                   </li>
                 <li class="nav-item"> --}}
-                  <a href="#" class="nav-link">
-                    <i class="fas fa-star nav-icon"></i>
-                    <p>
-                        Grades
-                    </p>
-                  </a>
+                <li class="nav-item">
+                  <router-link to="/grades" class="nav-link">
+                        <i class="fas fa-star nav-icon"></i>
+                        <p>
+                            Grades
+                        </p>
+                    </router-link>
                 </li>
                 <li class="nav-item">
                     <router-link to="/courses" class="nav-link">
@@ -273,12 +274,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         </router-link>
                   </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="fas fa-user-graduate nav-icon"></i>
-                        <p>
-                            Teachers
-                        </p>
-                    </a>
+                    <router-link to="/teachers" class="nav-link">
+                            <i class="fas fa-user-graduate nav-icon"></i>
+                            <p>
+                                Teachers
+                            </p>
+                        </router-link>
                 </li>
             </ul>
           </li>

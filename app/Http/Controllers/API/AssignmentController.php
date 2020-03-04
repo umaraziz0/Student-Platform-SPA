@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Assignment;
 use Illuminate\Http\Request;
+use JamesDordoy\LaravelVueDatatable\Http\Resources\DataTableCollectionResource;
 
 class AssignmentController extends Controller
 {
@@ -14,11 +15,18 @@ class AssignmentController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function index()
+    public function index(Request $request)
     {
-        $user = auth('api')->user();
+        $length = $request->input('length');
+        $sortBy = $request->input('column');
+        $orderBy = $request->input('dir');
+        $searchValue = $request->input('search');
 
-        return Assignment::where('student_id', $user->student_id)->latest()->paginate(10);
+        $query = Assignment::eloquentQuery($sortBy, $orderBy, $searchValue);
+
+        $data = $query->paginate($length);
+
+        return new DataTableCollectionResource($data);
     }
 
     /**

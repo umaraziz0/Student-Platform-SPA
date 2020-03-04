@@ -2669,6 +2669,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2774,15 +2775,41 @@ __webpack_require__.r(__webpack_exports__);
     displayRow: function displayRow(data) {
       alert("You clicked course ".concat(data.id));
     },
-    editModal: function editModal(data) {
+    createModal: function createModal() {
+      this.editMode = false;
+      this.form.clear();
+      this.form.reset();
+      $("#newModal").modal("show");
+    },
+    createCourse: function createCourse() {
+      var _this3 = this;
+
+      this.$Progress.start();
+      this.form.post(this.url).then(function () {
+        $("#newModal").modal("hide");
+        Toast.fire({
+          icon: "success",
+          title: "Course created successfully"
+        });
+
+        _this3.reloadTable();
+
+        _this3.$Progress.finish();
+      })["catch"](function (errors) {
+        _this3.$Progress.fail();
+
+        console.log(errors);
+      });
+    },
+    editModal: function editModal(formData) {
       this.editMode = true;
       this.form.clear();
       this.form.reset();
       $("#newModal").modal("show");
-      this.form.fill(data);
+      this.form.fill(formData);
     },
-    editCourse: function editCourse(data) {
-      var _this3 = this;
+    editCourse: function editCourse() {
+      var _this4 = this;
 
       this.$Progress.start();
       this.form.put(this.url + this.form.id).then(function () {
@@ -2792,15 +2819,15 @@ __webpack_require__.r(__webpack_exports__);
           title: "Update success"
         });
 
-        _this3.reloadTable();
+        _this4.reloadTable();
 
-        _this3.$Progress.finish();
+        _this4.$Progress.finish();
       })["catch"](function () {
-        _this3.$Progress.fail();
+        _this4.$Progress.fail();
       });
     },
-    deleteCourse: function deleteCourse(data) {
-      var _this4 = this;
+    deleteCourse: function deleteCourse() {
+      var _this5 = this;
 
       Swal.fire({
         title: "Are you sure?",
@@ -2811,16 +2838,16 @@ __webpack_require__.r(__webpack_exports__);
         confirmButtonText: "Yes, delete it!"
       }).then(function (result) {
         if (result.value) {
-          axios["delete"](_this4.url + "/".concat(data.id)).then(function () {
-            _this4.$Progress.start();
+          _this5.form["delete"](_this5.url + _this5.form.id).then(function () {
+            _this5.$Progress.start();
 
             Swal.fire("Deleted!", "Course deleted.", "success");
 
-            _this4.reloadTable();
+            _this5.reloadTable();
 
-            _this4.$Progress.finish();
+            _this5.$Progress.finish();
           })["catch"](function (errors) {
-            _this4.$Progress.fail();
+            _this5.$Progress.fail();
 
             Swal.fire({
               icon: "error",
@@ -71304,7 +71331,12 @@ var render = function() {
                             "button",
                             {
                               staticClass: "btn btn-block btn-success",
-                              attrs: { type: "button" }
+                              attrs: { type: "button" },
+                              on: {
+                                click: function($event) {
+                                  return _vm.createModal()
+                                }
+                              }
                             },
                             [
                               _c("i", { staticClass: "fas fa-plus" }),

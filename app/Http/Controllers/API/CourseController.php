@@ -36,7 +36,18 @@ class CourseController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'course_id' => 'required|numeric',
+            'course_name' => 'required|string',
+            'credits' => 'required|numeric',
+        ]);
+
+        return Course::create([
+            'course_id' => $request['course_id'],
+            'course_name' => $request['course_name'],
+            'credits' => $request['credits'],
+            'teacher' => $request['teacher']
+        ]);
     }
 
     /**

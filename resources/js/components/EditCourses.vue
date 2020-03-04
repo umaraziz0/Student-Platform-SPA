@@ -28,6 +28,7 @@
                                     <button
                                         type="button"
                                         class="btn btn-block btn-success"
+                                        v-on:click="createModal()"
                                     >
                                         <i class="fas fa-plus"> </i> Add Course
                                     </button>
@@ -292,15 +293,41 @@ export default {
             alert(`You clicked course ${data.id}`);
         },
 
-        editModal(data) {
+        createModal() {
+            this.editMode = false;
+            this.form.clear();
+            this.form.reset();
+            $("#newModal").modal("show");
+        },
+
+        createCourse() {
+            this.$Progress.start();
+            this.form
+                .post(this.url)
+                .then(() => {
+                    $("#newModal").modal("hide");
+                    Toast.fire({
+                        icon: "success",
+                        title: "Course created successfully"
+                    });
+                    this.reloadTable();
+                    this.$Progress.finish();
+                })
+                .catch(errors => {
+                    this.$Progress.fail();
+                    console.log(errors);
+                });
+        },
+
+        editModal(formData) {
             this.editMode = true;
             this.form.clear();
             this.form.reset();
             $("#newModal").modal("show");
-            this.form.fill(data);
+            this.form.fill(formData);
         },
 
-        editCourse(data) {
+        editCourse() {
             this.$Progress.start();
             this.form
                 .put(this.url + this.form.id)
@@ -318,7 +345,7 @@ export default {
                 });
         },
 
-        deleteCourse(data) {
+        deleteCourse() {
             Swal.fire({
                 title: "Are you sure?",
                 icon: "warning",
@@ -328,8 +355,8 @@ export default {
                 confirmButtonText: "Yes, delete it!"
             }).then(result => {
                 if (result.value) {
-                    axios
-                        .delete(this.url + `/${data.id}`)
+                    this.form
+                        .delete(this.url + this.form.id)
                         .then(() => {
                             this.$Progress.start();
                             Swal.fire("Deleted!", "Course deleted.", "success");

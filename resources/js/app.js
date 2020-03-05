@@ -88,6 +88,10 @@ let routes = [{
         component: require("./components/EditCourses.vue").default
     },
     {
+        path: "/teachers",
+        component: require("./components/Teachers.vue").default
+    },
+    {
         path: "*",
         component: require("./components/404.vue").default
     }

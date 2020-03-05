@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\TakenCourse;
 use Illuminate\Http\Request;
 use JamesDordoy\LaravelVueDatatable\Http\Resources\DataTableCollectionResource;
-use Illuminate\Support\Facades\Validator;
 
 class TakenCourseController extends Controller
 {

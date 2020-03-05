@@ -91695,7 +91695,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var laravel_vue_datatable__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(laravel_vue_datatable__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _components_ButtonEdit_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components/ButtonEdit.vue */ "./resources/js/components/ButtonEdit.vue");
 /* harmony import */ var _components_ButtonDelete_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/ButtonDelete.vue */ "./resources/js/components/ButtonDelete.vue");
-/* harmony import */ var _components_ButtonCheck_vue__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./components/ButtonCheck.vue */ "./resources/js/components/ButtonCheck.vue");
+/* harmony import */ var _components_ButtonCheck_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/ButtonCheck.vue */ "./resources/js/components/ButtonCheck.vue");
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var vform__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! vform */ "./node_modules/vform/dist/vform.common.js");
@@ -91718,7 +91718,7 @@ Vue.use(laravel_vue_datatable__WEBPACK_IMPORTED_MODULE_0___default.a);
 
 window.ButtonEdit = _components_ButtonEdit_vue__WEBPACK_IMPORTED_MODULE_1__["default"];
 window.ButtonDelete = _components_ButtonDelete_vue__WEBPACK_IMPORTED_MODULE_2__["default"];
-window.ButtonCheck = _components_ButtonCheck_vue__WEBPACK_IMPORTED_MODULE_8__["default"];
+window.ButtonCheck = _components_ButtonCheck_vue__WEBPACK_IMPORTED_MODULE_3__["default"];
 
 
 

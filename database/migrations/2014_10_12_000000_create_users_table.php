@@ -26,6 +26,9 @@ class CreateUsersTable extends Migration
             $table->text('major')->nullable();
             $table->year('year')->nullable();
             $table->unsignedBigInteger('phone')->unique()->nullable();
+            $table->string('sex')->nullable();
+            $table->date('birthdate')->nullable();
+            $table->string('birthplace')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

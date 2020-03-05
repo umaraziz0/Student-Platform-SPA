@@ -200,6 +200,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 </p>
                 </router-link>
             </li>
+            <li class="nav-item">
+                <router-link to="/editteachers" class="nav-link">
+                <i class="fas fa-user-graduate nav-icon"></i>
+                <p>
+                    Teachers
+                </p>
+                </router-link>
+            </li>
              {{-- <li class="nav-item">
                 <router-link to="/developer" class="nav-link">
                 <i class="fas fa-code nav-icon"></i>

@@ -24,7 +24,8 @@ Route::group(['middleware' => 'auth:api'], function () {
         'assignment' => 'API\AssignmentController',
         'exam' => 'API\ExamController',
         'course' => 'API\CourseController',
-        'takencourse' => 'API\TakenCourseController'
+        'takencourse' => 'API\TakenCourseController',
+        'teacher' => 'API\TeacherController'
     ]);
 });
 

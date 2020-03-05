@@ -22,8 +22,6 @@ class CreateTeachersTable extends Migration
             $table->text('office_address')->nullable();
             $table->string('office_hours')->nullable();
             $table->string('courses_taught')->nullable();
-            $table->foreign('courses_taught')->references('course_name')->on('courses')
-                ->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
         });
     }

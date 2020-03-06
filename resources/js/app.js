@@ -96,6 +96,10 @@ let routes = [{
         component: require("./components/EditTeachers.vue").default
     },
     {
+        path: "/grades",
+        component: require("./components/Grades.vue").default
+    },
+    {
         path: "*",
         component: require("./components/404.vue").default
     }

@@ -313,19 +313,29 @@
                                             class="col-sm-2 col-form-label"
                                             >Profile Picture</label
                                         >
-                                        <div class="col-sm-10">
-                                            <input
-                                                type="file"
-                                                @change="updatePhoto"
-                                                name="photo"
-                                                class="form-input"
-                                            />
-                                            <button
-                                                class="btn btn-sm btn-danger"
-                                                @click.prevent="removePhoto"
-                                            >
-                                                Remove Photo
-                                            </button>
+                                        <div class="col-sm-8">
+                                            <div class="input-group">
+                                            <div class="custom-file">
+                                                <input
+                                                    type="file"
+                                                    @change="updatePhoto"
+                                                    name="photo"
+                                                    class="form-control"
+                                                    id="photo"
+                                                />
+                                                <label
+                                                    for="photo"
+                                                    class="custom-file-label"
+                                                ></label></div>
+                                                <div class="input-group-append">
+                                                    <span
+                                                        class="input-group-text"
+                                                        style="cursor:pointer"
+                                                        @click.prevent="removePhoto"
+                                                        >Remove
+                                                    </span>
+                                                </div>
+                                                </div>
                                         </div>
                                     </div>
                                     <div class="form-group row">

@@ -3711,6 +3711,16 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -4792,6 +4802,16 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -73641,7 +73661,7 @@ var render = function() {
                                 expression: "tableData.length"
                               }
                             ],
-                            staticClass: "form-control",
+                            staticClass: "form-control custom-select",
                             on: {
                               change: function($event) {
                                 var $$selectedVal = Array.prototype.filter
@@ -74703,30 +74723,46 @@ var render = function() {
                         [_vm._v("Profile Picture")]
                       ),
                       _vm._v(" "),
-                      _c("div", { staticClass: "col-sm-10" }, [
-                        _c("input", {
-                          staticClass: "form-input",
-                          attrs: { type: "file", name: "photo" },
-                          on: { change: _vm.updatePhoto }
-                        }),
-                        _vm._v(" "),
-                        _c(
-                          "button",
-                          {
-                            staticClass: "btn btn-sm btn-danger",
-                            on: {
-                              click: function($event) {
-                                $event.preventDefault()
-                                return _vm.removePhoto($event)
-                              }
-                            }
-                          },
-                          [
-                            _vm._v(
-                              "\n                                            Remove Photo\n                                        "
+                      _c("div", { staticClass: "col-sm-8" }, [
+                        _c("div", { staticClass: "input-group" }, [
+                          _c("div", { staticClass: "custom-file" }, [
+                            _c("input", {
+                              staticClass: "form-control",
+                              attrs: {
+                                type: "file",
+                                name: "photo",
+                                id: "photo"
+                              },
+                              on: { change: _vm.updatePhoto }
+                            }),
+                            _vm._v(" "),
+                            _c("label", {
+                              staticClass: "custom-file-label",
+                              attrs: { for: "photo" }
+                            })
+                          ]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "input-group-append" }, [
+                            _c(
+                              "span",
+                              {
+                                staticClass: "input-group-text",
+                                staticStyle: { cursor: "pointer" },
+                                on: {
+                                  click: function($event) {
+                                    $event.preventDefault()
+                                    return _vm.removePhoto($event)
+                                  }
+                                }
+                              },
+                              [
+                                _vm._v(
+                                  "Remove\n                                                "
+                                )
+                              ]
                             )
-                          ]
-                        )
+                          ])
+                        ])
                       ])
                     ]),
                     _vm._v(" "),
@@ -74819,7 +74855,7 @@ var render = function() {
                                 expression: "tableData.length"
                               }
                             ],
-                            staticClass: "form-control",
+                            staticClass: "form-control custom-select",
                             on: {
                               change: function($event) {
                                 var $$selectedVal = Array.prototype.filter
@@ -76715,30 +76751,46 @@ var render = function() {
                         [_vm._v("Profile Picture")]
                       ),
                       _vm._v(" "),
-                      _c("div", { staticClass: "col-sm-10" }, [
-                        _c("input", {
-                          staticClass: "form-input",
-                          attrs: { type: "file", name: "photo" },
-                          on: { change: _vm.updatePhoto }
-                        }),
-                        _vm._v(" "),
-                        _c(
-                          "button",
-                          {
-                            staticClass: "btn btn-sm btn-danger",
-                            on: {
-                              click: function($event) {
-                                $event.preventDefault()
-                                return _vm.removePhoto($event)
-                              }
-                            }
-                          },
-                          [
-                            _vm._v(
-                              "\n                                            Remove Photo\n                                        "
+                      _c("div", { staticClass: "col-sm-8" }, [
+                        _c("div", { staticClass: "input-group" }, [
+                          _c("div", { staticClass: "custom-file" }, [
+                            _c("input", {
+                              staticClass: "form-control",
+                              attrs: {
+                                type: "file",
+                                name: "photo",
+                                id: "photo"
+                              },
+                              on: { change: _vm.updatePhoto }
+                            }),
+                            _vm._v(" "),
+                            _c("label", {
+                              staticClass: "custom-file-label",
+                              attrs: { for: "photo" }
+                            })
+                          ]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "input-group-append" }, [
+                            _c(
+                              "span",
+                              {
+                                staticClass: "input-group-text",
+                                staticStyle: { cursor: "pointer" },
+                                on: {
+                                  click: function($event) {
+                                    $event.preventDefault()
+                                    return _vm.removePhoto($event)
+                                  }
+                                }
+                              },
+                              [
+                                _vm._v(
+                                  "Remove\n                                                "
+                                )
+                              ]
                             )
-                          ]
-                        )
+                          ])
+                        ])
                       ])
                     ]),
                     _vm._v(" "),

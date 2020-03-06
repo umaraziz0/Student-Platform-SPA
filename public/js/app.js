@@ -3721,6 +3721,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -5361,28 +5364,47 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       editMode: false,
       url: "api/teacher/",
-      urlTaken: "api/takenteacher/",
+      url2: "api/teachers",
       data: {},
-      dataTaken: {},
       formData: {},
+      studentId: "",
       tableProps: {
         search: "",
         length: 10,
         column: "teacher_id",
         dir: "asc"
       },
-      form: new Form({
-        id: "",
-        teacher_id: "",
-        name: "",
-        credits: "",
-        teacher: ""
-      }),
       columns: [{
         label: "Teacher ID",
         name: "teacher_id",
@@ -5422,12 +5444,12 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   created: function created() {
-    this.getData(this.url);
-    this.getDataTaken(this.urlTaken);
-    this.getForm(this.url);
+    this.getId(); //this.getData(this.url);
+
+    this.getTeachers();
   },
   components: {
-    ButtonCheck: ButtonCheck,
+    ButtonEdit: ButtonEdit,
     ButtonDelete: ButtonDelete
   },
   methods: {
@@ -5436,6 +5458,7 @@ __webpack_require__.r(__webpack_exports__);
 
       var url = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.url;
       var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.tableProps;
+      var studentId = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : this.studentId;
       axios.get(url, {
         params: options
       }).then(function (response) {
@@ -5444,143 +5467,33 @@ __webpack_require__.r(__webpack_exports__);
       ["catch"](function (errors) {//Handle Errors
       });
     },
-    getDataTaken: function getDataTaken() {
+    getTeachers: function getTeachers() {
       var _this2 = this;
 
-      var urlTaken = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.urlTaken;
+      var url = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.url2;
       var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.tableProps;
-      axios.get(urlTaken, {
+      var studentId = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : this.studentId;
+      axios.get(url, {
         params: options
       }).then(function (response) {
-        _this2.dataTaken = response.data;
+        _this2.data = response.data;
       }) // eslint-disable-next-line
       ["catch"](function (errors) {//Handle Errors
       });
     },
-    getForm: function getForm() {
+    getId: function getId() {
       var _this3 = this;
 
-      var url = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.url;
-      axios.get(url).then(function (_ref) {
+      axios.get("api/studentid").then(function (_ref) {
         var data = _ref.data;
-        return _this3.formData = data.data;
+        return _this3.studentId = data;
       });
     },
     reloadTable: function reloadTable(tableProps) {
       this.getData(this.url, tableProps);
-      this.getDataTaken(this.urlTaken, tableProps);
     },
     displayRow: function displayRow(data) {
       alert("You clicked teacher ".concat(data.id));
-    },
-    createModal: function createModal() {
-      this.editMode = false;
-      this.form.clear();
-      this.form.reset();
-      $("#newModal").modal("show");
-    },
-    createTeacher: function createTeacher() {
-      var _this4 = this;
-
-      this.$Progress.start();
-      this.form.post(this.url).then(function () {
-        $("#newModal").modal("hide");
-        Toast.fire({
-          icon: "success",
-          title: "Teacher created successfully"
-        });
-
-        _this4.reloadTable();
-
-        _this4.$Progress.finish();
-      })["catch"](function (errors) {
-        _this4.$Progress.fail();
-
-        console.log(errors);
-      });
-    },
-    editModal: function editModal(formData) {
-      this.editMode = true;
-      this.form.clear();
-      this.form.reset();
-      $("#newModal").modal("show");
-      this.form.fill(formData);
-    },
-    editTeacher: function editTeacher() {
-      var _this5 = this;
-
-      this.$Progress.start();
-      this.form.put(this.url + this.form.id).then(function () {
-        $("#newModal").modal("hide");
-        Toast.fire({
-          icon: "success",
-          title: "Update success"
-        });
-
-        _this5.reloadTable();
-
-        _this5.$Progress.finish();
-      })["catch"](function () {
-        _this5.$Progress.fail();
-      });
-    },
-    takeTeacher: function takeTeacher(formData) {
-      var _this6 = this;
-
-      this.form.fill(formData);
-      this.form.post(this.urlTaken).then(function () {
-        _this6.$Progress.start();
-
-        Swal.fire({
-          icon: "success",
-          title: "Teacher taken."
-        });
-
-        _this6.reloadTable();
-
-        _this6.$Progress.finish();
-      })["catch"](function (errors) {
-        _this6.$Progress.fail();
-
-        Swal.fire({
-          icon: "error",
-          title: "An error occurred.",
-          text: "Teacher has already been taken."
-        });
-        console.log(errors);
-      });
-    },
-    deleteTeacher: function deleteTeacher(dataTaken) {
-      var _this7 = this;
-
-      Swal.fire({
-        title: "Are you sure?",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, delete it!"
-      }).then(function (result) {
-        if (result.value) {
-          _this7.form["delete"](_this7.urlTaken + "".concat(dataTaken.id)).then(function () {
-            _this7.$Progress.start();
-
-            Swal.fire("Deleted!", "Teacher deleted.", "success");
-
-            _this7.reloadTable();
-
-            _this7.$Progress.finish();
-          })["catch"](function (errors) {
-            _this7.$Progress.fail();
-
-            Swal.fire({
-              icon: "error",
-              title: "An error occurred.",
-              text: "".concat(errors)
-            });
-          });
-        }
-      });
     }
   }
 });
@@ -74068,7 +73981,11 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "container" }, [
     _c("div", { staticClass: "row justify-content-center" }, [
-      _c("div", { staticClass: "col-md-10 text-center mb-3" }, [
+      _c("div", { staticClass: "col-md-10 text-center" }, [
+        _c("h2", [_vm._v(_vm._s(_vm.form.name))])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-md-8 text-center mb-3" }, [
         _c("img", {
           staticClass: "profile-user-img img-fluid img-circle",
           staticStyle: { width: "10em" },
@@ -74077,7 +73994,7 @@ var render = function() {
         })
       ]),
       _vm._v(" "),
-      _c("div", { staticClass: "col-md-10" }, [
+      _c("div", { staticClass: "col-md-8" }, [
         _c("div", { staticClass: "card" }, [
           _c("div", { staticClass: "card-header p-2 pl-3" }, [
             _vm._v("Edit Profile")
@@ -74723,7 +74640,7 @@ var render = function() {
                         [_vm._v("Profile Picture")]
                       ),
                       _vm._v(" "),
-                      _c("div", { staticClass: "col-sm-8" }, [
+                      _c("div", { staticClass: "col-sm-10" }, [
                         _c("div", { staticClass: "input-group" }, [
                           _c("div", { staticClass: "custom-file" }, [
                             _c("input", {
@@ -74918,7 +74835,7 @@ var render = function() {
                               expression: "tableData.search"
                             }
                           ],
-                          staticClass: "form-control",
+                          staticClass: "form-control custom-select",
                           attrs: { name: "name", placeholder: "Search Table" },
                           domProps: { value: tableData.search },
                           on: {
@@ -76852,15 +76769,97 @@ var render = function() {
     _c("div", { staticClass: "row justify-content-center" }, [
       _c(
         "div",
-        { staticClass: "col-md-10" },
+        { staticClass: "col-md-12" },
         [
           _c("h2", { staticClass: "text-center" }, [_vm._v("Teachers List")]),
           _vm._v(" "),
           _c("hr"),
           _vm._v(" "),
+          _c("br"),
+          _vm._v(" "),
           _c("data-table", {
             attrs: { data: _vm.data, columns: _vm.columns },
-            on: { onTablePropsChanged: _vm.reloadTable }
+            on: { onTablePropsChanged: _vm.reloadTable },
+            scopedSlots: _vm._u([
+              {
+                key: "filters",
+                fn: function(ref) {
+                  var tableData = ref.tableData
+                  var perPage = ref.perPage
+                  return _c("div", {}, [
+                    _c("div", { staticClass: "row mb-2" }, [
+                      _c("div", { staticClass: "col-md-4" }, [
+                        _c(
+                          "select",
+                          {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: tableData.length,
+                                expression: "tableData.length"
+                              }
+                            ],
+                            staticClass: "form-control custom-select",
+                            on: {
+                              change: function($event) {
+                                var $$selectedVal = Array.prototype.filter
+                                  .call($event.target.options, function(o) {
+                                    return o.selected
+                                  })
+                                  .map(function(o) {
+                                    var val = "_value" in o ? o._value : o.value
+                                    return val
+                                  })
+                                _vm.$set(
+                                  tableData,
+                                  "length",
+                                  $event.target.multiple
+                                    ? $$selectedVal
+                                    : $$selectedVal[0]
+                                )
+                              }
+                            }
+                          },
+                          _vm._l(perPage, function(page) {
+                            return _c("option", { key: page }, [
+                              _vm._v(_vm._s(page))
+                            ])
+                          }),
+                          0
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-md-4 text-center" }),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-md-4" }, [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: tableData.search,
+                              expression: "tableData.search"
+                            }
+                          ],
+                          staticClass: "form-control",
+                          attrs: { name: "name", placeholder: "Search Table" },
+                          domProps: { value: tableData.search },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(tableData, "search", $event.target.value)
+                            }
+                          }
+                        })
+                      ])
+                    ])
+                  ])
+                }
+              }
+            ])
           })
         ],
         1

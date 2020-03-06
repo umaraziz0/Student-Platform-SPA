@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Teacher;
+use App\TakenCourse;
 use Illuminate\Http\Request;
 use JamesDordoy\LaravelVueDatatable\Http\Resources\DataTableCollectionResource;
 
@@ -16,8 +17,6 @@ class TeacherController extends Controller
      */
     public function index(Request $request)
     {
-        $user = auth('api')->user();
-
         $length = $request->input('length');
         $sortBy = $request->input('column');
         $orderBy = $request->input('dir');
@@ -62,9 +61,27 @@ class TeacherController extends Controller
      * @param  \App\Teacher  $teacher
      * @return \Illuminate\Http\Response
      */
-    public function show(Teacher $teacher)
+    public function show(Request $request)
     {
         //
+    }
+
+    public function getTeachers(Request $request)
+    {
+        $length = $request->input('length');
+        $sortBy = $request->input('column');
+        $orderBy = $request->input('dir');
+        $searchValue = $request->input('search');
+
+        $query = Teacher::join('taken_courses', function ($join) {
+            $join->on('teachers.name', '=', 'taken_courses.teacher')
+                ->where('taken_courses.student_id', '=', 1);
+        })
+            ->eloquentQuery($sortBy, $orderBy, $searchValue);
+
+        $data = $query->paginate($length);
+
+        return new DataTableCollectionResource($data);
     }
 
     /**

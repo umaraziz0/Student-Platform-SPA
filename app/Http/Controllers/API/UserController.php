@@ -19,6 +19,13 @@ class UserController extends Controller
         return User::latest()->paginate(10);
     }
 
+    public function getId()
+    {
+        $studentid = auth('api')->user()->student_id;
+
+        return $studentid;
+    }
+
     /**
      * Store a newly created resource in storage.
      *

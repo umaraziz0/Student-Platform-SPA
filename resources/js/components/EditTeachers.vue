@@ -38,7 +38,7 @@
                             <div class="col-md-4">
                                 <input
                                     name="name"
-                                    class="form-control"
+                                    class="form-control custom-select"
                                     v-model="tableData.search"
                                     placeholder="Search Table"
                                 />

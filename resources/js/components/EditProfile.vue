@@ -1,7 +1,10 @@
 <template>
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-10 text-center mb-3">
+            <div class="col-md-10 text-center">
+                <h2>{{ form.name }}</h2>
+            </div>
+            <div class="col-md-8 text-center mb-3">
                 <img
                     class="profile-user-img img-fluid img-circle"
                     :src="getPhoto()"
@@ -9,7 +12,7 @@
                     style="width: 10em"
                 />
             </div>
-            <div class="col-md-10">
+            <div class="col-md-8">
                 <div class="card">
                     <div class="card-header p-2 pl-3">Edit Profile</div>
                     <!-- /.card-header -->
@@ -313,7 +316,7 @@
                                             class="col-sm-2 col-form-label"
                                             >Profile Picture</label
                                         >
-                                        <div class="col-sm-8">
+                                        <div class="col-sm-10">
                                             <div class="input-group">
                                             <div class="custom-file">
                                                 <input

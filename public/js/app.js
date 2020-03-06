@@ -5394,8 +5394,7 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       editMode: false,
-      url: "api/teacher/",
-      url2: "api/teachers",
+      url: "api/teachers",
       data: {},
       formData: {},
       studentId: "",
@@ -5444,8 +5443,6 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   created: function created() {
-    this.getId(); //this.getData(this.url);
-
     this.getTeachers();
   },
   components: {
@@ -5453,7 +5450,7 @@ __webpack_require__.r(__webpack_exports__);
     ButtonDelete: ButtonDelete
   },
   methods: {
-    getData: function getData() {
+    getTeachers: function getTeachers() {
       var _this = this;
 
       var url = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.url;
@@ -5465,28 +5462,6 @@ __webpack_require__.r(__webpack_exports__);
         _this.data = response.data;
       }) // eslint-disable-next-line
       ["catch"](function (errors) {//Handle Errors
-      });
-    },
-    getTeachers: function getTeachers() {
-      var _this2 = this;
-
-      var url = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.url2;
-      var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.tableProps;
-      var studentId = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : this.studentId;
-      axios.get(url, {
-        params: options
-      }).then(function (response) {
-        _this2.data = response.data;
-      }) // eslint-disable-next-line
-      ["catch"](function (errors) {//Handle Errors
-      });
-    },
-    getId: function getId() {
-      var _this3 = this;
-
-      axios.get("api/studentid").then(function (_ref) {
-        var data = _ref.data;
-        return _this3.studentId = data;
       });
     },
     reloadTable: function reloadTable(tableProps) {

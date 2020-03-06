@@ -4,7 +4,6 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Teacher;
-use App\TakenCourse;
 use Illuminate\Http\Request;
 use JamesDordoy\LaravelVueDatatable\Http\Resources\DataTableCollectionResource;
 
@@ -74,8 +73,9 @@ class TeacherController extends Controller
         $searchValue = $request->input('search');
 
         $query = Teacher::join('taken_courses', function ($join) {
+            $user = auth('api')->user()->id;
             $join->on('teachers.name', '=', 'taken_courses.teacher')
-                ->where('taken_courses.student_id', '=', 1);
+                ->where('taken_courses.student_id', '=', $user);
         })
             ->eloquentQuery($sortBy, $orderBy, $searchValue);
 

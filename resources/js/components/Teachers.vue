@@ -46,8 +46,7 @@ export default {
     data() {
         return {
             editMode: false,
-            url: "api/teacher/",
-            url2: "api/teachers",
+            url: "api/teachers",
             data: {},
             formData: {},
             studentId: "",
@@ -104,8 +103,6 @@ export default {
         };
     },
     created() {
-        this.getId();
-        //this.getData(this.url);
         this.getTeachers();
     },
 
@@ -115,7 +112,7 @@ export default {
     },
 
     methods: {
-        getData(
+        getTeachers(
             url = this.url,
             options = this.tableProps,
             studentId = this.studentId
@@ -131,30 +128,6 @@ export default {
                 .catch(errors => {
                     //Handle Errors
                 });
-        },
-
-        getTeachers(
-            url = this.url2,
-            options = this.tableProps,
-            studentId = this.studentId
-        ) {
-            axios
-                .get(url, {
-                    params: options
-                })
-                .then(response => {
-                    this.data = response.data;
-                })
-                // eslint-disable-next-line
-                .catch(errors => {
-                    //Handle Errors
-                });
-        },
-
-        getId() {
-            axios
-                .get("api/studentid")
-                .then(({ data }) => (this.studentId = data));
         },
 
         reloadTable(tableProps) {

@@ -263,6 +263,7 @@ export default {
             form: new Form({
                 id: "",
                 teacher_id: "",
+                photo: "",
                 name: "",
                 phone: "",
                 email: "",

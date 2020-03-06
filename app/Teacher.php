@@ -10,7 +10,7 @@ class Teacher extends Model
     use LaravelVueDatatableTrait;
     //
     protected $fillable = [
-        'teacher_id', 'name', 'phone', 'email', 'office_address', 'office_hours', 'courses_taught'
+        'teacher_id', 'photo', 'name', 'phone', 'email', 'office_address', 'office_hours', 'courses_taught'
     ];
 
     protected $dataTableColumns = [
@@ -19,6 +19,9 @@ class Teacher extends Model
         ],
         'teacher_id' => [
             'searchable' => true,
+        ],
+        'photo' => [
+            'searchable' => false,
         ],
         'name' => [
             'searchable' => true,

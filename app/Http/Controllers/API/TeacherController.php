@@ -81,7 +81,7 @@ class TeacherController extends Controller
         $this->validate($request, [
             'teacher_id' => 'required|numeric|unique:teachers,teacher_id,' . $teacher->id,
             'name' => 'required|string|unique:teachers,name,' . $teacher->id,
-            'phone' => 'nullable|numeric|unique:teachers,phone,' . $teacher->id,
+            'phone' => 'nullable|numeric|digits_between:1,15|unique:teachers,phone,' . $teacher->id,
             'email' => 'nullable|email|unique:teachers,email,' . $teacher->id
         ]);
 

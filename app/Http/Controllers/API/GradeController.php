@@ -19,6 +19,31 @@ class GradeController extends Controller
         //
     }
 
+    public function getGrades(Request $request)
+    {
+        // require course_name column from courses table
+
+        $length = $request->input('length');
+        $sortBy = $request->input('column');
+        $orderBy = $request->input('dir');
+        $searchValue = $request->input('search');
+        $courseName = [
+            "course",
+        ];
+
+
+        $query = Grade::join('courses as c', function ($join) {
+            $user = auth('api')->user();
+            $join->on('grades.course_id', '=', 'c.course_id')
+                ->where('grades.student_id', '=', $user->id);
+        })
+            ->eloquentQuery($sortBy, $orderBy, $searchValue);
+
+        $data = $query->paginate($length);
+
+        return new DataTableCollectionResource($data);
+    }
+
     /**
      * Store a newly created resource in storage.
      *

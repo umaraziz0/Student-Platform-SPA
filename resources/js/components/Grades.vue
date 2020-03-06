@@ -1,45 +1,8 @@
 <template>
     <div class="container">
         <div class="row justify-content-center">
-            <!-- <div class="col-md-3">
-                <div class="card card-primary card-outline">
-                    <div class="card-body box-profile">
-                        <div class="text-center">
-                            <img
-                                class="profile-user-img img-fluid img-circle"
-                                src="/img/profile/default.png"
-                            />
-                        </div>
-
-                        <h3 class="profile-username text-center">
-                            Mohamad Aziz
-                        </h3>
-
-                        <p class="text-muted text-center">
-                            Associate Professor
-                        </p>
-
-                        <ul class="list-group list-group-unbordered mb-3">
-                            <li class="list-group-item">
-                                <b>Phone</b>
-                                <a class="float-right">1,322</a>
-                            </li>
-                            <li class="list-group-item">
-                                <b>Email</b> <a class="float-right">543</a>
-                            </li>
-                            <li class="list-group-item">
-                                <b>Courses</b>
-                                <a class="float-right"
-                                    >Algorithms, Data Structures</a
-                                >
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div> -->
-            <!-- card -->
-            <div class="col-md-12">
-                <h2 class="text-center">Teachers List</h2>
+            <div class="col-md-10">
+                <h2 class="text-center">Grades List</h2>
                 <hr />
                 <br />
                 <data-table
@@ -82,66 +45,38 @@
 export default {
     data() {
         return {
-            editMode: false,
-            url: "api/teachers",
+            url: "api/grades",
             data: {},
-            formData: {},
-            title: "",
-            photo: "",
             tableProps: {
                 search: "",
                 length: 10,
-                column: "teacher_id",
+                column: "course_id",
                 dir: "asc"
             },
             columns: [
                 {
-                    label: "Teacher ID",
-                    name: "teacher_id",
-                    columnName: "teacher_id",
+                    label: "Course ID",
+                    name: "course_id",
+                    columnName: "course_id",
                     orderable: true
                 },
                 {
-                    label: "Name",
-                    name: "name",
-                    columnName: "name",
+                    label: "Course Name:",
+                    name: "course_name",
+                    columnName: "course_name",
                     orderable: true
                 },
                 {
-                    label: "Phone",
-                    name: "phone",
-                    columnName: "phone",
-                    orderable: true
-                },
-                {
-                    label: "Email",
-                    name: "email",
-                    columnName: "email",
-                    orderable: true
-                },
-                {
-                    label: "Office Address",
-                    name: "office_address",
-                    columnName: "office_address",
-                    orderable: true
-                },
-                {
-                    label: "Office Hours",
-                    name: "office_hours",
-                    columnName: "office_hours",
-                    orderable: true
-                },
-                {
-                    label: "Courses Taught",
-                    name: "courses_taught",
-                    columnName: "courses_taught",
+                    label: "Grade",
+                    name: "grade",
+                    columnName: "grade",
                     orderable: true
                 }
             ]
         };
     },
     created() {
-        this.getTeachers();
+        this.getGrades();
     },
 
     components: {
@@ -150,11 +85,7 @@ export default {
     },
 
     methods: {
-        getTeachers(
-            url = this.url,
-            options = this.tableProps,
-            studentId = this.studentId
-        ) {
+        getGrades(url = this.url, options = this.tableProps) {
             axios
                 .get(url, {
                     params: options
@@ -170,10 +101,6 @@ export default {
 
         reloadTable(tableProps) {
             this.getData(this.url, tableProps);
-        },
-
-        displayRow(data) {
-            alert(`You clicked teacher ${data.id}`);
         }
     }
 };

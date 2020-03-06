@@ -2642,6 +2642,54 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2969,7 +3017,6 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-//
 //
 //
 //
@@ -4848,110 +4895,48 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      editMode: false,
-      url: "api/teachers",
+      url: "api/grades",
       data: {},
-      formData: {},
-      title: "",
-      photo: "",
       tableProps: {
         search: "",
         length: 10,
-        column: "teacher_id",
+        column: "course_id",
         dir: "asc"
       },
       columns: [{
-        label: "Teacher ID",
-        name: "teacher_id",
-        columnName: "teacher_id",
+        label: "Course ID",
+        name: "course_id",
+        columnName: "course_id",
         orderable: true
       }, {
-        label: "Name",
-        name: "name",
-        columnName: "name",
+        label: "Course Name:",
+        name: "course_name",
+        columnName: "course_name",
         orderable: true
       }, {
-        label: "Phone",
-        name: "phone",
-        columnName: "phone",
-        orderable: true
-      }, {
-        label: "Email",
-        name: "email",
-        columnName: "email",
-        orderable: true
-      }, {
-        label: "Office Address",
-        name: "office_address",
-        columnName: "office_address",
-        orderable: true
-      }, {
-        label: "Office Hours",
-        name: "office_hours",
-        columnName: "office_hours",
-        orderable: true
-      }, {
-        label: "Courses Taught",
-        name: "courses_taught",
-        columnName: "courses_taught",
+        label: "Grade",
+        name: "grade",
+        columnName: "grade",
         orderable: true
       }]
     };
   },
   created: function created() {
-    this.getTeachers();
+    this.getGrades();
   },
   components: {
     ButtonEdit: ButtonEdit,
     ButtonDelete: ButtonDelete
   },
   methods: {
-    getTeachers: function getTeachers() {
+    getGrades: function getGrades() {
       var _this = this;
 
       var url = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.url;
       var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.tableProps;
-      var studentId = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : this.studentId;
       axios.get(url, {
         params: options
       }).then(function (response) {
@@ -4962,9 +4947,6 @@ __webpack_require__.r(__webpack_exports__);
     },
     reloadTable: function reloadTable(tableProps) {
       this.getData(this.url, tableProps);
-    },
-    displayRow: function displayRow(data) {
-      alert("You clicked teacher ".concat(data.id));
     }
   }
 });
@@ -5668,7 +5650,6 @@ __webpack_require__.r(__webpack_exports__);
 
       var url = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.url;
       var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.tableProps;
-      var studentId = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : this.studentId;
       axios.get(url, {
         params: options
       }).then(function (response) {
@@ -5679,9 +5660,6 @@ __webpack_require__.r(__webpack_exports__);
     },
     reloadTable: function reloadTable(tableProps) {
       this.getData(this.url, tableProps);
-    },
-    displayRow: function displayRow(data) {
-      alert("You clicked teacher ".concat(data.id));
     }
   }
 });
@@ -72766,7 +72744,7 @@ var render = function() {
                                 expression: "tableData.length"
                               }
                             ],
-                            staticClass: "form-control",
+                            staticClass: "form-control custom-select",
                             on: {
                               change: function($event) {
                                 var $$selectedVal = Array.prototype.filter
@@ -73300,7 +73278,87 @@ var render = function() {
           _vm._v(" "),
           _c("data-table", {
             attrs: { data: _vm.dataTaken, columns: _vm.columnsTaken },
-            on: { onTablePropsChanged: _vm.reloadTable }
+            on: { onTablePropsChanged: _vm.reloadTable },
+            scopedSlots: _vm._u([
+              {
+                key: "filters",
+                fn: function(ref) {
+                  var tableData = ref.tableData
+                  var perPage = ref.perPage
+                  return _c("div", {}, [
+                    _c("div", { staticClass: "row mb-2" }, [
+                      _c("div", { staticClass: "col-md-4" }, [
+                        _c(
+                          "select",
+                          {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: tableData.length,
+                                expression: "tableData.length"
+                              }
+                            ],
+                            staticClass: "form-control custom-select",
+                            on: {
+                              change: function($event) {
+                                var $$selectedVal = Array.prototype.filter
+                                  .call($event.target.options, function(o) {
+                                    return o.selected
+                                  })
+                                  .map(function(o) {
+                                    var val = "_value" in o ? o._value : o.value
+                                    return val
+                                  })
+                                _vm.$set(
+                                  tableData,
+                                  "length",
+                                  $event.target.multiple
+                                    ? $$selectedVal
+                                    : $$selectedVal[0]
+                                )
+                              }
+                            }
+                          },
+                          _vm._l(perPage, function(page) {
+                            return _c("option", { key: page }, [
+                              _vm._v(_vm._s(page))
+                            ])
+                          }),
+                          0
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-md-4 text-center" }),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-md-4" }, [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: tableData.search,
+                              expression: "tableData.search"
+                            }
+                          ],
+                          staticClass: "form-control",
+                          attrs: { name: "name", placeholder: "Search Table" },
+                          domProps: { value: tableData.search },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(tableData, "search", $event.target.value)
+                            }
+                          }
+                        })
+                      ])
+                    ])
+                  ])
+                }
+              }
+            ])
           })
         ],
         1
@@ -73316,7 +73374,87 @@ var render = function() {
           _vm._v(" "),
           _c("data-table", {
             attrs: { data: _vm.data, columns: _vm.columns },
-            on: { onTablePropsChanged: _vm.reloadTable }
+            on: { onTablePropsChanged: _vm.reloadTable },
+            scopedSlots: _vm._u([
+              {
+                key: "filters",
+                fn: function(ref) {
+                  var tableData = ref.tableData
+                  var perPage = ref.perPage
+                  return _c("div", {}, [
+                    _c("div", { staticClass: "row mb-2" }, [
+                      _c("div", { staticClass: "col-md-4" }, [
+                        _c(
+                          "select",
+                          {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: tableData.length,
+                                expression: "tableData.length"
+                              }
+                            ],
+                            staticClass: "form-control custom-select",
+                            on: {
+                              change: function($event) {
+                                var $$selectedVal = Array.prototype.filter
+                                  .call($event.target.options, function(o) {
+                                    return o.selected
+                                  })
+                                  .map(function(o) {
+                                    var val = "_value" in o ? o._value : o.value
+                                    return val
+                                  })
+                                _vm.$set(
+                                  tableData,
+                                  "length",
+                                  $event.target.multiple
+                                    ? $$selectedVal
+                                    : $$selectedVal[0]
+                                )
+                              }
+                            }
+                          },
+                          _vm._l(perPage, function(page) {
+                            return _c("option", { key: page }, [
+                              _vm._v(_vm._s(page))
+                            ])
+                          }),
+                          0
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-md-4 text-center" }),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-md-4" }, [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: tableData.search,
+                              expression: "tableData.search"
+                            }
+                          ],
+                          staticClass: "form-control",
+                          attrs: { name: "name", placeholder: "Search Table" },
+                          domProps: { value: tableData.search },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(tableData, "search", $event.target.value)
+                            }
+                          }
+                        })
+                      ])
+                    ])
+                  ])
+                }
+              }
+            ])
           })
         ],
         1
@@ -75589,7 +75727,7 @@ var render = function() {
                                 expression: "tableData.length"
                               }
                             ],
-                            staticClass: "form-control",
+                            staticClass: "form-control custom-select",
                             on: {
                               change: function($event) {
                                 var $$selectedVal = Array.prototype.filter
@@ -76130,9 +76268,9 @@ var render = function() {
     _c("div", { staticClass: "row justify-content-center" }, [
       _c(
         "div",
-        { staticClass: "col-md-12" },
+        { staticClass: "col-md-10" },
         [
-          _c("h2", { staticClass: "text-center" }, [_vm._v("Teachers List")]),
+          _c("h2", { staticClass: "text-center" }, [_vm._v("Grades List")]),
           _vm._v(" "),
           _c("hr"),
           _vm._v(" "),

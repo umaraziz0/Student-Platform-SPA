@@ -9,8 +9,7 @@
                     :data="data"
                     :columns="columns"
                     @onTablePropsChanged="reloadTable"
-                >
-                    <div slot="filters" slot-scope="{ tableData, perPage }">
+                    ><div slot="filters" slot-scope="{ tableData, perPage }">
                         <div class="row mb-2">
                             <div class="col-md-4">
                                 <select

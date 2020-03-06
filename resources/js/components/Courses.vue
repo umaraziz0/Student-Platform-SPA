@@ -8,7 +8,31 @@
                     :data="dataTaken"
                     :columns="columnsTaken"
                     @onTablePropsChanged="reloadTable"
-                >
+                    ><div slot="filters" slot-scope="{ tableData, perPage }">
+                        <div class="row mb-2">
+                            <div class="col-md-4">
+                                <select
+                                    class="form-control custom-select"
+                                    v-model="tableData.length"
+                                >
+                                    <option
+                                        :key="page"
+                                        v-for="page in perPage"
+                                        >{{ page }}</option
+                                    >
+                                </select>
+                            </div>
+                            <div class="col-md-4 text-center"></div>
+                            <div class="col-md-4">
+                                <input
+                                    name="name"
+                                    class="form-control"
+                                    v-model="tableData.search"
+                                    placeholder="Search Table"
+                                />
+                            </div>
+                        </div>
+                    </div>
                 </data-table>
             </div>
             <div class="col-md-10">
@@ -18,7 +42,31 @@
                     :data="data"
                     :columns="columns"
                     @onTablePropsChanged="reloadTable"
-                >
+                    ><div slot="filters" slot-scope="{ tableData, perPage }">
+                        <div class="row mb-2">
+                            <div class="col-md-4">
+                                <select
+                                    class="form-control custom-select"
+                                    v-model="tableData.length"
+                                >
+                                    <option
+                                        :key="page"
+                                        v-for="page in perPage"
+                                        >{{ page }}</option
+                                    >
+                                </select>
+                            </div>
+                            <div class="col-md-4 text-center"></div>
+                            <div class="col-md-4">
+                                <input
+                                    name="name"
+                                    class="form-control"
+                                    v-model="tableData.search"
+                                    placeholder="Search Table"
+                                />
+                            </div>
+                        </div>
+                    </div>
                 </data-table>
             </div>
         </div>

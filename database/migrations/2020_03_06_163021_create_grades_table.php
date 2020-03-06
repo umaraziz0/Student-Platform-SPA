@@ -21,7 +21,7 @@ class CreateGradesTable extends Migration
             $table->integer('course_id');
             $table->foreign('course_id')->references('course_id')->on('courses')
                 ->onUpdate('cascade')->onDelete('cascade');
-            $table->decimal('grade', 3, 2)->nullable();
+            $table->decimal('grade', 5, 2)->nullable();
             $table->timestamps();
         });
     }

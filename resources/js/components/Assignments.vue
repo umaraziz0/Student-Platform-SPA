@@ -14,7 +14,7 @@
                         <div class="row mb-2">
                             <div class="col-md-4">
                                 <select
-                                    class="form-control"
+                                    class="form-control custom-select"
                                     v-model="tableData.length"
                                 >
                                     <option

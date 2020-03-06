@@ -32,10 +32,14 @@ Route::group(['middleware' => 'auth:api'], function () {
 
 // Route::apiResource('user', 'API\UserController');
 
-//define new routes for new methods
-Route::get('profile', 'API\UserController@profile');
-Route::put('profile', 'API\UserController@updateProfile');
-Route::delete('removePhoto', 'API\UserController@removePhoto');
-Route::get('studentid', 'API\UserController@getId');
+Route::group(['middleware' => 'auth:api'], function () {
+    //define new routes for new methods
+    Route::get('profile', 'API\UserController@profile');
+    Route::put('profile', 'API\UserController@updateProfile');
+    Route::delete('removePhoto', 'API\UserController@removePhoto');
+    Route::get('studentid', 'API\UserController@getId');
 
-Route::get('teachers', 'API\TeacherController@getTeachers');
+    // routes for getting single user info
+    Route::get('teachers', 'API\TeacherController@getTeachers');
+    Route::get('grades', 'API\GradeController@getGrades');
+});

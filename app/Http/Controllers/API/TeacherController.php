@@ -67,6 +67,9 @@ class TeacherController extends Controller
 
     public function getTeachers(Request $request)
     {
+        // require data from taken_courses table for current user
+        // display filtered data from teachers table
+
         $length = $request->input('length');
         $sortBy = $request->input('column');
         $orderBy = $request->input('dir');

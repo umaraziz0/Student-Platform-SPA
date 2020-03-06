@@ -150,11 +150,7 @@ export default {
     },
 
     methods: {
-        getTeachers(
-            url = this.url,
-            options = this.tableProps,
-            studentId = this.studentId
-        ) {
+        getTeachers(url = this.url, options = this.tableProps) {
             axios
                 .get(url, {
                     params: options
@@ -170,10 +166,6 @@ export default {
 
         reloadTable(tableProps) {
             this.getData(this.url, tableProps);
-        },
-
-        displayRow(data) {
-            alert(`You clicked teacher ${data.id}`);
         }
     }
 };

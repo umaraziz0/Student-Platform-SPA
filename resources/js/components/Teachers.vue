@@ -2,16 +2,6 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-10">
-                <h2 class="text-center">Teachers</h2>
-                <hr />
-                <data-table
-                    :data="dataTaken"
-                    :columns="columnsTaken"
-                    @onTablePropsChanged="reloadTable"
-                >
-                </data-table>
-            </div>
-            <div class="col-md-10">
                 <h2 class="text-center">Teachers List</h2>
                 <hr />
                 <data-table
@@ -44,7 +34,7 @@ export default {
             form: new Form({
                 id: "",
                 teacher_id: "",
-                teacher_name: "",
+                name: "",
                 credits: "",
                 teacher: ""
             }),
@@ -57,73 +47,39 @@ export default {
                 },
                 {
                     label: "Name",
-                    name: "teacher_name",
-                    columnName: "teacher_name",
+                    name: "name",
+                    columnName: "name",
                     orderable: true
                 },
                 {
-                    label: "Credits",
-                    name: "credits",
-                    columnName: "credits",
+                    label: "Phone",
+                    name: "phone",
+                    columnName: "phone",
                     orderable: true
                 },
                 {
-                    label: "Teacher",
-                    name: "teacher",
-                    columnName: "teacher",
+                    label: "Email",
+                    name: "email",
+                    columnName: "email",
                     orderable: true
                 },
                 {
-                    label: "Take Teacher",
-                    name: "take_teacher",
-                    orderable: false,
-                    classes: {
-                        btn: true,
-                        "btn-primary": true,
-                        "btn-sm": true
-                    },
-                    event: "click",
-                    handler: this.takeTeacher,
-                    component: ButtonCheck
-                }
-            ],
-            columnsTaken: [
-                {
-                    label: "Teacher ID",
-                    name: "teacher_id",
-                    columnName: "teacher_id",
+                    label: "Office Address",
+                    name: "office_address",
+                    columnName: "office_address",
                     orderable: true
                 },
                 {
-                    label: "Name",
-                    name: "teacher_name",
-                    columnName: "teacher_name",
+                    label: "Office Hours",
+                    name: "office_hours",
+                    columnName: "office_hours",
                     orderable: true
                 },
                 {
-                    label: "Credits",
-                    name: "credits",
-                    columnName: "credits",
+                    label: "Courses Taught",
+                    name: "courses_taught",
+                    columnName: "courses_taught",
                     orderable: true
-                },
-                {
-                    label: "Teacher",
-                    name: "teacher",
-                    columnName: "teacher",
-                    orderable: true
-                },
-                {
-                    label: "Delete",
-                    name: "delete",
-                    orderable: false,
-                    classes: {
-                        btn: true,
-                        "btn-primary": true,
-                        "btn-sm": true
-                    },
-                    event: "click",
-                    handler: this.deleteTeacher,
-                    component: ButtonDelete
                 }
             ]
         };

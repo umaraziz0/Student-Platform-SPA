@@ -5341,16 +5341,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -5369,7 +5359,7 @@ __webpack_require__.r(__webpack_exports__);
       form: new Form({
         id: "",
         teacher_id: "",
-        teacher_name: "",
+        name: "",
         credits: "",
         teacher: ""
       }),
@@ -5380,64 +5370,34 @@ __webpack_require__.r(__webpack_exports__);
         orderable: true
       }, {
         label: "Name",
-        name: "teacher_name",
-        columnName: "teacher_name",
+        name: "name",
+        columnName: "name",
         orderable: true
       }, {
-        label: "Credits",
-        name: "credits",
-        columnName: "credits",
+        label: "Phone",
+        name: "phone",
+        columnName: "phone",
         orderable: true
       }, {
-        label: "Teacher",
-        name: "teacher",
-        columnName: "teacher",
+        label: "Email",
+        name: "email",
+        columnName: "email",
         orderable: true
       }, {
-        label: "Take Teacher",
-        name: "take_teacher",
-        orderable: false,
-        classes: {
-          btn: true,
-          "btn-primary": true,
-          "btn-sm": true
-        },
-        event: "click",
-        handler: this.takeTeacher,
-        component: ButtonCheck
-      }],
-      columnsTaken: [{
-        label: "Teacher ID",
-        name: "teacher_id",
-        columnName: "teacher_id",
+        label: "Office Address",
+        name: "office_address",
+        columnName: "office_address",
         orderable: true
       }, {
-        label: "Name",
-        name: "teacher_name",
-        columnName: "teacher_name",
+        label: "Office Hours",
+        name: "office_hours",
+        columnName: "office_hours",
         orderable: true
       }, {
-        label: "Credits",
-        name: "credits",
-        columnName: "credits",
+        label: "Courses Taught",
+        name: "courses_taught",
+        columnName: "courses_taught",
         orderable: true
-      }, {
-        label: "Teacher",
-        name: "teacher",
-        columnName: "teacher",
-        orderable: true
-      }, {
-        label: "Delete",
-        name: "delete",
-        orderable: false,
-        classes: {
-          btn: true,
-          "btn-primary": true,
-          "btn-sm": true
-        },
-        event: "click",
-        handler: this.deleteTeacher,
-        component: ButtonDelete
       }]
     };
   },
@@ -76838,22 +76798,6 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "container" }, [
     _c("div", { staticClass: "row justify-content-center" }, [
-      _c(
-        "div",
-        { staticClass: "col-md-10" },
-        [
-          _c("h2", { staticClass: "text-center" }, [_vm._v("Teachers")]),
-          _vm._v(" "),
-          _c("hr"),
-          _vm._v(" "),
-          _c("data-table", {
-            attrs: { data: _vm.dataTaken, columns: _vm.columnsTaken },
-            on: { onTablePropsChanged: _vm.reloadTable }
-          })
-        ],
-        1
-      ),
-      _vm._v(" "),
       _c(
         "div",
         { staticClass: "col-md-10" },

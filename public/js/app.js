@@ -5781,28 +5781,170 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "todo-list",
   data: function data() {
     return {
       newTodo: "",
+      beforeEditCache: "",
+      filter: "all",
       idForTodo: 3,
       todos: [{
         id: 1,
         title: "finish todo list",
-        isCompleted: false
+        isCompleted: false,
+        editing: false
       }, {
         id: 2,
         title: "finish thesis",
-        isCompleted: false
+        isCompleted: false,
+        editing: false
       }]
     };
   },
   created: function created() {//
   },
+  computed: {
+    remaining: function remaining() {
+      return this.todos.filter(function (todo) {
+        return !todo.isCompleted;
+      }).length;
+    },
+    anyRemaining: function anyRemaining() {
+      return this.remaining != 0;
+    },
+    todosFiltered: function todosFiltered() {
+      if (this.filter == "all") {
+        return this.todos;
+      } else if (this.filter == "active") {
+        return this.todos.filter(function (todo) {
+          return !todo.isCompleted;
+        });
+      } else if (this.filter == "completed") {
+        return this.todos.filter(function (todo) {
+          return todo.isCompleted;
+        });
+      } else {
+        return this.todos;
+      }
+    },
+    showClearCompletedButton: function showClearCompletedButton() {
+      return this.todos.filter(function (todo) {
+        return todo.isCompleted;
+      }).length > 0;
+    }
+  },
+  directives: {
+    focus: {
+      // directive definition
+      inserted: function inserted(el) {
+        el.focus();
+      }
+    }
+  },
   methods: {
     addTodo: function addTodo() {
-      if (this.newTodo.trim() == 0) {
+      //check for empty string
+      if (this.newTodo.trim().length == 0) {
         return;
       }
 
@@ -5813,7 +5955,31 @@ __webpack_require__.r(__webpack_exports__);
       });
       this.newTodo = "", this.idForTodo++;
     },
-    editTodo: function editTodo(index) {//
+    checkAll: function checkAll() {
+      this.todos.forEach(function (todo) {
+        return todo.isCompleted = event.target.checked;
+      });
+    },
+    clearCompleted: function clearCompleted() {
+      this.todos = this.todos.filter(function (todo) {
+        return !todo.isCompleted;
+      });
+    },
+    editTodo: function editTodo(todo) {
+      this.beforeEditCache = todo.title;
+      todo.editing ? todo.editing = false : todo.editing = true;
+    },
+    doneEdit: function doneEdit(todo) {
+      //check for empty string
+      if (todo.title.trim() == "") {
+        todo.title = this.beforeEditCache;
+      }
+
+      todo.editing = false;
+    },
+    cancelEdit: function cancelEdit(todo) {
+      todo.editing = false;
+      todo.title = this.beforeEditCache;
     },
     removeTodo: function removeTodo(index) {
       this.todos.splice(index, 1);
@@ -77498,7 +77664,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "container" }, [
     _c("div", { staticClass: "row justify-content-center" }, [
-      _c("div", { staticClass: "col-md-6" }, [
+      _c("div", { staticClass: "col-md-7" }, [
         _c("div", { staticClass: "card" }, [
           _vm._m(0),
           _vm._v(" "),
@@ -77520,6 +77686,15 @@ var render = function() {
                   attrs: { type: "text", placeholder: "New Todo" },
                   domProps: { value: _vm.newTodo },
                   on: {
+                    keyup: function($event) {
+                      if (
+                        !$event.type.indexOf("key") &&
+                        _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
+                      ) {
+                        return null
+                      }
+                      return _vm.addTodo($event)
+                    },
                     input: function($event) {
                       if ($event.target.composing) {
                         return
@@ -77539,111 +77714,315 @@ var render = function() {
                 )
               ]),
               _vm._v(" "),
-              _vm._l(_vm.todos, function(todo, index) {
-                return _c(
-                  "ul",
-                  {
-                    key: todo.id,
-                    staticClass: "todo-list ui-sortable",
-                    attrs: { "data-widget": "todo-list" }
-                  },
-                  [
-                    _c("li", { class: { done: todo.isCompleted } }, [
-                      _vm._m(2, true),
-                      _vm._v(" "),
+              _c(
+                "transition-group",
+                {
+                  attrs: {
+                    name: "fade",
+                    "enter-active-class": "animated fadeInDown",
+                    "leave-active-class": "animated fadeOutRight"
+                  }
+                },
+                _vm._l(_vm.todosFiltered, function(todo, index) {
+                  return _c(
+                    "ul",
+                    {
+                      key: todo.id,
+                      staticClass: "todo-list ui-sortable",
+                      staticStyle: { "animation-duration": "0.5s" },
+                      attrs: { "data-widget": "todo-list" }
+                    },
+                    [
                       _c(
-                        "div",
-                        { staticClass: "icheck-primary d-inline ml-2" },
+                        "li",
+                        {
+                          staticClass: "form-check",
+                          class: { done: todo.isCompleted }
+                        },
                         [
-                          _c("input", {
-                            directives: [
-                              {
-                                name: "model",
-                                rawName: "v-model",
-                                value: todo.isCompleted,
-                                expression: "todo.isCompleted"
-                              }
-                            ],
-                            attrs: {
-                              type: "checkbox",
-                              name: "todo1",
-                              id: "todoCheck1",
-                              value: "",
-                              checked: ""
-                            },
-                            domProps: {
-                              checked: Array.isArray(todo.isCompleted)
-                                ? _vm._i(todo.isCompleted, "") > -1
-                                : todo.isCompleted
-                            },
-                            on: {
-                              change: function($event) {
-                                var $$a = todo.isCompleted,
-                                  $$el = $event.target,
-                                  $$c = $$el.checked ? true : false
-                                if (Array.isArray($$a)) {
-                                  var $$v = "",
-                                    $$i = _vm._i($$a, $$v)
-                                  if ($$el.checked) {
-                                    $$i < 0 &&
-                                      _vm.$set(
-                                        todo,
-                                        "isCompleted",
-                                        $$a.concat([$$v])
-                                      )
+                          _c(
+                            "span",
+                            { staticClass: "handle ui-sortable-handle" },
+                            [
+                              _c("i", { staticClass: "fas fa-ellipsis-v" }),
+                              _vm._v(" "),
+                              _c("i", { staticClass: "fas fa-ellipsis-v" })
+                            ]
+                          ),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "d-inline ml-4" }, [
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: todo.isCompleted,
+                                  expression: "todo.isCompleted"
+                                }
+                              ],
+                              staticClass: "form-check-input",
+                              attrs: {
+                                type: "checkbox",
+                                name: "todo1",
+                                id: "todoCheck"
+                              },
+                              domProps: {
+                                checked: Array.isArray(todo.isCompleted)
+                                  ? _vm._i(todo.isCompleted, null) > -1
+                                  : todo.isCompleted
+                              },
+                              on: {
+                                change: function($event) {
+                                  var $$a = todo.isCompleted,
+                                    $$el = $event.target,
+                                    $$c = $$el.checked ? true : false
+                                  if (Array.isArray($$a)) {
+                                    var $$v = null,
+                                      $$i = _vm._i($$a, $$v)
+                                    if ($$el.checked) {
+                                      $$i < 0 &&
+                                        _vm.$set(
+                                          todo,
+                                          "isCompleted",
+                                          $$a.concat([$$v])
+                                        )
+                                    } else {
+                                      $$i > -1 &&
+                                        _vm.$set(
+                                          todo,
+                                          "isCompleted",
+                                          $$a
+                                            .slice(0, $$i)
+                                            .concat($$a.slice($$i + 1))
+                                        )
+                                    }
                                   } else {
-                                    $$i > -1 &&
-                                      _vm.$set(
-                                        todo,
-                                        "isCompleted",
-                                        $$a
-                                          .slice(0, $$i)
-                                          .concat($$a.slice($$i + 1))
-                                      )
+                                    _vm.$set(todo, "isCompleted", $$c)
                                   }
-                                } else {
-                                  _vm.$set(todo, "isCompleted", $$c)
                                 }
                               }
-                            }
-                          }),
-                          _vm._v(" "),
-                          _c("label", { attrs: { for: "todoCheck1" } })
+                            }),
+                            _vm._v(" "),
+                            _c("label", { attrs: { for: "todoCheck" } }),
+                            _vm._v(" "),
+                            _c("span", { staticClass: "text" }, [
+                              !todo.editing
+                                ? _c(
+                                    "div",
+                                    { staticClass: "form-check-label" },
+                                    [
+                                      _vm._v(
+                                        "\n                                            " +
+                                          _vm._s(todo.title) +
+                                          "\n                                        "
+                                      )
+                                    ]
+                                  )
+                                : _c("input", {
+                                    directives: [
+                                      {
+                                        name: "model",
+                                        rawName: "v-model",
+                                        value: todo.title,
+                                        expression: "todo.title"
+                                      },
+                                      { name: "focus", rawName: "v-focus" }
+                                    ],
+                                    attrs: { type: "text" },
+                                    domProps: { value: todo.title },
+                                    on: {
+                                      keyup: [
+                                        function($event) {
+                                          if (
+                                            !$event.type.indexOf("key") &&
+                                            _vm._k(
+                                              $event.keyCode,
+                                              "enter",
+                                              13,
+                                              $event.key,
+                                              "Enter"
+                                            )
+                                          ) {
+                                            return null
+                                          }
+                                          return _vm.doneEdit(todo)
+                                        },
+                                        function($event) {
+                                          if (
+                                            !$event.type.indexOf("key") &&
+                                            _vm._k(
+                                              $event.keyCode,
+                                              "escape",
+                                              undefined,
+                                              $event.key,
+                                              undefined
+                                            )
+                                          ) {
+                                            return null
+                                          }
+                                          return _vm.cancelEdit(todo)
+                                        }
+                                      ],
+                                      input: function($event) {
+                                        if ($event.target.composing) {
+                                          return
+                                        }
+                                        _vm.$set(
+                                          todo,
+                                          "title",
+                                          $event.target.value
+                                        )
+                                      }
+                                    }
+                                  })
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "tools" }, [
+                              _c("i", {
+                                staticClass: "fas fa-edit",
+                                on: {
+                                  click: function($event) {
+                                    return _vm.editTodo(todo)
+                                  }
+                                }
+                              }),
+                              _vm._v(" "),
+                              _c("i", {
+                                staticClass: "fas fa-trash",
+                                on: {
+                                  click: function($event) {
+                                    return _vm.removeTodo(index)
+                                  }
+                                }
+                              })
+                            ])
+                          ])
                         ]
-                      ),
-                      _vm._v(" "),
-                      _c("span", { staticClass: "text" }, [
-                        _vm._v(_vm._s(todo.title))
-                      ]),
-                      _vm._v(" "),
-                      _vm._m(3, true),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "tools" }, [
-                        _c("i", {
-                          staticClass: "fas fa-edit",
-                          on: {
-                            click: function($event) {
-                              return _vm.editTodo(index)
-                            }
-                          }
-                        }),
-                        _vm._v(" "),
-                        _c("i", {
-                          staticClass: "fas fa-trash",
-                          on: {
-                            click: function($event) {
-                              return _vm.removeTodo(index)
-                            }
-                          }
-                        })
-                      ])
-                    ])
-                  ]
-                )
-              })
+                      )
+                    ]
+                  )
+                }),
+                0
+              )
             ],
-            2
-          )
+            1
+          ),
+          _vm._v(" "),
+          _c("div", { staticClass: "card-footer clearfix" }, [
+            _c("div", { staticClass: "row align-items-center" }, [
+              _c("div", { staticClass: "col-sm-3" }, [
+                _c("div", { staticClass: "form-check" }, [
+                  _c("input", {
+                    staticClass: "form-check-input",
+                    attrs: { type: "checkbox", name: "checkAll", id: "" },
+                    domProps: { checked: !_vm.anyRemaining },
+                    on: { click: _vm.checkAll }
+                  }),
+                  _vm._v(" "),
+                  _c(
+                    "label",
+                    {
+                      staticClass: "form-check-label",
+                      attrs: { for: "checkAll" }
+                    },
+                    [_vm._v("Check All")]
+                  )
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-sm-6 text-center" }, [
+                _c("div", { staticClass: "btn-group" }, [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-outline-primary btn-sm",
+                      class: { active: _vm.filter == "all" },
+                      attrs: { type: "button" },
+                      on: {
+                        click: function($event) {
+                          _vm.filter = "all"
+                        }
+                      }
+                    },
+                    [
+                      _vm._v(
+                        "\n                                    All\n                                "
+                      )
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-outline-primary btn-sm",
+                      class: { active: _vm.filter == "active" },
+                      attrs: { type: "button" },
+                      on: {
+                        click: function($event) {
+                          _vm.filter = "active"
+                        }
+                      }
+                    },
+                    [
+                      _vm._v(
+                        "\n                                    Active\n                                "
+                      )
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-outline-primary btn-sm",
+                      class: {
+                        active: _vm.filter == "completed"
+                      },
+                      attrs: { type: "button" },
+                      on: {
+                        click: function($event) {
+                          _vm.filter = "completed"
+                        }
+                      }
+                    },
+                    [
+                      _vm._v(
+                        "\n                                    Completed\n                                "
+                      )
+                    ]
+                  )
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-sm-3 text-right" }, [
+                _vm._v(
+                  "\n                            " +
+                    _vm._s(_vm.remaining) +
+                    " items left.\n                        "
+                )
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "row" }, [
+              _c("div", { staticClass: "col-sm-12 text-center mt-2" }, [
+                _vm.showClearCompletedButton
+                  ? _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-success btn-sm",
+                        on: { click: _vm.clearCompleted }
+                      },
+                      [
+                        _c("i", {
+                          staticClass: "fa fa-check mr-1",
+                          attrs: { "aria-hidden": "true" }
+                        }),
+                        _vm._v("Clear Completed\n                            ")
+                      ]
+                    )
+                  : _vm._e()
+              ])
+            ])
+          ])
         ])
       ])
     ])
@@ -77654,10 +78033,10 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "card-header ui-sortable-handle" }, [
-      _c("h3", { staticClass: "card-title text-center" }, [
-        _c("i", { staticClass: "fas fa-edit mr-1" }),
-        _vm._v("\n                        To-Do List\n                    ")
+    return _c("div", { staticClass: "card-header" }, [
+      _c("h3", { staticClass: "card-title mb-0" }, [
+        _c("i", { staticClass: "fas fa-edit" }),
+        _vm._v("\n                        To-Do List\n                        ")
       ])
     ])
   },
@@ -77670,25 +78049,6 @@ var staticRenderFns = [
       { staticClass: "input-group-text", staticStyle: { cursor: "pointer" } },
       [_c("i", { staticClass: "fa fa-plus", attrs: { "aria-hidden": "true" } })]
     )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("span", { staticClass: "handle ui-sortable-handle" }, [
-      _c("i", { staticClass: "fas fa-ellipsis-v" }),
-      _vm._v(" "),
-      _c("i", { staticClass: "fas fa-ellipsis-v" })
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("small", { staticClass: "badge badge-danger" }, [
-      _c("i", { staticClass: "far fa-clock" }),
-      _vm._v(" 2 mins")
-    ])
   }
 ]
 render._withStripped = true

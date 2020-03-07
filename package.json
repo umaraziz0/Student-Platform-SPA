@@ -25,6 +25,9 @@
     },
     "dependencies": {
         "admin-lte": "^3.0.2",
+        "animate.css": "^3.7.2",
+        "daterangepicker": "^3.0.5",
+        "icheck-bootstrap": "^3.0.1",
         "laravel-vue-datatable": "^0.5.7",
         "moment": "^2.24.0",
         "sweetalert2": "^9.7.2",

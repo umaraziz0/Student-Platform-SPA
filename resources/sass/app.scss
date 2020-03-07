@@ -1,15 +1,15 @@
 // Fonts
-@import url('https://fonts.googleapis.com/css?family=Nunito');
+@import url("https://fonts.googleapis.com/css?family=Nunito");
 
 // Variables
-@import 'variables';
+@import "variables";
 
 // Bootstrap
-@import '~bootstrap/scss/bootstrap';
+@import "~bootstrap/scss/bootstrap";
 
 //Admin LTE
-@import '~admin-lte/dist/css/adminlte.css';
-@import '~admin-lte/plugins/fontawesome-free/css/all.css';
+@import "~admin-lte/dist/css/adminlte.css";
+@import "~admin-lte/plugins/fontawesome-free/css/all.css";
 
 // FontAwesome
 $fa-font-path: "../webfonts";
@@ -17,3 +17,11 @@ $fa-font-path: "../webfonts";
 @import "~@fortawesome/fontawesome-free/scss/solid.scss";
 @import "~@fortawesome/fontawesome-free/scss/brands.scss";
 @import "~@fortawesome/fontawesome-free/scss/regular.scss";
+
+@import "~icheck-bootstrap/icheck-bootstrap.css";
+@import "~icheck-bootstrap/icheck-bootstrap.min.css";
+
+@import "~daterangepicker/daterangepicker.css";
+
+@import "~animate.css/animate.css";
+@import "~animate.css/animate.min.css";

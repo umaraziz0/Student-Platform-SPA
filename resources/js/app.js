@@ -100,6 +100,10 @@ let routes = [{
         component: require("./components/Grades.vue").default
     },
     {
+        path: "/todo",
+        component: require("./components/Todo.vue").default
+    },
+    {
         path: "*",
         component: require("./components/404.vue").default
     }

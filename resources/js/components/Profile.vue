@@ -364,33 +364,39 @@
                                     </div>
                                     <div class="form-group row">
                                         <label
-                                            for="photo"
+                                            for="inputPhoto"
                                             class="col-sm-2 col-form-label"
                                             >Profile Picture</label
                                         >
                                         <div class="col-sm-8">
                                             <div class="input-group">
-                                            <div class="custom-file">
-                                                <input
-                                                    type="file"
-                                                    @change="updatePhoto"
-                                                    name="photo"
-                                                    class="form-control"
-                                                    id="photo"
-                                                />
-                                                <label
-                                                    for="photo"
-                                                    class="custom-file-label"
-                                                ></label></div>
+                                                <div class="custom-file">
+                                                    <input
+                                                        class="custom-file-input"
+                                                        type="file"
+                                                        @change="updatePhoto"
+                                                        id="inputPhoto"
+                                                        name="photo"
+                                                    />
+                                                    <label
+                                                        class="custom-file-label"
+                                                        for="inputPhoto"
+                                                        >{{
+                                                            getFileName()
+                                                        }}</label
+                                                    >
+                                                </div>
                                                 <div class="input-group-append">
                                                     <span
                                                         class="input-group-text"
                                                         style="cursor:pointer"
-                                                        @click.prevent="removePhoto"
+                                                        @click.prevent="
+                                                            removePhoto
+                                                        "
                                                         >Remove
                                                     </span>
                                                 </div>
-                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -422,6 +428,7 @@
 export default {
     data() {
         return {
+            fileName: "",
             form: new Form({
                 id: "",
                 student_id: "",
@@ -441,14 +448,18 @@ export default {
 
     methods: {
         getPhoto() {
-            //   let photo =
+            // let photo =
             //     this.form.photo.length > 100
-            //       ? this.form.photo
-            //       : "img/profile/" + this.form.photo;
+            //         ? this.form.photo
+            //         : "img/profile/" + this.form.photo;
 
-            //   return photo;
+            // return photo;
 
             return "img/profile/" + this.form.photo;
+        },
+
+        getFileName() {
+            return this.fileName.length !== 0 ? this.fileName : "Choose file";
         },
 
         getInfo() {
@@ -482,6 +493,9 @@ export default {
         },
 
         updatePhoto(e) {
+            let photoName = document.getElementById("inputPhoto").value;
+            this.fileName = photoName.split("\\").pop();
+
             let file = e.target.files[0];
             let reader = new FileReader();
             if (file["size"] < 2111775) {

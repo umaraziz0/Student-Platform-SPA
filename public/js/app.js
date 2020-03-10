@@ -5382,9 +5382,16 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
+      fileName: "",
       form: new Form({
         id: "",
         student_id: "",
@@ -5403,12 +5410,15 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     getPhoto: function getPhoto() {
-      //   let photo =
+      // let photo =
       //     this.form.photo.length > 100
-      //       ? this.form.photo
-      //       : "img/profile/" + this.form.photo;
-      //   return photo;
+      //         ? this.form.photo
+      //         : "img/profile/" + this.form.photo;
+      // return photo;
       return "img/profile/" + this.form.photo;
+    },
+    getFileName: function getFileName() {
+      return this.fileName.length !== 0 ? this.fileName : "Choose file";
     },
     getInfo: function getInfo() {
       var _this = this;
@@ -5445,6 +5455,8 @@ __webpack_require__.r(__webpack_exports__);
     updatePhoto: function updatePhoto(e) {
       var _this3 = this;
 
+      var photoName = document.getElementById("inputPhoto").value;
+      this.fileName = photoName.split("\\").pop();
       var file = e.target.files[0];
       var reader = new FileReader();
 
@@ -5967,7 +5979,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     editTodo: function editTodo(todo) {
       this.beforeEditCache = todo.title;
-      todo.editing ? todo.editing = false : todo.editing = true;
+      todo.editing = todo.editing ? false : true;
     },
     doneEdit: function doneEdit(todo) {
       //check for empty string
@@ -5998,6 +6010,66 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -6268,6 +6340,7 @@ __webpack_require__.r(__webpack_exports__);
     this.$Progress.start();
     this.loadUsers();
     Fire.$on("refresh", function () {
+      // event listener
       _this5.loadUsers();
     });
     this.$Progress.finish();
@@ -77436,7 +77509,7 @@ var render = function() {
                         "label",
                         {
                           staticClass: "col-sm-2 col-form-label",
-                          attrs: { for: "photo" }
+                          attrs: { for: "inputPhoto" }
                         },
                         [_vm._v("Profile Picture")]
                       ),
@@ -77445,19 +77518,23 @@ var render = function() {
                         _c("div", { staticClass: "input-group" }, [
                           _c("div", { staticClass: "custom-file" }, [
                             _c("input", {
-                              staticClass: "form-control",
+                              staticClass: "custom-file-input",
                               attrs: {
                                 type: "file",
-                                name: "photo",
-                                id: "photo"
+                                id: "inputPhoto",
+                                name: "photo"
                               },
                               on: { change: _vm.updatePhoto }
                             }),
                             _vm._v(" "),
-                            _c("label", {
-                              staticClass: "custom-file-label",
-                              attrs: { for: "photo" }
-                            })
+                            _c(
+                              "label",
+                              {
+                                staticClass: "custom-file-label",
+                                attrs: { for: "inputPhoto" }
+                              },
+                              [_vm._v(_vm._s(_vm.getFileName()))]
+                            )
                           ]),
                           _vm._v(" "),
                           _c("div", { staticClass: "input-group-append" }, [
@@ -78177,7 +78254,11 @@ var render = function() {
             _c("div", { staticClass: "modal-content" }, [
               _c("div", { staticClass: "modal-header" }, [
                 _c("h4", { staticClass: "modal-title" }, [
-                  _vm._v(_vm._s(_vm.editMode ? "Edit User" : "Create New User"))
+                  _vm._v(
+                    "\n                        " +
+                      _vm._s(_vm.editMode ? "Edit User" : "Create New User") +
+                      "\n                    "
+                  )
                 ]),
                 _vm._v(" "),
                 _vm._m(1)
@@ -78213,7 +78294,9 @@ var render = function() {
                             }
                           ],
                           staticClass: "form-control",
-                          class: { "is-invalid": _vm.form.errors.has("name") },
+                          class: {
+                            "is-invalid": _vm.form.errors.has("name")
+                          },
                           attrs: {
                             type: "text",
                             id: "inputName",
@@ -78305,7 +78388,9 @@ var render = function() {
                             }
                           ],
                           staticClass: "form-control",
-                          class: { "is-invalid": _vm.form.errors.has("email") },
+                          class: {
+                            "is-invalid": _vm.form.errors.has("email")
+                          },
                           attrs: {
                             type: "email",
                             id: "inputEmail",
@@ -78447,7 +78532,11 @@ var render = function() {
                           staticClass: "btn btn-danger",
                           attrs: { type: "button", "data-dismiss": "modal" }
                         },
-                        [_vm._v("Close")]
+                        [
+                          _vm._v(
+                            "\n                            Close\n                        "
+                          )
+                        ]
                       ),
                       _vm._v(" "),
                       _c(
@@ -78460,7 +78549,13 @@ var render = function() {
                           },
                           attrs: { type: "submit" }
                         },
-                        [_vm._v(_vm._s(_vm.editMode ? "Update" : "Create"))]
+                        [
+                          _vm._v(
+                            "\n                            " +
+                              _vm._s(_vm.editMode ? "Update" : "Create") +
+                              "\n                        "
+                          )
+                        ]
                       )
                     ]
                   )
@@ -94867,7 +94962,7 @@ Vue.filter("upText", function (text) {
 Vue.filter("myDate", function (created) {
   return moment__WEBPACK_IMPORTED_MODULE_4___default()(created).format("MMMM Do YYYY, h:mm a");
 });
-window.Fire = new Vue(); // custom global event
+window.Fire = new Vue(); // custom global event bus
 
 /**
  * The following block of code may be used to automatically register your

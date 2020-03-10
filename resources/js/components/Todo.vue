@@ -293,7 +293,7 @@ export default {
 
         editTodo(todo) {
             this.beforeEditCache = todo.title;
-            todo.editing ? (todo.editing = false) : (todo.editing = true);
+            todo.editing = todo.editing ? false : true;
         },
 
         doneEdit(todo) {

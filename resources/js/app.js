@@ -125,7 +125,7 @@ Vue.filter("myDate", function (created) {
     return moment(created).format("MMMM Do YYYY, h:mm a");
 });
 
-window.Fire = new Vue(); // custom global event
+window.Fire = new Vue(); // custom global event bus
 
 /**
  * The following block of code may be used to automatically register your

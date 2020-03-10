@@ -524,8 +524,11 @@ export default {
                         icon: "success",
                         title: "Profile updated."
                     });
-                    Fire.$emit("refresh");
+                    //Fire.$emit("refresh");
                     // window.scrollTo(0, 0);
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1500);
                 })
                 .catch(() => {
                     this.$Progress.fail();
@@ -535,6 +538,7 @@ export default {
 
     created() {
         this.$Progress.start();
+        window.scrollTo(0, 0);
         this.getInfo();
         Fire.$on("refresh", () => {
             this.getInfo();

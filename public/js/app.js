@@ -5486,8 +5486,12 @@ __webpack_require__.r(__webpack_exports__);
         Swal.fire({
           icon: "success",
           title: "Profile updated."
-        });
-        Fire.$emit("refresh"); // window.scrollTo(0, 0);
+        }); //Fire.$emit("refresh");
+        // window.scrollTo(0, 0);
+
+        setTimeout(function () {
+          location.reload();
+        }, 1500);
       })["catch"](function () {
         _this4.$Progress.fail();
       });
@@ -5497,6 +5501,7 @@ __webpack_require__.r(__webpack_exports__);
     var _this5 = this;
 
     this.$Progress.start();
+    window.scrollTo(0, 0);
     this.getInfo();
     Fire.$on("refresh", function () {
       _this5.getInfo();

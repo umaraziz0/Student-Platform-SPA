@@ -5443,12 +5443,13 @@ __webpack_require__.r(__webpack_exports__);
           title: "Picture removed."
         });
         Fire.$emit("refresh");
-      })["catch"](function () {
+        window.scrollTo(0, 0);
+      })["catch"](function (errors) {
         _this2.$Progress.fail();
 
         Toast.fire({
           icon: "error",
-          title: "An error occurred."
+          title: "No photo available."
         });
       });
     },
@@ -5486,9 +5487,7 @@ __webpack_require__.r(__webpack_exports__);
         Swal.fire({
           icon: "success",
           title: "Profile updated."
-        }); //Fire.$emit("refresh");
-        // window.scrollTo(0, 0);
-
+        });
         setTimeout(function () {
           location.reload();
         }, 1500);

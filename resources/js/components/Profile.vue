@@ -482,12 +482,13 @@ export default {
                         title: "Picture removed."
                     });
                     Fire.$emit("refresh");
+                    window.scrollTo(0, 0);
                 })
-                .catch(() => {
+                .catch(errors => {
                     this.$Progress.fail();
                     Toast.fire({
                         icon: "error",
-                        title: "An error occurred."
+                        title: "No photo available."
                     });
                 });
         },
@@ -524,8 +525,6 @@ export default {
                         icon: "success",
                         title: "Profile updated."
                     });
-                    //Fire.$emit("refresh");
-                    // window.scrollTo(0, 0);
                     setTimeout(() => {
                         location.reload();
                     }, 1500);

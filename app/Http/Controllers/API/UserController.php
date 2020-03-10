@@ -154,10 +154,10 @@ class UserController extends Controller
             @unlink($userPhoto);
         }
 
-        $user->update(['photo' => null]);
-
-        return [
-            'message' => 'photo deleted.'
-        ];
+        if ($user->photo != null) {
+            $user->update(['photo' => null]);
+        } else {
+            abort(500, 'No photo uploaded.');
+        }
     }
 }

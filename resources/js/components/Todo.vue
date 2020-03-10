@@ -84,6 +84,7 @@
                                             v-model="todo.isCompleted"
                                             name="todo1"
                                             id="todoCheck"
+                                            @change="checkTodo(todo)"
                                         />
                                         <label for="todoCheck" class=""></label>
 
@@ -137,7 +138,7 @@
                                         id=""
                                         class="form-check-input"
                                         :checked="!anyRemaining"
-                                        @click="checkAll"
+                                        @click="checkAll()"
                                     />
                                     <label
                                         for="checkAll"
@@ -292,14 +293,58 @@ export default {
             Fire.$emit("refresh");
         },
 
-        checkAll() {
-            this.todos.forEach(
-                todo => (todo.isCompleted = event.target.checked)
-            );
+        checkTodo(todo, url = this.url) {
+            axios
+                .put(url + todo.id, {
+                    title: todo.title,
+                    isCompleted: todo.isCompleted
+                })
+                .then(response => {
+                    console.log(response);
+                })
+                .catch(errors => {
+                    console.log(errors);
+                });
+
+            Fire.$emit("refresh");
         },
 
-        clearCompleted() {
-            this.todos = this.todos.filter(todo => !todo.isCompleted);
+        checkAll(url = "api/todoCheckAll") {
+            this.todos.forEach(todo => {
+                todo.isCompleted = event.target.checked;
+            });
+
+            axios
+                .put(url, {
+                    isCompleted: !document.getElementById("todoCheck").checked
+                })
+                .then(response => {
+                    console.log(response);
+                })
+                .catch(errors => {
+                    console.log(errors);
+                });
+        },
+
+        clearCompleted(todos, url = "api/todoClearCompleted") {
+            const completed = this.todos
+                .filter(todo => todo.isCompleted)
+                .map(todo => todo.id);
+
+            axios
+                .delete(url, {
+                    data: {
+                        todos: completed
+                    }
+                })
+                .then(response => {
+                    console.log(response);
+                })
+                .catch(errors => {
+                    console.log(errors);
+                });
+
+            Fire.$emit("refresh");
         },
 
         editTodo(todo) {

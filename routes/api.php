@@ -43,4 +43,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     // routes for getting single user info
     Route::get('teachers', 'API\TeacherController@getTeachers');
     Route::get('grades', 'API\GradeController@getGrades');
+
+    Route::put('todoCheckAll', 'API\TodoController@checkAll');
+    Route::delete('todoClearCompleted', 'API\TodoController@clearCompleted');
 });

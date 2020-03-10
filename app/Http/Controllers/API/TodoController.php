@@ -9,12 +9,10 @@ use Illuminate\Http\Request;
 class TodoController extends Controller
 {
     public $user;
-    public $studentId;
 
     public function __construct()
     {
         $this->user = auth('api')->user();
-        $this->studentId = $this->user->student_id;
     }
 
     /**
@@ -24,8 +22,7 @@ class TodoController extends Controller
      */
     public function index()
     {
-
-        return Todo::where('student_id', $this->studentId)->get();
+        return Todo::where('student_id', $this->user->student_id)->get();
     }
 
     /**
@@ -36,7 +33,7 @@ class TodoController extends Controller
      */
     public function store(Request $request)
     {
-        $request->merge(['student_id' => $this->studentId]);
+        $request->merge(['student_id' => $this->user->student_id]);
 
         $data = $request->validate([
             'student_id' => 'required|numeric',
@@ -89,5 +86,29 @@ class TodoController extends Controller
     {
         $todo->delete();
         return response('Deleted item', 200);
+    }
+
+    public function checkAll(Request $request)
+    {
+        $data = $request->validate([
+            'isCompleted' => 'required|boolean'
+        ]);
+
+        // $todo->update($data);
+
+        Todo::query()->where('student_id', $this->user->student_id)->update($data);
+
+        return response('All items checked.', 200);
+    }
+
+    public function clearCompleted(Request $request)
+    {
+        $request->validate([
+            'todos' => 'required|array'
+        ]);
+
+        Todo::destroy($request->todos);
+
+        return response('Completed items cleared.', 200);
     }
 }

@@ -5898,6 +5898,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "todo-list",
   data: function data() {
@@ -5988,15 +5989,48 @@ __webpack_require__.r(__webpack_exports__);
       this.newTodo = "";
       Fire.$emit("refresh");
     },
+    checkTodo: function checkTodo(todo) {
+      var url = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.url;
+      axios.put(url + todo.id, {
+        title: todo.title,
+        isCompleted: todo.isCompleted
+      }).then(function (response) {
+        console.log(response);
+      })["catch"](function (errors) {
+        console.log(errors);
+      });
+      Fire.$emit("refresh");
+    },
     checkAll: function checkAll() {
+      var url = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "api/todoCheckAll";
       this.todos.forEach(function (todo) {
-        return todo.isCompleted = event.target.checked;
+        todo.isCompleted = event.target.checked;
+      });
+      axios.put(url, {
+        isCompleted: !document.getElementById("todoCheck").checked
+      }).then(function (response) {
+        console.log(response);
+      })["catch"](function (errors) {
+        console.log(errors);
       });
     },
-    clearCompleted: function clearCompleted() {
-      this.todos = this.todos.filter(function (todo) {
-        return !todo.isCompleted;
+    clearCompleted: function clearCompleted(todos) {
+      var url = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "api/todoClearCompleted";
+      var completed = this.todos.filter(function (todo) {
+        return todo.isCompleted;
+      }).map(function (todo) {
+        return todo.id;
       });
+      axios["delete"](url, {
+        data: {
+          todos: completed
+        }
+      }).then(function (response) {
+        console.log(response);
+      })["catch"](function (errors) {
+        console.log(errors);
+      });
+      Fire.$emit("refresh");
     },
     editTodo: function editTodo(todo) {
       this.beforeEditCache = todo.title;
@@ -77891,34 +77925,39 @@ var render = function() {
                                   : todo.isCompleted
                               },
                               on: {
-                                change: function($event) {
-                                  var $$a = todo.isCompleted,
-                                    $$el = $event.target,
-                                    $$c = $$el.checked ? true : false
-                                  if (Array.isArray($$a)) {
-                                    var $$v = null,
-                                      $$i = _vm._i($$a, $$v)
-                                    if ($$el.checked) {
-                                      $$i < 0 &&
-                                        _vm.$set(
-                                          todo,
-                                          "isCompleted",
-                                          $$a.concat([$$v])
-                                        )
+                                change: [
+                                  function($event) {
+                                    var $$a = todo.isCompleted,
+                                      $$el = $event.target,
+                                      $$c = $$el.checked ? true : false
+                                    if (Array.isArray($$a)) {
+                                      var $$v = null,
+                                        $$i = _vm._i($$a, $$v)
+                                      if ($$el.checked) {
+                                        $$i < 0 &&
+                                          _vm.$set(
+                                            todo,
+                                            "isCompleted",
+                                            $$a.concat([$$v])
+                                          )
+                                      } else {
+                                        $$i > -1 &&
+                                          _vm.$set(
+                                            todo,
+                                            "isCompleted",
+                                            $$a
+                                              .slice(0, $$i)
+                                              .concat($$a.slice($$i + 1))
+                                          )
+                                      }
                                     } else {
-                                      $$i > -1 &&
-                                        _vm.$set(
-                                          todo,
-                                          "isCompleted",
-                                          $$a
-                                            .slice(0, $$i)
-                                            .concat($$a.slice($$i + 1))
-                                        )
+                                      _vm.$set(todo, "isCompleted", $$c)
                                     }
-                                  } else {
-                                    _vm.$set(todo, "isCompleted", $$c)
+                                  },
+                                  function($event) {
+                                    return _vm.checkTodo(todo)
                                   }
-                                }
+                                ]
                               }
                             }),
                             _vm._v(" "),
@@ -78039,7 +78078,11 @@ var render = function() {
                     staticClass: "form-check-input",
                     attrs: { type: "checkbox", name: "checkAll", id: "" },
                     domProps: { checked: !_vm.anyRemaining },
-                    on: { click: _vm.checkAll }
+                    on: {
+                      click: function($event) {
+                        return _vm.checkAll()
+                      }
+                    }
                   }),
                   _vm._v(" "),
                   _c(

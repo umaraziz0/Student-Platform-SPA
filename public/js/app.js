@@ -5447,9 +5447,10 @@ __webpack_require__.r(__webpack_exports__);
       })["catch"](function (errors) {
         _this2.$Progress.fail();
 
+        var response = JSON.parse(errors.request.response);
         Toast.fire({
           icon: "error",
-          title: "No photo available."
+          title: response["message"]
         });
       });
     },

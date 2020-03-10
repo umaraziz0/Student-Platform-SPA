@@ -486,9 +486,10 @@ export default {
                 })
                 .catch(errors => {
                     this.$Progress.fail();
+                    let response = JSON.parse(errors.request.response);
                     Toast.fire({
                         icon: "error",
-                        title: "No photo available."
+                        title: response["message"]
                     });
                 });
         },

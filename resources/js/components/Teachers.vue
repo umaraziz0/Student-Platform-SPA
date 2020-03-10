@@ -160,7 +160,7 @@ export default {
                 })
                 // eslint-disable-next-line
                 .catch(errors => {
-                    //Handle Errors
+                    console.log(errors);
                 });
         },
 

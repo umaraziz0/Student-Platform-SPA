@@ -8,10 +8,10 @@ use JamesDordoy\LaravelVueDatatable\Traits\LaravelVueDatatableTrait;
 class Grade extends Model
 {
     use LaravelVueDatatableTrait;
-    //
-    // protected $fillable = [
-    //     'course_id', 'grade', 'course_name'
-    // ];
+
+    protected $fillable = [
+        'student_id', 'course_id', 'grade', 'course_name'
+    ];
 
     protected $dataTableColumns = [
         'id' => [

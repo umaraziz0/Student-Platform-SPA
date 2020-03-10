@@ -36,9 +36,9 @@
                                 class="form-control"
                                 placeholder="New Todo"
                                 v-model="newTodo"
-                                @keyup.enter="addTodo"
+                                @keyup.enter="addTodo()"
                             />
-                            <div class="input-group-append" @click="addTodo">
+                            <div class="input-group-append" @click="addTodo()">
                                 <span
                                     class="input-group-text"
                                     style="cursor: pointer;"
@@ -64,7 +64,7 @@
                                 class="todo-list ui-sortable"
                                 style="animation-duration: 0.5s"
                                 data-widget="todo-list"
-                                v-for="(todo, index) in todosFiltered"
+                                v-for="todo in todosFiltered"
                                 :key="todo.id"
                             >
                                 <li
@@ -96,7 +96,7 @@
                                                 {{ todo.title }}
                                             </div>
                                             <input
-                                                v-else
+                                                v-if="todo.editing"
                                                 type="text"
                                                 v-model="todo.title"
                                                 @keyup.enter="doneEdit(todo)"
@@ -117,7 +117,7 @@
                                             ></i>
                                             <i
                                                 class="fas fa-trash"
-                                                @click="removeTodo(index)"
+                                                @click="removeTodo(todo.id)"
                                             ></i>
                                         </div>
                                     </div>
@@ -209,22 +209,19 @@ export default {
     data() {
         return {
             newTodo: "",
+            url: "api/todo/",
             beforeEditCache: "",
             filter: "all",
-            idForTodo: 3,
-            todos: [
-                {
-                    id: "",
-                    title: "",
-                    isCompleted: "",
-                    editing: ""
-                }
-            ]
+            todos: [],
+            studentId: ""
         };
     },
 
     created() {
-        //
+        this.getTodos();
+        Fire.$on("refresh", () => {
+            this.getTodos();
+        });
     },
 
     computed: {
@@ -261,18 +258,38 @@ export default {
     },
 
     methods: {
-        addTodo() {
+        getTodos(url = this.url) {
+            axios
+                .get(url)
+                .then(response => {
+                    this.todos = response.data;
+                })
+                .catch(errors => {
+                    console.log(errors);
+                });
+        },
+
+        addTodo(url = this.url, newTodo = this.newTodo) {
             //check for empty string
             if (this.newTodo.trim().length == 0) {
                 return;
             }
 
-            this.todos.push({
-                id: this.idForTodo,
-                title: this.newTodo,
-                isCompleted: false
-            });
-            (this.newTodo = ""), this.idForTodo++;
+            axios
+                .post(url, {
+                    student_id: "",
+                    title: newTodo,
+                    isCompleted: false
+                })
+                .then(response => {
+                    console.log(response);
+                })
+                .catch(errors => {
+                    console.log(errors);
+                });
+
+            this.newTodo = "";
+            Fire.$emit("refresh");
         },
 
         checkAll() {
@@ -290,13 +307,27 @@ export default {
             todo.editing = todo.editing ? false : true;
         },
 
-        doneEdit(todo) {
+        doneEdit(todo, url = this.url) {
             //check for empty string
             if (todo.title.trim() == "") {
                 todo.title = this.beforeEditCache;
             }
 
             todo.editing = false;
+
+            axios
+                .put(url + todo.id, {
+                    title: todo.title,
+                    isCompleted: todo.isCompleted
+                })
+                .then(response => {
+                    console.log(response);
+                })
+                .catch(errors => {
+                    console.log(errors);
+                });
+
+            Fire.$emit("refresh");
         },
 
         cancelEdit(todo) {
@@ -304,8 +335,16 @@ export default {
             todo.title = this.beforeEditCache;
         },
 
-        removeTodo(index) {
-            this.todos.splice(index, 1);
+        removeTodo(id, url = this.url) {
+            axios
+                .delete(url + id)
+                .then(response => {
+                    console.log(response);
+                })
+                .catch(errors => {
+                    console.log(errors);
+                });
+            Fire.$emit("refresh");
         }
     }
 };

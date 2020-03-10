@@ -8,6 +8,15 @@ use Illuminate\Http\Request;
 
 class TodoController extends Controller
 {
+    public $user;
+    public $studentId;
+
+    public function __construct()
+    {
+        $this->user = auth('api')->user();
+        $this->studentId = $this->user->student_id;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -15,17 +24,8 @@ class TodoController extends Controller
      */
     public function index()
     {
-        //
-    }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return Todo::where('student_id', $this->studentId)->get();
     }
 
     /**
@@ -36,7 +36,17 @@ class TodoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->merge(['student_id' => $this->studentId]);
+
+        $data = $request->validate([
+            'student_id' => 'required|numeric',
+            'title' => 'required|string',
+            'isCompleted' => 'required|boolean',
+        ]);
+
+        $todo = Todo::create($data);
+
+        return response($todo, 201);
     }
 
     /**
@@ -51,17 +61,6 @@ class TodoController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Todo  $todo
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Todo $todo)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -70,7 +69,14 @@ class TodoController extends Controller
      */
     public function update(Request $request, Todo $todo)
     {
-        //
+        $data = $request->validate([
+            'title' => 'required|string',
+            'isCompleted' => 'required|boolean'
+        ]);
+
+        $todo->update($data);
+
+        return response($todo, 200);
     }
 
     /**
@@ -81,6 +87,7 @@ class TodoController extends Controller
      */
     public function destroy(Todo $todo)
     {
-        //
+        $todo->delete();
+        return response('Deleted item', 200);
     }
 }

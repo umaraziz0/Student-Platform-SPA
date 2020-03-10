@@ -5672,7 +5672,8 @@ __webpack_require__.r(__webpack_exports__);
       }).then(function (response) {
         _this.data = response.data;
       }) // eslint-disable-next-line
-      ["catch"](function (errors) {//Handle Errors
+      ["catch"](function (errors) {
+        console.log(errors);
       });
     },
     reloadTable: function reloadTable(tableProps) {
@@ -5902,18 +5903,20 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       newTodo: "",
+      url: "api/todo/",
       beforeEditCache: "",
       filter: "all",
-      idForTodo: 3,
-      todos: [{
-        id: "",
-        title: "",
-        isCompleted: "",
-        editing: ""
-      }]
+      todos: [],
+      studentId: ""
     };
   },
-  created: function created() {//
+  created: function created() {
+    var _this = this;
+
+    this.getTodos();
+    Fire.$on("refresh", function () {
+      _this.getTodos();
+    });
   },
   computed: {
     remaining: function remaining() {
@@ -5954,18 +5957,36 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   methods: {
+    getTodos: function getTodos() {
+      var _this2 = this;
+
+      var url = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.url;
+      axios.get(url).then(function (response) {
+        _this2.todos = response.data;
+      })["catch"](function (errors) {
+        console.log(errors);
+      });
+    },
     addTodo: function addTodo() {
+      var url = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.url;
+      var newTodo = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.newTodo;
+
       //check for empty string
       if (this.newTodo.trim().length == 0) {
         return;
       }
 
-      this.todos.push({
-        id: this.idForTodo,
-        title: this.newTodo,
+      axios.post(url, {
+        student_id: "",
+        title: newTodo,
         isCompleted: false
+      }).then(function (response) {
+        console.log(response);
+      })["catch"](function (errors) {
+        console.log(errors);
       });
-      this.newTodo = "", this.idForTodo++;
+      this.newTodo = "";
+      Fire.$emit("refresh");
     },
     checkAll: function checkAll() {
       this.todos.forEach(function (todo) {
@@ -5982,19 +6003,36 @@ __webpack_require__.r(__webpack_exports__);
       todo.editing = todo.editing ? false : true;
     },
     doneEdit: function doneEdit(todo) {
+      var url = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.url;
+
       //check for empty string
       if (todo.title.trim() == "") {
         todo.title = this.beforeEditCache;
       }
 
       todo.editing = false;
+      axios.put(url + todo.id, {
+        title: todo.title,
+        isCompleted: todo.isCompleted
+      }).then(function (response) {
+        console.log(response);
+      })["catch"](function (errors) {
+        console.log(errors);
+      });
+      Fire.$emit("refresh");
     },
     cancelEdit: function cancelEdit(todo) {
       todo.editing = false;
       todo.title = this.beforeEditCache;
     },
-    removeTodo: function removeTodo(index) {
-      this.todos.splice(index, 1);
+    removeTodo: function removeTodo(id) {
+      var url = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.url;
+      axios["delete"](url + id).then(function (response) {
+        console.log(response);
+      })["catch"](function (errors) {
+        console.log(errors);
+      });
+      Fire.$emit("refresh");
     }
   }
 });
@@ -77770,7 +77808,7 @@ var render = function() {
                       ) {
                         return null
                       }
-                      return _vm.addTodo($event)
+                      return _vm.addTodo()
                     },
                     input: function($event) {
                       if ($event.target.composing) {
@@ -77785,7 +77823,11 @@ var render = function() {
                   "div",
                   {
                     staticClass: "input-group-append",
-                    on: { click: _vm.addTodo }
+                    on: {
+                      click: function($event) {
+                        return _vm.addTodo()
+                      }
+                    }
                   },
                   [_vm._m(1)]
                 )
@@ -77800,7 +77842,7 @@ var render = function() {
                     "leave-active-class": "animated fadeOutRight"
                   }
                 },
-                _vm._l(_vm.todosFiltered, function(todo, index) {
+                _vm._l(_vm.todosFiltered, function(todo) {
                   return _c(
                     "ul",
                     {
@@ -77895,7 +77937,10 @@ var render = function() {
                                       )
                                     ]
                                   )
-                                : _c("input", {
+                                : _vm._e(),
+                              _vm._v(" "),
+                              todo.editing
+                                ? _c("input", {
                                     directives: [
                                       {
                                         name: "model",
@@ -77952,6 +77997,7 @@ var render = function() {
                                       }
                                     }
                                   })
+                                : _vm._e()
                             ]),
                             _vm._v(" "),
                             _c("div", { staticClass: "tools" }, [
@@ -77968,7 +78014,7 @@ var render = function() {
                                 staticClass: "fas fa-trash",
                                 on: {
                                   click: function($event) {
-                                    return _vm.removeTodo(index)
+                                    return _vm.removeTodo(todo.id)
                                   }
                                 }
                               })

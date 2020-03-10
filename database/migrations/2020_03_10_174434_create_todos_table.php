@@ -15,8 +15,12 @@ class CreateTodosTable extends Migration
     {
         Schema::create('todos', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->integer('student_id');
+            $table->foreign('student_id')->references('student_id')->on('users')
+                ->onUpdate('cascade')->onDelete('cascade');
             $table->string('title');
             $table->boolean('isCompleted')->default(false);
+            $table->boolean('editing')->default(false);
             $table->timestamps();
         });
     }

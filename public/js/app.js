@@ -5487,11 +5487,11 @@ __webpack_require__.r(__webpack_exports__);
 
         Swal.fire({
           icon: "success",
-          title: "Profile updated."
-        });
-        setTimeout(function () {
+          title: "Profile updated.",
+          timer: 1500
+        }).then(function () {
           location.reload();
-        }, 1500);
+        });
       })["catch"](function () {
         _this4.$Progress.fail();
       });
@@ -5906,15 +5906,10 @@ __webpack_require__.r(__webpack_exports__);
       filter: "all",
       idForTodo: 3,
       todos: [{
-        id: 1,
-        title: "finish todo list",
-        isCompleted: false,
-        editing: false
-      }, {
-        id: 2,
-        title: "finish thesis",
-        isCompleted: false,
-        editing: false
+        id: "",
+        title: "",
+        isCompleted: "",
+        editing: ""
       }]
     };
   },

@@ -524,11 +524,11 @@ export default {
                     this.$Progress.finish();
                     Swal.fire({
                         icon: "success",
-                        title: "Profile updated."
-                    });
-                    setTimeout(() => {
+                        title: "Profile updated.",
+                        timer: 1500
+                    }).then(() => {
                         location.reload();
-                    }, 1500);
+                    });
                 })
                 .catch(() => {
                     this.$Progress.fail();

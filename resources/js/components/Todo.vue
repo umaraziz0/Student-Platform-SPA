@@ -214,16 +214,10 @@ export default {
             idForTodo: 3,
             todos: [
                 {
-                    id: 1,
-                    title: "finish todo list",
-                    isCompleted: false,
-                    editing: false
-                },
-                {
-                    id: 2,
-                    title: "finish thesis",
-                    isCompleted: false,
-                    editing: false
+                    id: "",
+                    title: "",
+                    isCompleted: "",
+                    editing: ""
                 }
             ]
         };

@@ -8,7 +8,7 @@ require("./bootstrap");
 
 window.Vue = require("vue");
 
-import DataTable from 'laravel-vue-datatable';
+import DataTable from "laravel-vue-datatable";
 Vue.use(DataTable);
 
 import ButtonEdit from "./components/ButtonEdit.vue";
@@ -17,6 +17,14 @@ import ButtonCheck from "./components/ButtonCheck.vue";
 window.ButtonEdit = ButtonEdit;
 window.ButtonDelete = ButtonDelete;
 window.ButtonCheck = ButtonCheck;
+
+import FullCalendar from "@fullcalendar/vue";
+import dayGridPlugin from "@fullcalendar/daygrid";
+import interactionPlugin from "@fullcalendar/interaction";
+
+window.FullCalendar = FullCalendar;
+window.dayGridPlugin = dayGridPlugin;
+window.interactionPlugin = interactionPlugin;
 
 import moment from "moment";
 import {
@@ -102,6 +110,10 @@ let routes = [{
     {
         path: "/todo",
         component: require("./components/Todo.vue").default
+    },
+    {
+        path: "/calendar",
+        component: require("./components/Calendar.vue").default
     },
     {
         path: "*",

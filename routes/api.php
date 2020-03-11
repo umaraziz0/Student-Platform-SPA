@@ -27,7 +27,8 @@ Route::group(['middleware' => 'auth:api'], function () {
         'takencourse' => 'API\TakenCourseController',
         'teacher' => 'API\TeacherController',
         'grade' => 'API\GradeController',
-        'todo' => 'API\TodoController'
+        'todo' => 'API\TodoController',
+        'calendar' => 'API\EventController'
     ]);
 });
 

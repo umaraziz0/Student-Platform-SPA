@@ -40,7 +40,11 @@ class EventController extends Controller
         $studentId = $this->user->student_id;
         $request->merge(['student_id' => $studentId]);
 
-        //! validation
+        $request->validate([
+            'name' => 'required|string',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date'
+        ]);
 
         $new_calendar = Event::create($request->all());
         return response()->json([
@@ -68,12 +72,15 @@ class EventController extends Controller
      * @param  \App\Event  $event
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Event $event)
+    public function update(Request $request, $id)
     {
-        $studentId = $this->user->student_id;
-        $request->merge(['student_id' => $studentId]);
+        $event = Event::findOrFail($id);
 
-        //! validation
+        $request->validate([
+            'name' => 'required|string',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date'
+        ]);
 
         $event->update($request->all());
         return response()->json([
@@ -89,8 +96,9 @@ class EventController extends Controller
      * @param  \App\Event  $event
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Event $event)
+    public function destroy($id)
     {
+        $event = Event::findOrFail($id);
         $event->delete();
         return response('Event deleted!', Response::HTTP_NO_CONTENT);
     }

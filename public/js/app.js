@@ -15372,6 +15372,8 @@ __webpack_require__.r(__webpack_exports__);
         _this3.$Progress.finish();
       })["catch"](function (errors) {
         _this3.$Progress.fail();
+
+        console.log(errors);
       });
     },
     editModal: function editModal(formData) {
@@ -15774,15 +15776,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
     FullCalendar: FullCalendar // make the <FullCalendar> tag available
@@ -15790,25 +15783,120 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      calendarPlugins: [dayGridPlugin],
+      calendarPlugins: [dayGridPlugin, interactionPlugin],
       editMode: false,
       url: "api/calendar/",
-      data: {},
+      events: "",
+      indexToUpdate: "",
       form: new Form({
         id: "",
         student_id: "",
-        title: "",
-        start: "",
-        end: "",
+        name: "",
+        start_date: "",
+        end_date: "",
         start_time: "",
         end_time: "",
         details: ""
       })
     };
   },
+  created: function created() {
+    this.getEvents();
+  },
   methods: {
     createModal: function createModal() {
+      this.editMode = false;
+      this.form.clear();
+      this.form.reset();
       $("#newModal").modal("show");
+    },
+    getEvents: function getEvents() {
+      var _this = this;
+
+      var url = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.url;
+      axios.get(url).then(function (res) {
+        _this.events = res.data.data;
+      })["catch"](function (err) {
+        console.error(err.response.data);
+      });
+    },
+    showEvent: function showEvent(arg) {
+      this.editMode = true;
+      this.form.clear();
+      this.form.reset();
+      $("#newModal").modal("show");
+
+      var _this$events$find = this.events.find(function (event) {
+        return event.id === +arg.event.id;
+      }),
+          id = _this$events$find.id,
+          student_id = _this$events$find.student_id,
+          title = _this$events$find.title,
+          start = _this$events$find.start,
+          end = _this$events$find.end,
+          start_time = _this$events$find.start_time,
+          end_time = _this$events$find.end_time,
+          details = _this$events$find.details;
+
+      var eventData = {
+        id: id,
+        student_id: student_id,
+        name: title,
+        start_date: start,
+        end_date: end,
+        start_time: start_time,
+        end_time: end_time,
+        details: details
+      };
+      this.form.fill(eventData);
+    },
+    editEvent: function editEvent() {
+      var _this2 = this;
+
+      var url = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.url;
+      this.form.put(url + this.form.id).then(function (res) {
+        $("#newModal").modal("hide");
+        Toast.fire({
+          icon: "success",
+          title: "Event updated!"
+        });
+
+        _this2.getEvents();
+      })["catch"](function (err) {
+        console.log(err.response.data);
+      });
+    },
+    createEvent: function createEvent() {
+      var _this3 = this;
+
+      var url = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.url;
+      this.form.post(url).then(function (res) {
+        $("#newModal").modal("hide");
+        Toast.fire({
+          icon: "success",
+          title: "Event created!"
+        });
+
+        _this3.getEvents();
+      })["catch"](function (err) {
+        console.error(err);
+      });
+    },
+    deleteEvent: function deleteEvent() {
+      var _this4 = this;
+
+      var url = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.url;
+      this.form["delete"](url + this.form.id).then(function (res) {
+        $("#newModal").modal("hide");
+        Toast.fire({
+          icon: "success",
+          title: "Event deleted!"
+        });
+
+        _this4.getEvents();
+      })["catch"](function (err) {
+        console.error(err);
+      });
     }
   }
 });
@@ -87077,42 +87165,6 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "container" }, [
     _c("div", { staticClass: "row justify-content-center" }, [
-      _c("div", { staticClass: "col-md-8" }, [
-        _c(
-          "div",
-          { staticClass: "card" },
-          [
-            _c(
-              "button",
-              {
-                staticClass: "btn btn-success",
-                attrs: { type: "button" },
-                on: {
-                  click: function($event) {
-                    return _vm.createModal()
-                  }
-                }
-              },
-              [
-                _c("i", {
-                  staticClass: "fa fa-plus",
-                  attrs: { "aria-hidden": "true" }
-                }),
-                _vm._v("\n                    Add New Event\n                ")
-              ]
-            ),
-            _vm._v(" "),
-            _c("FullCalendar", {
-              attrs: {
-                defaultView: "dayGridMonth",
-                plugins: _vm.calendarPlugins
-              }
-            })
-          ],
-          1
-        )
-      ]),
-      _vm._v(" "),
       _c(
         "div",
         {
@@ -87170,8 +87222,8 @@ var render = function() {
                               {
                                 name: "model",
                                 rawName: "v-model",
-                                value: _vm.form.title,
-                                expression: "form.title"
+                                value: _vm.form.name,
+                                expression: "form.name"
                               }
                             ],
                             staticClass: "form-control",
@@ -87184,13 +87236,13 @@ var render = function() {
                               placeholder: "",
                               field: "name"
                             },
-                            domProps: { value: _vm.form.title },
+                            domProps: { value: _vm.form.name },
                             on: {
                               input: function($event) {
                                 if ($event.target.composing) {
                                   return
                                 }
-                                _vm.$set(_vm.form, "title", $event.target.value)
+                                _vm.$set(_vm.form, "name", $event.target.value)
                               }
                             }
                           }),
@@ -87215,32 +87267,36 @@ var render = function() {
                               {
                                 name: "model",
                                 rawName: "v-model",
-                                value: _vm.form.start,
-                                expression: "form.start"
+                                value: _vm.form.start_date,
+                                expression: "form.start_date"
                               }
                             ],
                             staticClass: "custom-select",
                             class: {
-                              "is-invalid": _vm.form.errors.has("start")
+                              "is-invalid": _vm.form.errors.has("start_date")
                             },
                             attrs: {
                               type: "date",
                               id: "inputStartDate",
-                              name: "start"
+                              name: "start_date"
                             },
-                            domProps: { value: _vm.form.start },
+                            domProps: { value: _vm.form.start_date },
                             on: {
                               input: function($event) {
                                 if ($event.target.composing) {
                                   return
                                 }
-                                _vm.$set(_vm.form, "start", $event.target.value)
+                                _vm.$set(
+                                  _vm.form,
+                                  "start_date",
+                                  $event.target.value
+                                )
                               }
                             }
                           }),
                           _vm._v(" "),
                           _c("has-error", {
-                            attrs: { form: _vm.form, field: "start" }
+                            attrs: { form: _vm.form, field: "start_date" }
                           })
                         ],
                         1
@@ -87259,64 +87315,20 @@ var render = function() {
                               {
                                 name: "model",
                                 rawName: "v-model",
-                                value: _vm.form.end,
-                                expression: "form.end"
+                                value: _vm.form.end_date,
+                                expression: "form.end_date"
                               }
                             ],
                             staticClass: "custom-select",
                             class: {
-                              "is-invalid": _vm.form.errors.has("end")
+                              "is-invalid": _vm.form.errors.has("end_date")
                             },
                             attrs: {
                               type: "date",
                               id: "inputEndDate",
-                              name: "end"
+                              name: "end_date"
                             },
-                            domProps: { value: _vm.form.end },
-                            on: {
-                              input: function($event) {
-                                if ($event.target.composing) {
-                                  return
-                                }
-                                _vm.$set(_vm.form, "end", $event.target.value)
-                              }
-                            }
-                          }),
-                          _vm._v(" "),
-                          _c("has-error", {
-                            attrs: { form: _vm.form, field: "end" }
-                          })
-                        ],
-                        1
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "div",
-                        { staticClass: "form-group" },
-                        [
-                          _c("label", { attrs: { for: "inputStartTime" } }, [
-                            _vm._v("Start Time:")
-                          ]),
-                          _vm._v(" "),
-                          _c("input", {
-                            directives: [
-                              {
-                                name: "model",
-                                rawName: "v-model",
-                                value: _vm.form.start_time,
-                                expression: "form.start_time"
-                              }
-                            ],
-                            staticClass: "custom-select",
-                            class: {
-                              "is-invalid": _vm.form.errors.has("start_time")
-                            },
-                            attrs: {
-                              type: "time",
-                              id: "inputStartTime",
-                              name: "start_time"
-                            },
-                            domProps: { value: _vm.form.start_time },
+                            domProps: { value: _vm.form.end_date },
                             on: {
                               input: function($event) {
                                 if ($event.target.composing) {
@@ -87324,7 +87336,7 @@ var render = function() {
                                 }
                                 _vm.$set(
                                   _vm.form,
-                                  "start_time",
+                                  "end_date",
                                   $event.target.value
                                 )
                               }
@@ -87332,7 +87344,7 @@ var render = function() {
                           }),
                           _vm._v(" "),
                           _c("has-error", {
-                            attrs: { form: _vm.form, field: "start_time" }
+                            attrs: { form: _vm.form, field: "end_date" }
                           })
                         ],
                         1
@@ -87503,6 +87515,32 @@ var render = function() {
                         _c(
                           "button",
                           {
+                            directives: [
+                              {
+                                name: "show",
+                                rawName: "v-show",
+                                value: _vm.editMode,
+                                expression: "editMode"
+                              }
+                            ],
+                            staticClass: "btn btn-danger",
+                            attrs: { type: "button" },
+                            on: {
+                              click: function($event) {
+                                return _vm.deleteEvent()
+                              }
+                            }
+                          },
+                          [
+                            _vm._v(
+                              "\n                                Delete\n                            "
+                            )
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "button",
+                          {
                             staticClass: "btn",
                             class: {
                               "btn-success": !_vm.editMode,
@@ -87526,7 +87564,45 @@ var render = function() {
             ]
           )
         ]
-      )
+      ),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-md-8" }, [
+        _c(
+          "div",
+          { staticClass: "card" },
+          [
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-success",
+                attrs: { type: "button" },
+                on: {
+                  click: function($event) {
+                    return _vm.createModal()
+                  }
+                }
+              },
+              [
+                _c("i", {
+                  staticClass: "fa fa-plus",
+                  attrs: { "aria-hidden": "true" }
+                }),
+                _vm._v("\n                    Add New Event\n                ")
+              ]
+            ),
+            _vm._v(" "),
+            _c("FullCalendar", {
+              attrs: {
+                defaultView: "dayGridMonth",
+                plugins: _vm.calendarPlugins,
+                events: _vm.events
+              },
+              on: { eventClick: _vm.showEvent }
+            })
+          ],
+          1
+        )
+      ])
     ])
   ])
 }

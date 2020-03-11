@@ -1,22 +1,6 @@
 <template>
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card">
-                    <button
-                        type="button"
-                        class="btn btn-success"
-                        @click="createModal()"
-                    >
-                        <i class="fa fa-plus" aria-hidden="true"></i>
-                        Add New Event
-                    </button>
-                    <FullCalendar
-                        defaultView="dayGridMonth"
-                        :plugins="calendarPlugins"
-                    />
-                </div>
-            </div>
             <!-- Modal -->
             <div
                 class="modal fade"
@@ -53,7 +37,7 @@
                                     <label for="inputName">Name:</label>
                                     <input
                                         type="text"
-                                        v-model="form.title"
+                                        v-model="form.name"
                                         class="form-control"
                                         :class="{
                                             'is-invalid': form.errors.has(
@@ -75,57 +59,38 @@
                                     >
                                     <input
                                         type="date"
-                                        v-model="form.start"
+                                        v-model="form.start_date"
                                         class="custom-select"
                                         :class="{
                                             'is-invalid': form.errors.has(
-                                                'start'
+                                                'start_date'
                                             )
                                         }"
                                         id="inputStartDate"
-                                        name="start"
+                                        name="start_date"
                                     />
                                     <has-error
                                         :form="form"
-                                        field="start"
+                                        field="start_date"
                                     ></has-error>
                                 </div>
                                 <div class="form-group">
                                     <label for="inputEndDate">End Date:</label>
                                     <input
                                         type="date"
-                                        v-model="form.end"
-                                        class="custom-select"
-                                        :class="{
-                                            'is-invalid': form.errors.has('end')
-                                        }"
-                                        id="inputEndDate"
-                                        name="end"
-                                    />
-                                    <has-error
-                                        :form="form"
-                                        field="end"
-                                    ></has-error>
-                                </div>
-                                <div class="form-group">
-                                    <label for="inputStartTime"
-                                        >Start Time:</label
-                                    >
-                                    <input
-                                        type="time"
-                                        v-model="form.start_time"
+                                        v-model="form.end_date"
                                         class="custom-select"
                                         :class="{
                                             'is-invalid': form.errors.has(
-                                                'start_time'
+                                                'end_date'
                                             )
                                         }"
-                                        id="inputStartTime"
-                                        name="start_time"
+                                        id="inputEndDate"
+                                        name="end_date"
                                     />
                                     <has-error
                                         :form="form"
-                                        field="start_time"
+                                        field="end_date"
                                     ></has-error>
                                 </div>
                                 <div class="form-group">
@@ -197,6 +162,14 @@
                                     Close
                                 </button>
                                 <button
+                                    v-show="editMode"
+                                    type="button"
+                                    class="btn btn-danger"
+                                    @click="deleteEvent()"
+                                >
+                                    Delete
+                                </button>
+                                <button
                                     type="submit"
                                     class="btn"
                                     :class="{
@@ -212,6 +185,24 @@
                 </div>
             </div>
             <!-- Modal End -->
+            <div class="col-md-8">
+                <div class="card">
+                    <button
+                        type="button"
+                        class="btn btn-success"
+                        @click="createModal()"
+                    >
+                        <i class="fa fa-plus" aria-hidden="true"></i>
+                        Add New Event
+                    </button>
+                    <FullCalendar
+                        defaultView="dayGridMonth"
+                        :plugins="calendarPlugins"
+                        :events="events"
+                        @eventClick="showEvent"
+                    />
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -224,16 +215,17 @@ export default {
 
     data() {
         return {
-            calendarPlugins: [dayGridPlugin],
+            calendarPlugins: [dayGridPlugin, interactionPlugin],
             editMode: false,
             url: "api/calendar/",
-            data: {},
+            events: "",
+            indexToUpdate: "",
             form: new Form({
                 id: "",
                 student_id: "",
-                title: "",
-                start: "",
-                end: "",
+                name: "",
+                start_date: "",
+                end_date: "",
                 start_time: "",
                 end_time: "",
                 details: ""
@@ -241,9 +233,106 @@ export default {
         };
     },
 
+    created() {
+        this.getEvents();
+    },
+
     methods: {
         createModal() {
+            this.editMode = false;
+            this.form.clear();
+            this.form.reset();
             $("#newModal").modal("show");
+        },
+
+        getEvents(url = this.url) {
+            axios
+                .get(url)
+                .then(res => {
+                    this.events = res.data.data;
+                })
+                .catch(err => {
+                    console.error(err.response.data);
+                });
+        },
+
+        showEvent(arg) {
+            this.editMode = true;
+            this.form.clear();
+            this.form.reset();
+            $("#newModal").modal("show");
+
+            const {
+                id,
+                student_id,
+                title,
+                start,
+                end,
+                start_time,
+                end_time,
+                details
+            } = this.events.find(event => event.id === +arg.event.id);
+
+            let eventData = {
+                id: id,
+                student_id: student_id,
+                name: title,
+                start_date: start,
+                end_date: end,
+                start_time: start_time,
+                end_time: end_time,
+                details: details
+            };
+
+            this.form.fill(eventData);
+        },
+
+        editEvent(url = this.url) {
+            this.form
+                .put(url + this.form.id)
+                .then(res => {
+                    $("#newModal").modal("hide");
+                    Toast.fire({
+                        icon: "success",
+                        title: "Event updated!"
+                    });
+                    this.getEvents();
+                })
+                .catch(err => {
+                    console.log(err.response.data);
+                });
+        },
+
+        createEvent(url = this.url) {
+            this.form
+                .post(url)
+                .then(res => {
+                    $("#newModal").modal("hide");
+                    Toast.fire({
+                        icon: "success",
+                        title: "Event created!"
+                    });
+                    this.getEvents();
+                })
+                .catch(err => {
+                    console.error(err);
+                });
+        },
+
+        deleteEvent(url = this.url) {
+            this.form
+                .delete(url + this.form.id)
+                .then(res => {
+                    $("#newModal").modal("hide");
+                    Toast.fire({
+                        icon: "success",
+                        title: "Event deleted!"
+                    });
+                    this.getEvents();
+                })
+                .catch(err => {
+                    console.error(err);
+                });
         }
     }
 };

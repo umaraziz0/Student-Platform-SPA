@@ -323,6 +323,7 @@ export default {
                 })
                 .catch(errors => {
                     this.$Progress.fail();
+                    console.log(errors);
                 });
         },
 

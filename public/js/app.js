@@ -22299,6 +22299,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -22831,6 +22836,72 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
     FullCalendar: FullCalendar // make the <FullCalendar> tag available
@@ -22864,10 +22935,10 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   created: function created() {
-    this.getEvents();
+    this.getClasses();
   },
   methods: {
-    getEvents: function getEvents() {
+    getClasses: function getClasses() {
       var _this = this;
 
       var url = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.url;
@@ -22877,9 +22948,27 @@ __webpack_require__.r(__webpack_exports__);
         console.error(err.response.data);
       });
     },
-    createModal: function createModal() {//
+    createModal: function createModal() {
+      this.editMode = false;
+      this.form.clear();
+      this.form.reset();
+      $("#newModal").modal("show");
     },
-    createClass: function createClass() {//
+    addClass: function addClass() {
+      var _this2 = this;
+
+      var url = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.url;
+      this.form.post(url).then(function (res) {
+        $("#newModal").modal("hide");
+        Toast.fire({
+          icon: "success",
+          title: "Class added!"
+        });
+
+        _this2.getClasses();
+      })["catch"](function (err) {
+        console.error(err);
+      });
     },
     editClass: function editClass() {//
     },
@@ -95044,6 +95133,9 @@ var render = function() {
                                 }
                               ],
                               staticClass: "custom-select",
+                              class: {
+                                "is-invalid": _vm.form.errors.has("major")
+                              },
                               attrs: { id: "inputMajor", name: "major" },
                               on: {
                                 change: function($event) {
@@ -95523,9 +95615,7 @@ var render = function() {
                   _c("h4", { staticClass: "modal-title" }, [
                     _vm._v(
                       "\n                            " +
-                        _vm._s(
-                          _vm.editMode ? "Edit Class" : "Create New Class"
-                        ) +
+                        _vm._s(_vm.editMode ? "Edit Class" : "Add New Class") +
                         "\n                        "
                     )
                   ]),
@@ -95539,7 +95629,7 @@ var render = function() {
                     on: {
                       submit: function($event) {
                         $event.preventDefault()
-                        _vm.editMode ? _vm.editClass() : _vm.createClass()
+                        _vm.editMode ? _vm.editClass() : _vm.addClass()
                       }
                     }
                   },
@@ -95558,8 +95648,8 @@ var render = function() {
                               {
                                 name: "model",
                                 rawName: "v-model",
-                                value: _vm.form.name,
-                                expression: "form.name"
+                                value: _vm.form.course_name,
+                                expression: "form.course_name"
                               }
                             ],
                             staticClass: "form-control",
@@ -95569,16 +95659,19 @@ var render = function() {
                             attrs: {
                               type: "text",
                               id: "inputName",
-                              placeholder: "",
-                              field: "name"
+                              placeholder: ""
                             },
-                            domProps: { value: _vm.form.name },
+                            domProps: { value: _vm.form.course_name },
                             on: {
                               input: function($event) {
                                 if ($event.target.composing) {
                                   return
                                 }
-                                _vm.$set(_vm.form, "name", $event.target.value)
+                                _vm.$set(
+                                  _vm.form,
+                                  "course_name",
+                                  $event.target.value
+                                )
                               }
                             }
                           }),
@@ -95594,45 +95687,80 @@ var render = function() {
                         "div",
                         { staticClass: "form-group" },
                         [
-                          _c("label", { attrs: { for: "inputStartDate" } }, [
-                            _vm._v("Start Date:")
+                          _c("label", { attrs: { for: "inputDay" } }, [
+                            _vm._v("Day:")
                           ]),
                           _vm._v(" "),
-                          _c("input", {
-                            directives: [
-                              {
-                                name: "model",
-                                rawName: "v-model",
-                                value: _vm.form.start_date,
-                                expression: "form.start_date"
-                              }
-                            ],
-                            staticClass: "custom-select",
-                            class: {
-                              "is-invalid": _vm.form.errors.has("start_date")
-                            },
-                            attrs: {
-                              type: "date",
-                              id: "inputStartDate",
-                              name: "start_date"
-                            },
-                            domProps: { value: _vm.form.start_date },
-                            on: {
-                              input: function($event) {
-                                if ($event.target.composing) {
-                                  return
+                          _c(
+                            "select",
+                            {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.form.day,
+                                  expression: "form.day"
                                 }
-                                _vm.$set(
-                                  _vm.form,
-                                  "start_date",
-                                  $event.target.value
-                                )
+                              ],
+                              staticClass: "custom-select",
+                              class: {
+                                "is-invalid": _vm.form.errors.has("day")
+                              },
+                              attrs: {
+                                type: "text",
+                                id: "inputDay",
+                                name: "day"
+                              },
+                              on: {
+                                change: function($event) {
+                                  var $$selectedVal = Array.prototype.filter
+                                    .call($event.target.options, function(o) {
+                                      return o.selected
+                                    })
+                                    .map(function(o) {
+                                      var val =
+                                        "_value" in o ? o._value : o.value
+                                      return val
+                                    })
+                                  _vm.$set(
+                                    _vm.form,
+                                    "day",
+                                    $event.target.multiple
+                                      ? $$selectedVal
+                                      : $$selectedVal[0]
+                                  )
+                                }
                               }
-                            }
-                          }),
+                            },
+                            [
+                              _c("option", { attrs: { value: "mon" } }, [
+                                _vm._v("Monday")
+                              ]),
+                              _vm._v(" "),
+                              _c("option", { attrs: { value: "tues" } }, [
+                                _vm._v("Tuesday")
+                              ]),
+                              _vm._v(" "),
+                              _c("option", { attrs: { value: "wed" } }, [
+                                _vm._v("Wednesday")
+                              ]),
+                              _vm._v(" "),
+                              _c("option", { attrs: { value: "thurs" } }, [
+                                _vm._v("Thursday")
+                              ]),
+                              _vm._v(" "),
+                              _c("option", { attrs: { value: "sat" } }, [
+                                _vm._v("Saturday")
+                              ]),
+                              _vm._v(" "),
+                              _c("option", { attrs: { value: "sun" } }, [
+                                _vm._v("Sunday")
+                              ])
+                            ]
+                          ),
                           _vm._v(" "),
                           _c("has-error", {
-                            attrs: { form: _vm.form, field: "start_date" }
+                            attrs: { form: _vm.form, field: "day" }
                           })
                         ],
                         1
@@ -95642,45 +95770,118 @@ var render = function() {
                         "div",
                         { staticClass: "form-group" },
                         [
-                          _c("label", { attrs: { for: "inputEndDate" } }, [
-                            _vm._v("End Date:")
+                          _c("label", { attrs: { for: "inputDay" } }, [
+                            _vm._v("Type:")
                           ]),
+                          _c("br"),
                           _vm._v(" "),
-                          _c("input", {
-                            directives: [
-                              {
-                                name: "model",
-                                rawName: "v-model",
-                                value: _vm.form.end_date,
-                                expression: "form.end_date"
-                              }
-                            ],
-                            staticClass: "custom-select",
-                            class: {
-                              "is-invalid": _vm.form.errors.has("end_date")
+                          _c(
+                            "div",
+                            {
+                              staticClass:
+                                "custom-control custom-radio custom-control-inline"
                             },
-                            attrs: {
-                              type: "date",
-                              id: "inputEndDate",
-                              name: "end_date"
-                            },
-                            domProps: { value: _vm.form.end_date },
-                            on: {
-                              input: function($event) {
-                                if ($event.target.composing) {
-                                  return
+                            [
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.form.class_type,
+                                    expression: "form.class_type"
+                                  }
+                                ],
+                                staticClass: "custom-control-input",
+                                class: {
+                                  "is-invalid": _vm.form.errors.has("type")
+                                },
+                                attrs: {
+                                  type: "radio",
+                                  id: "lecture",
+                                  value: "lecture",
+                                  name: "type"
+                                },
+                                domProps: {
+                                  checked: _vm._q(
+                                    _vm.form.class_type,
+                                    "lecture"
+                                  )
+                                },
+                                on: {
+                                  change: function($event) {
+                                    return _vm.$set(
+                                      _vm.form,
+                                      "class_type",
+                                      "lecture"
+                                    )
+                                  }
                                 }
-                                _vm.$set(
-                                  _vm.form,
-                                  "end_date",
-                                  $event.target.value
-                                )
-                              }
-                            }
-                          }),
+                              }),
+                              _vm._v(" "),
+                              _c(
+                                "label",
+                                {
+                                  staticClass: "custom-control-label",
+                                  attrs: { for: "lecture" }
+                                },
+                                [_vm._v("Lecture")]
+                              )
+                            ]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "div",
+                            {
+                              staticClass:
+                                "custom-control custom-radio custom-control-inline"
+                            },
+                            [
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.form.class_type,
+                                    expression: "form.class_type"
+                                  }
+                                ],
+                                staticClass: "custom-control-input",
+                                class: {
+                                  "is-invalid": _vm.form.errors.has("type")
+                                },
+                                attrs: {
+                                  type: "radio",
+                                  id: "lab",
+                                  value: "lab",
+                                  name: "type"
+                                },
+                                domProps: {
+                                  checked: _vm._q(_vm.form.class_type, "lab")
+                                },
+                                on: {
+                                  change: function($event) {
+                                    return _vm.$set(
+                                      _vm.form,
+                                      "class_type",
+                                      "lab"
+                                    )
+                                  }
+                                }
+                              }),
+                              _vm._v(" "),
+                              _c(
+                                "label",
+                                {
+                                  staticClass: "custom-control-label",
+                                  attrs: { for: "lab" }
+                                },
+                                [_vm._v("Lab")]
+                              )
+                            ]
+                          ),
                           _vm._v(" "),
                           _c("has-error", {
-                            attrs: { form: _vm.form, field: "end_date" }
+                            attrs: { form: _vm.form, field: "type" }
                           })
                         ],
                         1
@@ -95691,7 +95892,7 @@ var render = function() {
                         { staticClass: "form-group" },
                         [
                           _c("label", { attrs: { for: "inputStartTime" } }, [
-                            _vm._v("Start Time:")
+                            _vm._v("Start:")
                           ]),
                           _vm._v(" "),
                           _c("input", {
@@ -95699,36 +95900,32 @@ var render = function() {
                               {
                                 name: "model",
                                 rawName: "v-model",
-                                value: _vm.form.start_time,
-                                expression: "form.start_time"
+                                value: _vm.form.start,
+                                expression: "form.start"
                               }
                             ],
-                            staticClass: "custom-select",
+                            staticClass: "form-control",
                             class: {
-                              "is-invalid": _vm.form.errors.has("start_time")
+                              "is-invalid": _vm.form.errors.has("start")
                             },
                             attrs: {
                               type: "time",
                               id: "inputStartTime",
-                              name: "start_time"
+                              name: "start"
                             },
-                            domProps: { value: _vm.form.start_time },
+                            domProps: { value: _vm.form.start },
                             on: {
                               input: function($event) {
                                 if ($event.target.composing) {
                                   return
                                 }
-                                _vm.$set(
-                                  _vm.form,
-                                  "start_time",
-                                  $event.target.value
-                                )
+                                _vm.$set(_vm.form, "start", $event.target.value)
                               }
                             }
                           }),
                           _vm._v(" "),
                           _c("has-error", {
-                            attrs: { form: _vm.form, field: "start_time" }
+                            attrs: { form: _vm.form, field: "start" }
                           })
                         ],
                         1
@@ -95739,7 +95936,7 @@ var render = function() {
                         { staticClass: "form-group" },
                         [
                           _c("label", { attrs: { for: "inputEndTime" } }, [
-                            _vm._v("End Time:")
+                            _vm._v("End:")
                           ]),
                           _vm._v(" "),
                           _c("input", {
@@ -95747,20 +95944,108 @@ var render = function() {
                               {
                                 name: "model",
                                 rawName: "v-model",
-                                value: _vm.form.end_time,
-                                expression: "form.end_time"
+                                value: _vm.form.end,
+                                expression: "form.end"
                               }
                             ],
-                            staticClass: "custom-select",
+                            staticClass: "form-control",
                             class: {
-                              "is-invalid": _vm.form.errors.has("end_time")
+                              "is-invalid": _vm.form.errors.has("end")
                             },
                             attrs: {
                               type: "time",
                               id: "inputEndTime",
-                              name: "end_time"
+                              name: "end"
                             },
-                            domProps: { value: _vm.form.end_time },
+                            domProps: { value: _vm.form.end },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(_vm.form, "end", $event.target.value)
+                              }
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c("has-error", {
+                            attrs: { form: _vm.form, field: "end" }
+                          })
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        { staticClass: "form-group" },
+                        [
+                          _c("label", { attrs: { for: "inputRoom" } }, [
+                            _vm._v("Room:")
+                          ]),
+                          _vm._v(" "),
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.form.room,
+                                expression: "form.room"
+                              }
+                            ],
+                            staticClass: "form-control",
+                            class: {
+                              "is-invalid": _vm.form.errors.has("room")
+                            },
+                            attrs: {
+                              type: "text",
+                              id: "inputRoom",
+                              name: "room"
+                            },
+                            domProps: { value: _vm.form.room },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(_vm.form, "room", $event.target.value)
+                              }
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c("has-error", {
+                            attrs: { form: _vm.form, field: "room" }
+                          })
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        { staticClass: "form-group" },
+                        [
+                          _c("label", { attrs: { for: "inputBuilding" } }, [
+                            _vm._v("Building:")
+                          ]),
+                          _vm._v(" "),
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.form.building,
+                                expression: "form.building"
+                              }
+                            ],
+                            staticClass: "form-control",
+                            class: {
+                              "is-invalid": _vm.form.errors.has("buliding")
+                            },
+                            attrs: {
+                              type: "text",
+                              id: "inputBuilding",
+                              name: "buliding"
+                            },
+                            domProps: { value: _vm.form.building },
                             on: {
                               input: function($event) {
                                 if ($event.target.composing) {
@@ -95768,7 +96053,7 @@ var render = function() {
                                 }
                                 _vm.$set(
                                   _vm.form,
-                                  "end_time",
+                                  "building",
                                   $event.target.value
                                 )
                               }
@@ -95776,7 +96061,7 @@ var render = function() {
                           }),
                           _vm._v(" "),
                           _c("has-error", {
-                            attrs: { form: _vm.form, field: "end_time" }
+                            attrs: { form: _vm.form, field: "buliding" }
                           })
                         ],
                         1
@@ -95887,7 +96172,7 @@ var render = function() {
                           [
                             _vm._v(
                               "\n                                " +
-                                _vm._s(_vm.editMode ? "Update" : "Create") +
+                                _vm._s(_vm.editMode ? "Update" : "Add") +
                                 "\n                            "
                             )
                           ]

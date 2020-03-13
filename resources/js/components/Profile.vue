@@ -263,6 +263,11 @@
                                             <select
                                                 v-model="form.major"
                                                 class="custom-select"
+                                                :class="{
+                                                    'is-invalid': form.errors.has(
+                                                        'major'
+                                                    )
+                                                }"
                                                 id="inputMajor"
                                                 name="major"
                                             >

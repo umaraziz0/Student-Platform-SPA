@@ -14,9 +14,7 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <h4 class="modal-title">
-                                {{
-                                    editMode ? "Edit Class" : "Create New Class"
-                                }}
+                                {{ editMode ? "Edit Class" : "Add New Class" }}
                             </h4>
                             <button
                                 type="button"
@@ -29,7 +27,7 @@
                         </div>
                         <form
                             @submit.prevent="
-                                editMode ? editClass() : createClass()
+                                editMode ? editClass() : addClass()
                             "
                         >
                             <div class="modal-body">
@@ -37,7 +35,7 @@
                                     <label for="inputName">Name:</label>
                                     <input
                                         type="text"
-                                        v-model="form.name"
+                                        v-model="form.course_name"
                                         class="form-control"
                                         :class="{
                                             'is-invalid': form.errors.has(
@@ -46,7 +44,6 @@
                                         }"
                                         id="inputName"
                                         placeholder=""
-                                        field="name"
                                     />
                                     <has-error
                                         :form="form"
@@ -54,83 +51,152 @@
                                     ></has-error>
                                 </div>
                                 <div class="form-group">
-                                    <label for="inputStartDate"
-                                        >Start Date:</label
-                                    >
-                                    <input
-                                        type="date"
-                                        v-model="form.start_date"
+                                    <label for="inputDay">Day:</label>
+                                    <select
+                                        type="text"
+                                        v-model="form.day"
                                         class="custom-select"
                                         :class="{
-                                            'is-invalid': form.errors.has(
-                                                'start_date'
-                                            )
+                                            'is-invalid': form.errors.has('day')
                                         }"
-                                        id="inputStartDate"
-                                        name="start_date"
-                                    />
+                                        id="inputDay"
+                                        name="day"
+                                    >
+                                        <option value="mon">Monday</option>
+                                        <option value="tues">Tuesday</option>
+                                        <option value="wed">Wednesday</option>
+                                        <option value="thurs">Thursday</option>
+                                        <option value="sat">Saturday</option>
+                                        <option value="sun">Sunday</option>
+                                    </select>
                                     <has-error
                                         :form="form"
-                                        field="start_date"
+                                        field="day"
                                     ></has-error>
                                 </div>
                                 <div class="form-group">
-                                    <label for="inputEndDate">End Date:</label>
-                                    <input
-                                        type="date"
-                                        v-model="form.end_date"
-                                        class="custom-select"
-                                        :class="{
-                                            'is-invalid': form.errors.has(
-                                                'end_date'
-                                            )
-                                        }"
-                                        id="inputEndDate"
-                                        name="end_date"
-                                    />
+                                    <label for="inputDay">Type:</label><br />
+                                    <div
+                                        class="custom-control custom-radio custom-control-inline"
+                                    >
+                                        <input
+                                            type="radio"
+                                            v-model="form.class_type"
+                                            id="lecture"
+                                            value="lecture"
+                                            name="type"
+                                            class="custom-control-input"
+                                            :class="{
+                                                'is-invalid': form.errors.has(
+                                                    'type'
+                                                )
+                                            }"
+                                        />
+                                        <label
+                                            class="custom-control-label"
+                                            for="lecture"
+                                            >Lecture</label
+                                        >
+                                    </div>
+                                    <div
+                                        class="custom-control custom-radio custom-control-inline"
+                                    >
+                                        <input
+                                            type="radio"
+                                            v-model="form.class_type"
+                                            id="lab"
+                                            value="lab"
+                                            name="type"
+                                            class="custom-control-input"
+                                            :class="{
+                                                'is-invalid': form.errors.has(
+                                                    'type'
+                                                )
+                                            }"
+                                        />
+                                        <label
+                                            class="custom-control-label"
+                                            for="lab"
+                                            >Lab</label
+                                        >
+                                    </div>
                                     <has-error
                                         :form="form"
-                                        field="end_date"
+                                        field="type"
                                     ></has-error>
                                 </div>
                                 <div class="form-group">
-                                    <label for="inputStartTime"
-                                        >Start Time:</label
-                                    >
+                                    <label for="inputStartTime">Start:</label>
                                     <input
                                         type="time"
-                                        v-model="form.start_time"
-                                        class="custom-select"
+                                        v-model="form.start"
+                                        class="form-control"
                                         :class="{
                                             'is-invalid': form.errors.has(
-                                                'start_time'
+                                                'start'
                                             )
                                         }"
                                         id="inputStartTime"
-                                        name="start_time"
+                                        name="start"
                                     />
                                     <has-error
                                         :form="form"
-                                        field="start_time"
+                                        field="start"
                                     ></has-error>
                                 </div>
                                 <div class="form-group">
-                                    <label for="inputEndTime">End Time:</label>
+                                    <label for="inputEndTime">End:</label>
                                     <input
                                         type="time"
-                                        v-model="form.end_time"
-                                        class="custom-select"
+                                        v-model="form.end"
+                                        class="form-control"
                                         :class="{
-                                            'is-invalid': form.errors.has(
-                                                'end_time'
-                                            )
+                                            'is-invalid': form.errors.has('end')
                                         }"
                                         id="inputEndTime"
-                                        name="end_time"
+                                        name="end"
                                     />
                                     <has-error
                                         :form="form"
-                                        field="end_time"
+                                        field="end"
+                                    ></has-error>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inputRoom">Room:</label>
+                                    <input
+                                        type="text"
+                                        v-model="form.room"
+                                        class="form-control"
+                                        :class="{
+                                            'is-invalid': form.errors.has(
+                                                'room'
+                                            )
+                                        }"
+                                        id="inputRoom"
+                                        name="room"
+                                    />
+                                    <has-error
+                                        :form="form"
+                                        field="room"
+                                    ></has-error>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inputBuilding">Building:</label>
+                                    <input
+                                        type="text"
+                                        v-model="form.building"
+                                        class="form-control"
+                                        :class="{
+                                            'is-invalid': form.errors.has(
+                                                'buliding'
+                                            )
+                                        }"
+                                        id="inputBuilding"
+                                        name="buliding"
+                                    />
+                                    <has-error
+                                        :form="form"
+                                        field="buliding"
                                     ></has-error>
                                 </div>
                                 <div class="form-group">
@@ -177,7 +243,7 @@
                                         'btn-primary': editMode
                                     }"
                                 >
-                                    {{ editMode ? "Update" : "Create" }}
+                                    {{ editMode ? "Update" : "Add" }}
                                 </button>
                             </div>
                         </form>
@@ -261,11 +327,11 @@ export default {
     },
 
     created() {
-        this.getEvents();
+        this.getClasses();
     },
 
     methods: {
-        getEvents(url = this.url) {
+        getClasses(url = this.url) {
             axios
                 .get(url)
                 .then(res => {
@@ -277,11 +343,26 @@ export default {
         },
 
         createModal() {
-            //
+            this.editMode = false;
+            this.form.clear();
+            this.form.reset();
+            $("#newModal").modal("show");
         },
 
-        createClass() {
-            //
+        addClass(url = this.url) {
+            this.form
+                .post(url)
+                .then(res => {
+                    $("#newModal").modal("hide");
+                    Toast.fire({
+                        icon: "success",
+                        title: "Class added!"
+                    });
+                    this.getClasses();
+                })
+                .catch(err => {
+                    console.error(err);
+                });
         },
 
         editClass() {

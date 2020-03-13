@@ -44,8 +44,8 @@ class TimetableController extends Controller
             'course_name' => 'required|string',
             'class_type' => 'required|string',
             'day' => 'required|string',
-            'start' => 'required|time',
-            'end' => 'required|time'
+            'start' => 'required',
+            'end' => 'required'
         ]);
 
         $new_calendar = Timetable::create($request->all());

@@ -32,7 +32,7 @@
                         >
                             <div class="modal-body">
                                 <div class="form-group">
-                                    <label for="inputName">Name:</label>
+                                    <label for="inputName">Class:</label>
                                     <input
                                         type="text"
                                         v-model="form.course_name"
@@ -66,6 +66,7 @@
                                         <option value="tues">Tuesday</option>
                                         <option value="wed">Wednesday</option>
                                         <option value="thurs">Thursday</option>
+                                        <option value="fri">Friday</option>
                                         <option value="sat">Saturday</option>
                                         <option value="sun">Sunday</option>
                                     </select>
@@ -257,12 +258,8 @@
                 <FullCalendar
                     defaultView="resourceTimeGridDay"
                     :plugins="calendarPlugins"
-                    :events="events"
+                    :events="classes"
                     @eventClick="showClass"
-                    :visibleRange="{
-                        start: '2020-03-09',
-                        end: '2020-03-15'
-                    }"
                     :resources="[
                         { id: 'mon', title: 'Monday' },
                         { id: 'tues', title: 'Tuesday' },
@@ -310,7 +307,7 @@ export default {
                     end: "2020-03-14 13:00:00"
                 }
             ],
-            events: "",
+            classes: "",
             form: new Form({
                 id: "",
                 student_id: "",
@@ -335,7 +332,7 @@ export default {
             axios
                 .get(url)
                 .then(res => {
-                    this.events = res.data.data;
+                    this.classes = res.data.data;
                 })
                 .catch(err => {
                     console.error(err.response.data);
@@ -365,15 +362,58 @@ export default {
                 });
         },
 
-        editClass() {
-            //
+        showClass(arg) {
+            this.editMode = true;
+            this.form.clear();
+            this.form.reset();
+            $("#newModal").modal("show");
+
+            const {
+                id,
+                student_id,
+                title,
+                resourceId,
+                class_type,
+                start,
+                end,
+                room,
+                building,
+                details
+            } = this.classes.find(event => event.id === +arg.event.id);
+
+            let classData = {
+                id: id,
+                student_id: student_id,
+                course_name: title,
+                class_type: class_type,
+                day: resourceId,
+                start: start.slice(11),
+                end: end.slice(11),
+                room: room,
+                building: building,
+                details: details
+            };
+
+            this.form.fill(classData);
+        },
+
+        editClass(url = this.url) {
+            this.form
+                .put(url + this.form.id)
+                .then(res => {
+                    $("#newModal").modal("hide");
+                    Toast.fire({
+                        icon: "success",
+                        title: "Class updated!"
+                    });
+                    this.getClasses();
+                })
+                .catch(err => {
+                    console.log(err.response.data);
+                });
         },
 
         deleteClass() {
-            //
-        },
-
-        showClass() {
             //
         }
     }

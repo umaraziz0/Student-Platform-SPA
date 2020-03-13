@@ -74,9 +74,24 @@ class TimetableController extends Controller
      * @param  \App\Timetable  $timetable
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Timetable $timetable)
+    public function update(Request $request, $id)
     {
-        //
+        $class = Timetable::findOrFail($id);
+
+        $request->validate([
+            'course_name' => 'required|string',
+            'class_type' => 'required|string',
+            'day' => 'required|string',
+            'start' => 'required',
+            'end' => 'required'
+        ]);
+
+        $class->update($request->all());
+        return response()->json([
+            'data' => new TimetableResource($class),
+            'message' => 'Timetable updated!',
+            'status' => Response::HTTP_ACCEPTED
+        ]);
     }
 
     /**

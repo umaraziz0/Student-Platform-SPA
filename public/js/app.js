@@ -22899,9 +22899,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
     FullCalendar: FullCalendar // make the <FullCalendar> tag available
@@ -22919,7 +22916,7 @@ __webpack_require__.r(__webpack_exports__);
         start: "2020-03-14 12:00:00",
         end: "2020-03-14 13:00:00"
       }],
-      events: "",
+      classes: "",
       form: new Form({
         id: "",
         student_id: "",
@@ -22943,7 +22940,7 @@ __webpack_require__.r(__webpack_exports__);
 
       var url = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.url;
       axios.get(url).then(function (res) {
-        _this.events = res.data.data;
+        _this.classes = res.data.data;
       })["catch"](function (err) {
         console.error(err.response.data);
       });
@@ -22970,11 +22967,57 @@ __webpack_require__.r(__webpack_exports__);
         console.error(err);
       });
     },
-    editClass: function editClass() {//
+    showClass: function showClass(arg) {
+      this.editMode = true;
+      this.form.clear();
+      this.form.reset();
+      $("#newModal").modal("show");
+
+      var _this$classes$find = this.classes.find(function (event) {
+        return event.id === +arg.event.id;
+      }),
+          id = _this$classes$find.id,
+          student_id = _this$classes$find.student_id,
+          title = _this$classes$find.title,
+          resourceId = _this$classes$find.resourceId,
+          class_type = _this$classes$find.class_type,
+          start = _this$classes$find.start,
+          end = _this$classes$find.end,
+          room = _this$classes$find.room,
+          building = _this$classes$find.building,
+          details = _this$classes$find.details;
+
+      var classData = {
+        id: id,
+        student_id: student_id,
+        course_name: title,
+        class_type: class_type,
+        day: resourceId,
+        start: start.slice(11),
+        end: end.slice(11),
+        room: room,
+        building: building,
+        details: details
+      };
+      this.form.fill(classData);
+    },
+    editClass: function editClass() {
+      var _this3 = this;
+
+      var url = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.url;
+      this.form.put(url + this.form.id).then(function (res) {
+        $("#newModal").modal("hide");
+        Toast.fire({
+          icon: "success",
+          title: "Class updated!"
+        });
+
+        _this3.getClasses();
+      })["catch"](function (err) {
+        console.log(err.response.data);
+      });
     },
     deleteClass: function deleteClass() {//
-    },
-    showClass: function showClass() {//
     }
   }
 });
@@ -95640,7 +95683,7 @@ var render = function() {
                         { staticClass: "form-group" },
                         [
                           _c("label", { attrs: { for: "inputName" } }, [
-                            _vm._v("Name:")
+                            _vm._v("Class:")
                           ]),
                           _vm._v(" "),
                           _c("input", {
@@ -95747,6 +95790,10 @@ var render = function() {
                               _vm._v(" "),
                               _c("option", { attrs: { value: "thurs" } }, [
                                 _vm._v("Thursday")
+                              ]),
+                              _vm._v(" "),
+                              _c("option", { attrs: { value: "fri" } }, [
+                                _vm._v("Friday")
                               ]),
                               _vm._v(" "),
                               _c("option", { attrs: { value: "sat" } }, [
@@ -96199,11 +96246,7 @@ var render = function() {
             attrs: {
               defaultView: "resourceTimeGridDay",
               plugins: _vm.calendarPlugins,
-              events: _vm.events,
-              visibleRange: {
-                start: "2020-03-09",
-                end: "2020-03-15"
-              },
+              events: _vm.classes,
               resources: [
                 { id: "mon", title: "Monday" },
                 { id: "tues", title: "Tuesday" },

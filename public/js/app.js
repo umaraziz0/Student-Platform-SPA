@@ -23017,7 +23017,21 @@ __webpack_require__.r(__webpack_exports__);
         console.log(err.response.data);
       });
     },
-    deleteClass: function deleteClass() {//
+    deleteClass: function deleteClass() {
+      var _this4 = this;
+
+      var url = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.url;
+      this.form["delete"](url + this.form.id).then(function (res) {
+        $("#newModal").modal("hide");
+        Toast.fire({
+          icon: "success",
+          title: "Class deleted!"
+        });
+
+        _this4.getClasses();
+      })["catch"](function (err) {
+        console.error(err);
+      });
     }
   }
 });

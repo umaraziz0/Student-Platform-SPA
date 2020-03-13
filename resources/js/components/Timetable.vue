@@ -413,8 +413,20 @@ export default {
                 });
         },
 
-        deleteClass() {
-            //
+        deleteClass(url = this.url) {
+            this.form
+                .delete(url + this.form.id)
+                .then(res => {
+                    $("#newModal").modal("hide");
+                    Toast.fire({
+                        icon: "success",
+                        title: "Class deleted!"
+                    });
+                    this.getClasses();
+                })
+                .catch(err => {
+                    console.error(err);
+                });
         }
     }
 };

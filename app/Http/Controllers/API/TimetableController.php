@@ -51,7 +51,7 @@ class TimetableController extends Controller
         $new_calendar = Timetable::create($request->all());
         return response()->json([
             'data' => new TimetableResource($new_calendar),
-            'message' => 'Timetable added!',
+            'message' => 'Class added!',
             'status' => Response::HTTP_CREATED
         ]);
     }
@@ -100,8 +100,10 @@ class TimetableController extends Controller
      * @param  \App\Timetable  $timetable
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Timetable $timetable)
+    public function destroy($id)
     {
-        //
+        $class = Timetable::findOrFail($id);
+        $class->delete();
+        return response('Class deleted!', Response::HTTP_NO_CONTENT);
     }
 }

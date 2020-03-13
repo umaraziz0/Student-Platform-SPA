@@ -14,6 +14,7 @@ Vue.use(DataTable);
 import ButtonEdit from "./components/ButtonEdit.vue";
 import ButtonDelete from "./components/ButtonDelete.vue";
 import ButtonCheck from "./components/ButtonCheck.vue";
+
 window.ButtonEdit = ButtonEdit;
 window.ButtonDelete = ButtonDelete;
 window.ButtonCheck = ButtonCheck;
@@ -21,17 +22,15 @@ window.ButtonCheck = ButtonCheck;
 import FullCalendar from "@fullcalendar/vue";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
+import resourceTimeGridPlugin from "@fullcalendar/resource-timegrid";
 
 window.FullCalendar = FullCalendar;
 window.dayGridPlugin = dayGridPlugin;
 window.interactionPlugin = interactionPlugin;
+window.resourceTimeGridPlugin = resourceTimeGridPlugin;
 
 import moment from "moment";
-import {
-    Form,
-    HasError,
-    AlertError
-} from "vform";
+import { Form, HasError, AlertError } from "vform";
 import VueProgressBar from "vue-progressbar";
 
 Vue.use(VueProgressBar, {
@@ -59,7 +58,8 @@ Vue.component(AlertError.name, AlertError);
 import VueRouter from "vue-router";
 Vue.use(VueRouter);
 
-let routes = [{
+let routes = [
+    {
         path: "/home",
         component: require("./components/Dashboard.vue").default
     },
@@ -116,6 +116,10 @@ let routes = [{
         component: require("./components/Calendar.vue").default
     },
     {
+        path: "/timetable",
+        component: require("./components/Timetable.vue").default
+    },
+    {
         path: "*",
         component: require("./components/404.vue").default
     }
@@ -129,11 +133,11 @@ const router = new VueRouter({
 
 // Global vue filters
 // to uppercase first letter in text
-Vue.filter("upText", function (text) {
+Vue.filter("upText", function(text) {
     return text.charAt(0).toUpperCase() + text.slice(1);
 });
 // reformat date
-Vue.filter("myDate", function (created) {
+Vue.filter("myDate", function(created) {
     return moment(created).format("MMMM Do YYYY, h:mm a");
 });
 

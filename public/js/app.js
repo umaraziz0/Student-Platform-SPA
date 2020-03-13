@@ -12664,6 +12664,3482 @@ var main = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["createPlugin"
 
 /***/ }),
 
+/***/ "./node_modules/@fullcalendar/resource-common/main.esm.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/@fullcalendar/resource-common/main.esm.js ***!
+  \****************************************************************/
+/*! exports provided: default, AbstractResourceDayTable, DayResourceTable, ResourceApi, ResourceDayHeader, ResourceDayTable, ResourceSplitter, VResourceJoiner, VResourceSplitter, buildResourceFields, buildResourceTextFunc, buildRowNodes, flattenResources, isGroupsEqual */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AbstractResourceDayTable", function() { return AbstractResourceDayTable; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DayResourceTable", function() { return DayResourceTable; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ResourceApi", function() { return ResourceApi; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ResourceDayHeader", function() { return ResourceDayHeader; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ResourceDayTable", function() { return ResourceDayTable; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ResourceSplitter", function() { return ResourceSplitter; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "VResourceJoiner", function() { return VResourceJoiner; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "VResourceSplitter", function() { return VResourceSplitter; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "buildResourceFields", function() { return buildResourceFields; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "buildResourceTextFunc", function() { return buildResourceTextFunc; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "buildRowNodes", function() { return buildRowNodes; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "flattenResources", function() { return flattenResources; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isGroupsEqual", function() { return isGroupsEqual; });
+/* harmony import */ var _fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @fullcalendar/core */ "./node_modules/@fullcalendar/core/main.esm.js");
+/*!
+FullCalendar Resources Common Plugin v4.4.0
+Docs & License: https://fullcalendar.io/scheduler
+(c) 2019 Adam Shaw
+*/
+
+
+
+/*! *****************************************************************************
+Copyright (c) Microsoft Corporation. All rights reserved.
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+this file except in compliance with the License. You may obtain a copy of the
+License at http://www.apache.org/licenses/LICENSE-2.0
+
+THIS CODE IS PROVIDED ON AN *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED
+WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
+MERCHANTABLITY OR NON-INFRINGEMENT.
+
+See the Apache Version 2.0 License for specific language governing permissions
+and limitations under the License.
+***************************************************************************** */
+/* global Reflect, Promise */
+
+var extendStatics = function(d, b) {
+    extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return extendStatics(d, b);
+};
+
+function __extends(d, b) {
+    extendStatics(d, b);
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+}
+
+var __assign = function() {
+    __assign = Object.assign || function __assign(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+
+function massageEventDragMutation(eventMutation, hit0, hit1) {
+    var resource0 = hit0.dateSpan.resourceId;
+    var resource1 = hit1.dateSpan.resourceId;
+    if (resource0 && resource1 &&
+        resource0 !== resource1) {
+        eventMutation.resourceMutation = {
+            matchResourceId: resource0,
+            setResourceId: resource1
+        };
+    }
+}
+/*
+TODO: all this would be much easier if we were using a hash!
+*/
+function applyEventDefMutation(eventDef, mutation, calendar) {
+    var resourceMutation = mutation.resourceMutation;
+    if (resourceMutation && computeResourceEditable(eventDef, calendar)) {
+        var index = eventDef.resourceIds.indexOf(resourceMutation.matchResourceId);
+        if (index !== -1) {
+            var resourceIds = eventDef.resourceIds.slice(); // copy
+            resourceIds.splice(index, 1); // remove
+            if (resourceIds.indexOf(resourceMutation.setResourceId) === -1) { // not already in there
+                resourceIds.push(resourceMutation.setResourceId); // add
+            }
+            eventDef.resourceIds = resourceIds;
+        }
+    }
+}
+/*
+HACK
+TODO: use EventUi system instead of this
+*/
+function computeResourceEditable(eventDef, calendar) {
+    var resourceEditable = eventDef.resourceEditable;
+    if (resourceEditable == null) {
+        var source = eventDef.sourceId && calendar.state.eventSources[eventDef.sourceId];
+        if (source) {
+            resourceEditable = source.extendedProps.resourceEditable; // used the Source::extendedProps hack
+        }
+        if (resourceEditable == null) {
+            resourceEditable = calendar.opt('eventResourceEditable');
+            if (resourceEditable == null) {
+                resourceEditable = calendar.opt('editable'); // TODO: use defaults system instead
+            }
+        }
+    }
+    return resourceEditable;
+}
+function transformEventDrop(mutation, calendar) {
+    var resourceMutation = mutation.resourceMutation;
+    if (resourceMutation) {
+        return {
+            oldResource: calendar.getResourceById(resourceMutation.matchResourceId),
+            newResource: calendar.getResourceById(resourceMutation.setResourceId)
+        };
+    }
+    else {
+        return {
+            oldResource: null,
+            newResource: null
+        };
+    }
+}
+
+var ResourceDataAdder = /** @class */ (function () {
+    function ResourceDataAdder() {
+        this.filterResources = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["memoize"])(filterResources);
+    }
+    ResourceDataAdder.prototype.transform = function (viewProps, viewSpec, calendarProps, allOptions) {
+        if (viewSpec.class.needsResourceData) {
+            return {
+                resourceStore: this.filterResources(calendarProps.resourceStore, allOptions.filterResourcesWithEvents, calendarProps.eventStore, calendarProps.dateProfile.activeRange),
+                resourceEntityExpansions: calendarProps.resourceEntityExpansions
+            };
+        }
+    };
+    return ResourceDataAdder;
+}());
+function filterResources(resourceStore, doFilterResourcesWithEvents, eventStore, activeRange) {
+    if (doFilterResourcesWithEvents) {
+        var instancesInRange = filterEventInstancesInRange(eventStore.instances, activeRange);
+        var hasEvents_1 = computeHasEvents(instancesInRange, eventStore.defs);
+        __assign(hasEvents_1, computeAncestorHasEvents(hasEvents_1, resourceStore));
+        return Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["filterHash"])(resourceStore, function (resource, resourceId) {
+            return hasEvents_1[resourceId];
+        });
+    }
+    else {
+        return resourceStore;
+    }
+}
+function filterEventInstancesInRange(eventInstances, activeRange) {
+    return Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["filterHash"])(eventInstances, function (eventInstance) {
+        return Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["rangesIntersect"])(eventInstance.range, activeRange);
+    });
+}
+function computeHasEvents(eventInstances, eventDefs) {
+    var hasEvents = {};
+    for (var instanceId in eventInstances) {
+        var instance = eventInstances[instanceId];
+        for (var _i = 0, _a = eventDefs[instance.defId].resourceIds; _i < _a.length; _i++) {
+            var resourceId = _a[_i];
+            hasEvents[resourceId] = true;
+        }
+    }
+    return hasEvents;
+}
+/*
+mark resources as having events if any of their ancestors have them
+NOTE: resourceStore might not have all the resources that hasEvents{} has keyed
+*/
+function computeAncestorHasEvents(hasEvents, resourceStore) {
+    var res = {};
+    for (var resourceId in hasEvents) {
+        var resource = void 0;
+        while ((resource = resourceStore[resourceId])) {
+            resourceId = resource.parentId; // now functioning as the parentId
+            if (resourceId) {
+                res[resourceId] = true;
+            }
+            else {
+                break;
+            }
+        }
+    }
+    return res;
+}
+// for when non-resource view should be given EventUi info (for event coloring/constraints based off of resource data)
+var ResourceEventConfigAdder = /** @class */ (function () {
+    function ResourceEventConfigAdder() {
+        this.buildResourceEventUis = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["memoizeOutput"])(buildResourceEventUis, _fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["isPropsEqual"]);
+        this.injectResourceEventUis = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["memoize"])(injectResourceEventUis);
+    }
+    ResourceEventConfigAdder.prototype.transform = function (viewProps, viewSpec, calendarProps) {
+        if (!viewSpec.class.needsResourceData) { // is a non-resource view?
+            return {
+                eventUiBases: this.injectResourceEventUis(viewProps.eventUiBases, viewProps.eventStore.defs, this.buildResourceEventUis(calendarProps.resourceStore))
+            };
+        }
+    };
+    return ResourceEventConfigAdder;
+}());
+function buildResourceEventUis(resourceStore) {
+    return Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["mapHash"])(resourceStore, function (resource) {
+        return resource.ui;
+    });
+}
+function injectResourceEventUis(eventUiBases, eventDefs, resourceEventUis) {
+    return Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["mapHash"])(eventUiBases, function (eventUi, defId) {
+        if (defId) { // not the '' key
+            return injectResourceEventUi(eventUi, eventDefs[defId], resourceEventUis);
+        }
+        else {
+            return eventUi;
+        }
+    });
+}
+function injectResourceEventUi(origEventUi, eventDef, resourceEventUis) {
+    var parts = [];
+    // first resource takes precedence, which fights with the ordering of combineEventUis, thus the unshifts
+    for (var _i = 0, _a = eventDef.resourceIds; _i < _a.length; _i++) {
+        var resourceId = _a[_i];
+        if (resourceEventUis[resourceId]) {
+            parts.unshift(resourceEventUis[resourceId]);
+        }
+    }
+    parts.unshift(origEventUi);
+    return Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["combineEventUis"])(parts);
+}
+// for making sure events that have editable resources are always draggable in resource views
+function transformIsDraggable(val, eventDef, eventUi, view) {
+    if (!val) {
+        if (view.viewSpec.class.needsResourceData) {
+            if (computeResourceEditable(eventDef, view.context.calendar)) { // yuck
+                return true;
+            }
+        }
+    }
+    return val;
+}
+
+var RESOURCE_SOURCE_PROPS = {
+    id: String
+};
+var defs = [];
+var uid = 0;
+function registerResourceSourceDef(def) {
+    defs.push(def);
+}
+function getResourceSourceDef(id) {
+    return defs[id];
+}
+function doesSourceIgnoreRange(source) {
+    return Boolean(defs[source.sourceDefId].ignoreRange);
+}
+function parseResourceSource(input) {
+    for (var i = defs.length - 1; i >= 0; i--) { // later-added plugins take precedence
+        var def = defs[i];
+        var meta = def.parseMeta(input);
+        if (meta) {
+            var res = parseResourceSourceProps((typeof input === 'object' && input) ? input : {}, meta, i);
+            res._raw = input;
+            return res;
+        }
+    }
+    return null;
+}
+function parseResourceSourceProps(input, meta, sourceDefId) {
+    var props = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["refineProps"])(input, RESOURCE_SOURCE_PROPS);
+    props.sourceId = String(uid++);
+    props.sourceDefId = sourceDefId;
+    props.meta = meta;
+    props.publicId = props.id;
+    props.isFetching = false;
+    props.latestFetchId = '';
+    props.fetchRange = null;
+    delete props.id;
+    return props;
+}
+
+function reduceResourceSource (source, action, dateProfile, calendar) {
+    switch (action.type) {
+        case 'INIT':
+            return createSource(calendar.opt('resources'), calendar);
+        case 'RESET_RESOURCE_SOURCE':
+            return createSource(action.resourceSourceInput, calendar, true);
+        case 'PREV': // TODO: how do we track all actions that affect dateProfile :(
+        case 'NEXT':
+        case 'SET_DATE':
+        case 'SET_VIEW_TYPE':
+            return handleRange(source, dateProfile.activeRange, calendar);
+        case 'RECEIVE_RESOURCES':
+        case 'RECEIVE_RESOURCE_ERROR':
+            return receiveResponse(source, action.fetchId, action.fetchRange);
+        case 'REFETCH_RESOURCES':
+            return fetchSource(source, dateProfile.activeRange, calendar);
+        default:
+            return source;
+    }
+}
+var uid$1 = 0;
+function createSource(input, calendar, forceFetch) {
+    if (input) {
+        var source = parseResourceSource(input);
+        if (forceFetch || !calendar.opt('refetchResourcesOnNavigate')) { // because assumes handleRange will do it later
+            source = fetchSource(source, null, calendar);
+        }
+        return source;
+    }
+    return null;
+}
+function handleRange(source, activeRange, calendar) {
+    if (calendar.opt('refetchResourcesOnNavigate') &&
+        !doesSourceIgnoreRange(source) &&
+        (!source.fetchRange || !Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["rangesEqual"])(source.fetchRange, activeRange))) {
+        return fetchSource(source, activeRange, calendar);
+    }
+    else {
+        return source;
+    }
+}
+function fetchSource(source, fetchRange, calendar) {
+    var sourceDef = getResourceSourceDef(source.sourceDefId);
+    var fetchId = String(uid$1++);
+    sourceDef.fetch({
+        resourceSource: source,
+        calendar: calendar,
+        range: fetchRange
+    }, function (res) {
+        // HACK
+        // do before calling dispatch in case dispatch renders synchronously
+        calendar.afterSizingTriggers._resourcesRendered = [null]; // fire once
+        calendar.dispatch({
+            type: 'RECEIVE_RESOURCES',
+            fetchId: fetchId,
+            fetchRange: fetchRange,
+            rawResources: res.rawResources
+        });
+    }, function (error) {
+        calendar.dispatch({
+            type: 'RECEIVE_RESOURCE_ERROR',
+            fetchId: fetchId,
+            fetchRange: fetchRange,
+            error: error
+        });
+    });
+    return __assign({}, source, { isFetching: true, latestFetchId: fetchId });
+}
+function receiveResponse(source, fetchId, fetchRange) {
+    if (fetchId === source.latestFetchId) {
+        return __assign({}, source, { isFetching: false, fetchRange: fetchRange });
+    }
+    return source;
+}
+
+var RESOURCE_PROPS = {
+    id: String,
+    title: String,
+    parentId: String,
+    businessHours: null,
+    children: null,
+    extendedProps: null
+};
+var PRIVATE_ID_PREFIX = '_fc:';
+var uid$2 = 0;
+/*
+needs a full store so that it can populate children too
+*/
+function parseResource(input, parentId, store, calendar) {
+    if (parentId === void 0) { parentId = ''; }
+    var leftovers0 = {};
+    var props = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["refineProps"])(input, RESOURCE_PROPS, {}, leftovers0);
+    var leftovers1 = {};
+    var ui = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["processScopedUiProps"])('event', leftovers0, calendar, leftovers1);
+    if (!props.id) {
+        props.id = PRIVATE_ID_PREFIX + (uid$2++);
+    }
+    if (!props.parentId) { // give precedence to the parentId property
+        props.parentId = parentId;
+    }
+    props.businessHours = props.businessHours ? Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["parseBusinessHours"])(props.businessHours, calendar) : null;
+    props.ui = ui;
+    props.extendedProps = __assign({}, leftovers1, props.extendedProps);
+    // help out ResourceApi from having user modify props
+    Object.freeze(ui.classNames);
+    Object.freeze(props.extendedProps);
+    if (store[props.id]) ;
+    else {
+        store[props.id] = props;
+        if (props.children) {
+            for (var _i = 0, _a = props.children; _i < _a.length; _i++) {
+                var childInput = _a[_i];
+                parseResource(childInput, props.id, store, calendar);
+            }
+            delete props.children;
+        }
+    }
+    return props;
+}
+/*
+TODO: use this in more places
+*/
+function getPublicId(id) {
+    if (id.indexOf(PRIVATE_ID_PREFIX) === 0) {
+        return '';
+    }
+    return id;
+}
+
+function reduceResourceStore (store, action, source, calendar) {
+    switch (action.type) {
+        case 'INIT':
+            return {};
+        case 'RECEIVE_RESOURCES':
+            return receiveRawResources(store, action.rawResources, action.fetchId, source, calendar);
+        case 'ADD_RESOURCE':
+            return addResource(store, action.resourceHash);
+        case 'REMOVE_RESOURCE':
+            return removeResource(store, action.resourceId);
+        case 'SET_RESOURCE_PROP':
+            return setResourceProp(store, action.resourceId, action.propName, action.propValue);
+        case 'RESET_RESOURCES':
+            // must make the calendar think each resource is a new object :/
+            return Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["mapHash"])(store, function (resource) {
+                return __assign({}, resource);
+            });
+        default:
+            return store;
+    }
+}
+function receiveRawResources(existingStore, inputs, fetchId, source, calendar) {
+    if (source.latestFetchId === fetchId) {
+        var nextStore = {};
+        for (var _i = 0, inputs_1 = inputs; _i < inputs_1.length; _i++) {
+            var input = inputs_1[_i];
+            parseResource(input, '', nextStore, calendar);
+        }
+        return nextStore;
+    }
+    else {
+        return existingStore;
+    }
+}
+function addResource(existingStore, additions) {
+    // TODO: warn about duplicate IDs
+    return __assign({}, existingStore, additions);
+}
+function removeResource(existingStore, resourceId) {
+    var newStore = __assign({}, existingStore);
+    delete newStore[resourceId];
+    // promote children
+    for (var childResourceId in newStore) { // a child, *maybe* but probably not
+        if (newStore[childResourceId].parentId === resourceId) {
+            newStore[childResourceId] = __assign({}, newStore[childResourceId], { parentId: '' });
+        }
+    }
+    return newStore;
+}
+function setResourceProp(existingStore, resourceId, name, value) {
+    var _a, _b;
+    var existingResource = existingStore[resourceId];
+    // TODO: sanitization
+    if (existingResource) {
+        return __assign({}, existingStore, (_a = {}, _a[resourceId] = __assign({}, existingResource, (_b = {}, _b[name] = value, _b)), _a));
+    }
+    else {
+        return existingStore;
+    }
+}
+
+function reduceResourceEntityExpansions(expansions, action) {
+    var _a;
+    switch (action.type) {
+        case 'INIT':
+            return {};
+        case 'SET_RESOURCE_ENTITY_EXPANDED':
+            return __assign({}, expansions, (_a = {}, _a[action.id] = action.isExpanded, _a));
+        default:
+            return expansions;
+    }
+}
+
+function resourcesReducers (state, action, calendar) {
+    var resourceSource = reduceResourceSource(state.resourceSource, action, state.dateProfile, calendar);
+    var resourceStore = reduceResourceStore(state.resourceStore, action, resourceSource, calendar);
+    var resourceEntityExpansions = reduceResourceEntityExpansions(state.resourceEntityExpansions, action);
+    return __assign({}, state, { resourceSource: resourceSource,
+        resourceStore: resourceStore,
+        resourceEntityExpansions: resourceEntityExpansions });
+}
+
+var RESOURCE_RELATED_PROPS = {
+    resourceId: String,
+    resourceIds: function (items) {
+        return (items || []).map(function (item) {
+            return String(item);
+        });
+    },
+    resourceEditable: Boolean
+};
+function parseEventDef(def, props, leftovers) {
+    var resourceRelatedProps = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["refineProps"])(props, RESOURCE_RELATED_PROPS, {}, leftovers);
+    var resourceIds = resourceRelatedProps.resourceIds;
+    if (resourceRelatedProps.resourceId) {
+        resourceIds.push(resourceRelatedProps.resourceId);
+    }
+    def.resourceIds = resourceIds;
+    def.resourceEditable = resourceRelatedProps.resourceEditable;
+}
+
+function transformDateSelectionJoin(hit0, hit1) {
+    var resourceId0 = hit0.dateSpan.resourceId;
+    var resourceId1 = hit1.dateSpan.resourceId;
+    if (resourceId0 && resourceId1) {
+        if (hit0.component.allowAcrossResources === false &&
+            resourceId0 !== resourceId1) {
+            return false;
+        }
+        else {
+            return { resourceId: resourceId0 };
+        }
+    }
+}
+
+var ResourceApi = /** @class */ (function () {
+    function ResourceApi(calendar, rawResource) {
+        this._calendar = calendar;
+        this._resource = rawResource;
+    }
+    ResourceApi.prototype.setProp = function (name, value) {
+        this._calendar.dispatch({
+            type: 'SET_RESOURCE_PROP',
+            resourceId: this._resource.id,
+            propName: name,
+            propValue: value
+        });
+    };
+    ResourceApi.prototype.remove = function () {
+        this._calendar.dispatch({
+            type: 'REMOVE_RESOURCE',
+            resourceId: this._resource.id
+        });
+    };
+    ResourceApi.prototype.getParent = function () {
+        var calendar = this._calendar;
+        var parentId = this._resource.parentId;
+        if (parentId) {
+            return new ResourceApi(calendar, calendar.state.resourceSource[parentId]);
+        }
+        else {
+            return null;
+        }
+    };
+    ResourceApi.prototype.getChildren = function () {
+        var thisResourceId = this._resource.id;
+        var calendar = this._calendar;
+        var resourceStore = calendar.state.resourceStore;
+        var childApis = [];
+        for (var resourceId in resourceStore) {
+            if (resourceStore[resourceId].parentId === thisResourceId) {
+                childApis.push(new ResourceApi(calendar, resourceStore[resourceId]));
+            }
+        }
+        return childApis;
+    };
+    /*
+    this is really inefficient!
+    TODO: make EventApi::resourceIds a hash or keep an index in the Calendar's state
+    */
+    ResourceApi.prototype.getEvents = function () {
+        var thisResourceId = this._resource.id;
+        var calendar = this._calendar;
+        var _a = calendar.state.eventStore, defs = _a.defs, instances = _a.instances;
+        var eventApis = [];
+        for (var instanceId in instances) {
+            var instance = instances[instanceId];
+            var def = defs[instance.defId];
+            if (def.resourceIds.indexOf(thisResourceId) !== -1) { // inefficient!!!
+                eventApis.push(new _fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["EventApi"](calendar, def, instance));
+            }
+        }
+        return eventApis;
+    };
+    Object.defineProperty(ResourceApi.prototype, "id", {
+        get: function () { return this._resource.id; },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ResourceApi.prototype, "title", {
+        get: function () { return this._resource.title; },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ResourceApi.prototype, "eventConstraint", {
+        get: function () { return this._resource.ui.constraints[0] || null; },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ResourceApi.prototype, "eventOverlap", {
+        get: function () { return this._resource.ui.overlap; },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ResourceApi.prototype, "eventAllow", {
+        get: function () { return this._resource.ui.allows[0] || null; },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ResourceApi.prototype, "eventBackgroundColor", {
+        get: function () { return this._resource.ui.backgroundColor; },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ResourceApi.prototype, "eventBorderColor", {
+        get: function () { return this._resource.ui.borderColor; },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ResourceApi.prototype, "eventTextColor", {
+        get: function () { return this._resource.ui.textColor; },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ResourceApi.prototype, "eventClassNames", {
+        // NOTE: user can't modify these because Object.freeze was called in event-def parsing
+        get: function () { return this._resource.ui.classNames; },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ResourceApi.prototype, "extendedProps", {
+        get: function () { return this._resource.extendedProps; },
+        enumerable: true,
+        configurable: true
+    });
+    return ResourceApi;
+}());
+
+_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["Calendar"].prototype.addResource = function (input, scrollTo) {
+    var _a;
+    if (scrollTo === void 0) { scrollTo = true; }
+    var resourceHash;
+    var resource;
+    if (input instanceof ResourceApi) {
+        resource = input._resource;
+        resourceHash = (_a = {}, _a[resource.id] = resource, _a);
+    }
+    else {
+        resourceHash = {};
+        resource = parseResource(input, '', resourceHash, this);
+    }
+    // HACK
+    if (scrollTo) {
+        this.component.view.addScroll({ forcedRowId: resource.id });
+    }
+    this.dispatch({
+        type: 'ADD_RESOURCE',
+        resourceHash: resourceHash
+    });
+    return new ResourceApi(this, resource);
+};
+_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["Calendar"].prototype.getResourceById = function (id) {
+    id = String(id);
+    if (this.state.resourceStore) { // guard against calendar with no resource functionality
+        var rawResource = this.state.resourceStore[id];
+        if (rawResource) {
+            return new ResourceApi(this, rawResource);
+        }
+    }
+    return null;
+};
+_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["Calendar"].prototype.getResources = function () {
+    var resourceStore = this.state.resourceStore;
+    var resourceApis = [];
+    if (resourceStore) { // guard against calendar with no resource functionality
+        for (var resourceId in resourceStore) {
+            resourceApis.push(new ResourceApi(this, resourceStore[resourceId]));
+        }
+    }
+    return resourceApis;
+};
+_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["Calendar"].prototype.getTopLevelResources = function () {
+    var resourceStore = this.state.resourceStore;
+    var resourceApis = [];
+    if (resourceStore) { // guard against calendar with no resource functionality
+        for (var resourceId in resourceStore) {
+            if (!resourceStore[resourceId].parentId) {
+                resourceApis.push(new ResourceApi(this, resourceStore[resourceId]));
+            }
+        }
+    }
+    return resourceApis;
+};
+_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["Calendar"].prototype.rerenderResources = function () {
+    this.dispatch({
+        type: 'RESET_RESOURCES'
+    });
+};
+_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["Calendar"].prototype.refetchResources = function () {
+    this.dispatch({
+        type: 'REFETCH_RESOURCES'
+    });
+};
+function transformDatePoint(dateSpan, calendar) {
+    return dateSpan.resourceId ?
+        { resource: calendar.getResourceById(dateSpan.resourceId) } :
+        {};
+}
+function transformDateSpan(dateSpan, calendar) {
+    return dateSpan.resourceId ?
+        { resource: calendar.getResourceById(dateSpan.resourceId) } :
+        {};
+}
+
+/*
+splits things BASED OFF OF which resources they are associated with.
+creates a '' entry which is when something has NO resource.
+*/
+var ResourceSplitter = /** @class */ (function (_super) {
+    __extends(ResourceSplitter, _super);
+    function ResourceSplitter() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    ResourceSplitter.prototype.getKeyInfo = function (props) {
+        return __assign({ '': {} }, props.resourceStore // already has `ui` and `businessHours` keys!
+        );
+    };
+    ResourceSplitter.prototype.getKeysForDateSpan = function (dateSpan) {
+        return [dateSpan.resourceId || ''];
+    };
+    ResourceSplitter.prototype.getKeysForEventDef = function (eventDef) {
+        var resourceIds = eventDef.resourceIds;
+        if (!resourceIds.length) {
+            return [''];
+        }
+        return resourceIds;
+    };
+    return ResourceSplitter;
+}(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["Splitter"]));
+
+function isPropsValidWithResources(props, calendar) {
+    var splitter = new ResourceSplitter();
+    var sets = splitter.splitProps(__assign({}, props, { resourceStore: calendar.state.resourceStore }));
+    for (var resourceId in sets) {
+        var props_1 = sets[resourceId];
+        // merge in event data from the non-resource segment
+        if (resourceId && sets['']) { // current segment is not the non-resource one, and there IS a non-resource one
+            props_1 = __assign({}, props_1, { eventStore: Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["mergeEventStores"])(sets[''].eventStore, props_1.eventStore), eventUiBases: __assign({}, sets[''].eventUiBases, props_1.eventUiBases) });
+        }
+        if (!Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["isPropsValid"])(props_1, calendar, { resourceId: resourceId }, filterConfig.bind(null, resourceId))) {
+            return false;
+        }
+    }
+    return true;
+}
+function filterConfig(resourceId, config) {
+    return __assign({}, config, { constraints: filterConstraints(resourceId, config.constraints) });
+}
+function filterConstraints(resourceId, constraints) {
+    return constraints.map(function (constraint) {
+        var defs = constraint.defs;
+        if (defs) { // we are dealing with an EventStore
+            // if any of the events define constraints to resources that are NOT this resource,
+            // then this resource is unconditionally prohibited, which is what a `false` value does.
+            for (var defId in defs) {
+                var resourceIds = defs[defId].resourceIds;
+                if (resourceIds.length && resourceIds.indexOf(resourceId) === -1) { // TODO: use a hash?!!! (for other reasons too)
+                    return false;
+                }
+            }
+        }
+        return constraint;
+    });
+}
+
+function transformExternalDef(dateSpan) {
+    return dateSpan.resourceId ?
+        { resourceId: dateSpan.resourceId } :
+        {};
+}
+
+function transformEventResizeJoin(hit0, hit1) {
+    var component = hit0.component;
+    if (component.allowAcrossResources === false &&
+        hit0.dateSpan.resourceId !== hit1.dateSpan.resourceId) {
+        return false;
+    }
+}
+
+_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["EventApi"].prototype.getResources = function () {
+    var calendar = this._calendar;
+    return this._def.resourceIds.map(function (resourceId) {
+        return calendar.getResourceById(resourceId);
+    });
+};
+_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["EventApi"].prototype.setResources = function (resources) {
+    var resourceIds = [];
+    // massage resources -> resourceIds
+    for (var _i = 0, resources_1 = resources; _i < resources_1.length; _i++) {
+        var resource = resources_1[_i];
+        var resourceId = null;
+        if (typeof resource === 'string') {
+            resourceId = resource;
+        }
+        else if (typeof resource === 'number') {
+            resourceId = String(resource);
+        }
+        else if (resource instanceof ResourceApi) {
+            resourceId = resource.id; // guaranteed to always have an ID. hmmm
+        }
+        else {
+            console.warn('unknown resource type: ' + resource);
+        }
+        if (resourceId) {
+            resourceIds.push(resourceId);
+        }
+    }
+    this.mutate({
+        standardProps: {
+            resourceIds: resourceIds
+        }
+    });
+};
+
+var RELEASE_DATE = '2020-02-12'; // for Scheduler
+var UPGRADE_WINDOW = 365 + 7; // days. 1 week leeway, for tz shift reasons too
+var LICENSE_INFO_URL = 'http://fullcalendar.io/scheduler/license/';
+var PRESET_LICENSE_KEYS = [
+    'GPL-My-Project-Is-Open-Source',
+    'CC-Attribution-NonCommercial-NoDerivatives'
+];
+var CSS = {
+    position: 'absolute',
+    'z-index': 99999,
+    bottom: '1px',
+    left: '1px',
+    background: '#eee',
+    'border-color': '#ddd',
+    'border-style': 'solid',
+    'border-width': '1px 1px 0 0',
+    padding: '2px 4px',
+    'font-size': '12px',
+    'border-top-right-radius': '3px'
+};
+function injectLicenseWarning(containerEl, calendar) {
+    var key = calendar.opt('schedulerLicenseKey');
+    if (!isImmuneUrl(window.location.href) && !isValidKey(key)) {
+        Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["appendToElement"])(containerEl, '<div class="fc-license-message" style="' + Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["htmlEscape"])(Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["cssToStr"])(CSS)) + '">' +
+            'Please use a valid license key. <a href="' + LICENSE_INFO_URL + '">More Info</a>' +
+            '</div>');
+    }
+}
+/*
+This decryption is not meant to be bulletproof. Just a way to remind about an upgrade.
+*/
+function isValidKey(key) {
+    if (PRESET_LICENSE_KEYS.indexOf(key) !== -1) {
+        return true;
+    }
+    var parts = (key || '').match(/^(\d+)\-fcs\-(\d+)$/);
+    if (parts && (parts[1].length === 10)) {
+        var purchaseDate = new Date(parseInt(parts[2], 10) * 1000);
+        var releaseDate = new Date(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["config"].mockSchedulerReleaseDate || RELEASE_DATE);
+        if (Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["isValidDate"])(releaseDate)) { // token won't be replaced in dev mode
+            var minPurchaseDate = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["addDays"])(releaseDate, -UPGRADE_WINDOW);
+            if (minPurchaseDate < purchaseDate) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+function isImmuneUrl(url) {
+    return /\w+\:\/\/fullcalendar\.io\/|\/examples\/[\w-]+\.html$/.test(url);
+}
+
+var optionChangeHandlers = {
+    resources: handleResources
+};
+function handleResources(newSourceInput, calendar, deepEqual) {
+    var oldSourceInput = calendar.state.resourceSource._raw;
+    if (!deepEqual(oldSourceInput, newSourceInput)) {
+        calendar.dispatch({
+            type: 'RESET_RESOURCE_SOURCE',
+            resourceSourceInput: newSourceInput
+        });
+    }
+}
+
+registerResourceSourceDef({
+    ignoreRange: true,
+    parseMeta: function (raw) {
+        if (Array.isArray(raw)) {
+            return raw;
+        }
+        else if (Array.isArray(raw.resources)) {
+            return raw.resources;
+        }
+        return null;
+    },
+    fetch: function (arg, successCallback) {
+        successCallback({
+            rawResources: arg.resourceSource.meta
+        });
+    }
+});
+
+registerResourceSourceDef({
+    parseMeta: function (raw) {
+        if (typeof raw === 'function') {
+            return raw;
+        }
+        else if (typeof raw.resources === 'function') {
+            return raw.resources;
+        }
+        return null;
+    },
+    fetch: function (arg, success, failure) {
+        var dateEnv = arg.calendar.dateEnv;
+        var func = arg.resourceSource.meta;
+        var publicArg = {};
+        if (arg.range) {
+            publicArg = {
+                start: dateEnv.toDate(arg.range.start),
+                end: dateEnv.toDate(arg.range.end),
+                startStr: dateEnv.formatIso(arg.range.start),
+                endStr: dateEnv.formatIso(arg.range.end),
+                timeZone: dateEnv.timeZone
+            };
+        }
+        // TODO: make more dry with EventSourceFunc
+        // TODO: accept a response?
+        Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["unpromisify"])(func.bind(null, publicArg), function (rawResources) {
+            success({ rawResources: rawResources }); // needs an object response
+        }, failure // send errorObj directly to failure callback
+        );
+    }
+});
+
+registerResourceSourceDef({
+    parseMeta: function (raw) {
+        if (typeof raw === 'string') {
+            raw = { url: raw };
+        }
+        else if (!raw || typeof raw !== 'object' || !raw.url) {
+            return null;
+        }
+        return {
+            url: raw.url,
+            method: (raw.method || 'GET').toUpperCase(),
+            extraParams: raw.extraParams
+        };
+    },
+    fetch: function (arg, successCallback, failureCallback) {
+        var meta = arg.resourceSource.meta;
+        var requestParams = buildRequestParams(meta, arg.range, arg.calendar);
+        Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["requestJson"])(meta.method, meta.url, requestParams, function (rawResources, xhr) {
+            successCallback({ rawResources: rawResources, xhr: xhr });
+        }, function (message, xhr) {
+            failureCallback({ message: message, xhr: xhr });
+        });
+    }
+});
+// TODO: somehow consolidate with event json feed
+function buildRequestParams(meta, range, calendar) {
+    var dateEnv = calendar.dateEnv;
+    var startParam;
+    var endParam;
+    var timeZoneParam;
+    var customRequestParams;
+    var params = {};
+    if (range) {
+        // startParam = meta.startParam
+        // if (startParam == null) {
+        startParam = calendar.opt('startParam');
+        // }
+        // endParam = meta.endParam
+        // if (endParam == null) {
+        endParam = calendar.opt('endParam');
+        // }
+        // timeZoneParam = meta.timeZoneParam
+        // if (timeZoneParam == null) {
+        timeZoneParam = calendar.opt('timeZoneParam');
+        // }
+        params[startParam] = dateEnv.formatIso(range.start);
+        params[endParam] = dateEnv.formatIso(range.end);
+        if (dateEnv.timeZone !== 'local') {
+            params[timeZoneParam] = dateEnv.timeZone;
+        }
+    }
+    // retrieve any outbound GET/POST data from the options
+    if (typeof meta.extraParams === 'function') {
+        // supplied as a function that returns a key/value object
+        customRequestParams = meta.extraParams();
+    }
+    else {
+        // probably supplied as a straight key/value object
+        customRequestParams = meta.extraParams || {};
+    }
+    __assign(params, customRequestParams);
+    return params;
+}
+
+function buildResourceTextFunc(resourceTextSetting, calendar) {
+    if (typeof resourceTextSetting === 'function') {
+        return function (resource) {
+            return resourceTextSetting(new ResourceApi(calendar, resource));
+        };
+    }
+    else {
+        return function (resource) {
+            return resource.title || getPublicId(resource.id);
+        };
+    }
+}
+
+var ResourceDayHeader = /** @class */ (function (_super) {
+    __extends(ResourceDayHeader, _super);
+    function ResourceDayHeader(parentEl) {
+        var _this = _super.call(this) || this;
+        _this.processOptions = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["memoize"])(_this._processOptions);
+        _this.parentEl = parentEl;
+        return _this;
+    }
+    ResourceDayHeader.prototype._processOptions = function (options, calendar) {
+        this.datesAboveResources = options.datesAboveResources;
+        this.resourceTextFunc = buildResourceTextFunc(options.resourceText, calendar);
+    };
+    ResourceDayHeader.prototype.render = function (props, context) {
+        var options = context.options, calendar = context.calendar, theme = context.theme;
+        this.processOptions(options, calendar);
+        this.parentEl.innerHTML = ''; // because might be nbsp
+        this.parentEl.appendChild(this.el = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["htmlToElement"])('<div class="fc-row ' + theme.getClass('headerRow') + '">' +
+            '<table class="' + theme.getClass('tableGrid') + '">' +
+            '<thead></thead>' +
+            '</table>' +
+            '</div>'));
+        this.thead = this.el.querySelector('thead');
+        var html;
+        this.dateFormat = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["createFormatter"])(options.columnHeaderFormat ||
+            Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["computeFallbackHeaderFormat"])(props.datesRepDistinctDays, props.dates.length));
+        if (props.dates.length === 1) {
+            html = this.renderResourceRow(props.resources);
+        }
+        else {
+            if (this.datesAboveResources) {
+                html = this.renderDayAndResourceRows(props.dates, props.resources);
+            }
+            else {
+                html = this.renderResourceAndDayRows(props.resources, props.dates);
+            }
+        }
+        this.thead.innerHTML = html;
+        this.processResourceEls(props.resources);
+    };
+    ResourceDayHeader.prototype.destroy = function () {
+        Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["removeElement"])(this.el);
+    };
+    ResourceDayHeader.prototype.renderResourceRow = function (resources) {
+        var _this = this;
+        var cellHtmls = resources.map(function (resource) {
+            return _this.renderResourceCell(resource, 1);
+        });
+        return this.buildTr(cellHtmls);
+    };
+    ResourceDayHeader.prototype.renderDayAndResourceRows = function (dates, resources) {
+        var dateHtmls = [];
+        var resourceHtmls = [];
+        for (var _i = 0, dates_1 = dates; _i < dates_1.length; _i++) {
+            var date = dates_1[_i];
+            dateHtmls.push(this.renderDateCell(date, resources.length));
+            for (var _a = 0, resources_1 = resources; _a < resources_1.length; _a++) {
+                var resource = resources_1[_a];
+                resourceHtmls.push(this.renderResourceCell(resource, 1, date));
+            }
+        }
+        return this.buildTr(dateHtmls) +
+            this.buildTr(resourceHtmls);
+    };
+    ResourceDayHeader.prototype.renderResourceAndDayRows = function (resources, dates) {
+        var resourceHtmls = [];
+        var dateHtmls = [];
+        for (var _i = 0, resources_2 = resources; _i < resources_2.length; _i++) {
+            var resource = resources_2[_i];
+            resourceHtmls.push(this.renderResourceCell(resource, dates.length));
+            for (var _a = 0, dates_2 = dates; _a < dates_2.length; _a++) {
+                var date = dates_2[_a];
+                dateHtmls.push(this.renderDateCell(date, 1, resource));
+            }
+        }
+        return this.buildTr(resourceHtmls) +
+            this.buildTr(dateHtmls);
+    };
+    // Cell Rendering Utils
+    // ----------------------------------------------------------------------------------------------
+    // a cell with the resource name. might be associated with a specific day
+    ResourceDayHeader.prototype.renderResourceCell = function (resource, colspan, date) {
+        var dateEnv = this.context.dateEnv;
+        return '<th class="fc-resource-cell"' +
+            ' data-resource-id="' + resource.id + '"' +
+            (date ?
+                ' data-date="' + dateEnv.formatIso(date, { omitTime: true }) + '"' :
+                '') +
+            (colspan > 1 ?
+                ' colspan="' + colspan + '"' :
+                '') +
+            '>' +
+            Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["htmlEscape"])(this.resourceTextFunc(resource)) +
+            '</th>';
+    };
+    // a cell with date text. might have a resource associated with it
+    ResourceDayHeader.prototype.renderDateCell = function (date, colspan, resource) {
+        var props = this.props;
+        return Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["renderDateCell"])(date, props.dateProfile, props.datesRepDistinctDays, props.dates.length * props.resources.length, this.dateFormat, this.context, colspan, resource ? 'data-resource-id="' + resource.id + '"' : '');
+    };
+    ResourceDayHeader.prototype.buildTr = function (cellHtmls) {
+        if (!cellHtmls.length) {
+            cellHtmls = ['<td>&nbsp;</td>'];
+        }
+        if (this.props.renderIntroHtml) {
+            cellHtmls = [this.props.renderIntroHtml()].concat(cellHtmls);
+        }
+        if (this.context.isRtl) {
+            cellHtmls.reverse();
+        }
+        return '<tr>' +
+            cellHtmls.join('') +
+            '</tr>';
+    };
+    // Post-rendering
+    // ----------------------------------------------------------------------------------------------
+    // given a container with already rendered resource cells
+    ResourceDayHeader.prototype.processResourceEls = function (resources) {
+        var _a = this.context, calendar = _a.calendar, isRtl = _a.isRtl, view = _a.view;
+        Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["findElements"])(this.thead, '.fc-resource-cell').forEach(function (node, col) {
+            col = col % resources.length;
+            if (isRtl) {
+                col = resources.length - 1 - col;
+            }
+            var resource = resources[col];
+            calendar.publiclyTrigger('resourceRender', [
+                {
+                    resource: new ResourceApi(calendar, resource),
+                    el: node,
+                    view: view
+                }
+            ]);
+        });
+    };
+    return ResourceDayHeader;
+}(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["Component"]));
+
+var AbstractResourceDayTable = /** @class */ (function () {
+    function AbstractResourceDayTable(dayTable, resources) {
+        this.dayTable = dayTable;
+        this.resources = resources;
+        this.resourceIndex = new ResourceIndex(resources);
+        this.rowCnt = dayTable.rowCnt;
+        this.colCnt = dayTable.colCnt * resources.length;
+        this.cells = this.buildCells();
+    }
+    AbstractResourceDayTable.prototype.buildCells = function () {
+        var _a = this, rowCnt = _a.rowCnt, dayTable = _a.dayTable, resources = _a.resources;
+        var rows = [];
+        for (var row = 0; row < rowCnt; row++) {
+            var rowCells = [];
+            for (var dateCol = 0; dateCol < dayTable.colCnt; dateCol++) {
+                for (var resourceCol = 0; resourceCol < resources.length; resourceCol++) {
+                    var resource = resources[resourceCol];
+                    var htmlAttrs = 'data-resource-id="' + resource.id + '"';
+                    rowCells[this.computeCol(dateCol, resourceCol)] = {
+                        date: dayTable.cells[row][dateCol].date,
+                        resource: resource,
+                        htmlAttrs: htmlAttrs
+                    };
+                }
+            }
+            rows.push(rowCells);
+        }
+        return rows;
+    };
+    return AbstractResourceDayTable;
+}());
+/*
+resources over dates
+*/
+var ResourceDayTable = /** @class */ (function (_super) {
+    __extends(ResourceDayTable, _super);
+    function ResourceDayTable() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    ResourceDayTable.prototype.computeCol = function (dateI, resourceI) {
+        return resourceI * this.dayTable.colCnt + dateI;
+    };
+    /*
+    all date ranges are intact
+    */
+    ResourceDayTable.prototype.computeColRanges = function (dateStartI, dateEndI, resourceI) {
+        return [
+            {
+                firstCol: this.computeCol(dateStartI, resourceI),
+                lastCol: this.computeCol(dateEndI, resourceI),
+                isStart: true,
+                isEnd: true
+            }
+        ];
+    };
+    return ResourceDayTable;
+}(AbstractResourceDayTable));
+/*
+dates over resources
+*/
+var DayResourceTable = /** @class */ (function (_super) {
+    __extends(DayResourceTable, _super);
+    function DayResourceTable() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    DayResourceTable.prototype.computeCol = function (dateI, resourceI) {
+        return dateI * this.resources.length + resourceI;
+    };
+    /*
+    every single day is broken up
+    */
+    DayResourceTable.prototype.computeColRanges = function (dateStartI, dateEndI, resourceI) {
+        var segs = [];
+        for (var i = dateStartI; i <= dateEndI; i++) {
+            var col = this.computeCol(i, resourceI);
+            segs.push({
+                firstCol: col,
+                lastCol: col,
+                isStart: i === dateStartI,
+                isEnd: i === dateEndI
+            });
+        }
+        return segs;
+    };
+    return DayResourceTable;
+}(AbstractResourceDayTable));
+var ResourceIndex = /** @class */ (function () {
+    function ResourceIndex(resources) {
+        var indicesById = {};
+        var ids = [];
+        for (var i = 0; i < resources.length; i++) {
+            var id = resources[i].id;
+            ids.push(id);
+            indicesById[id] = i;
+        }
+        this.ids = ids;
+        this.indicesById = indicesById;
+        this.length = resources.length;
+    }
+    return ResourceIndex;
+}());
+/*
+TODO: just use ResourceHash somehow? could then use the generic ResourceSplitter
+*/
+var VResourceSplitter = /** @class */ (function (_super) {
+    __extends(VResourceSplitter, _super);
+    function VResourceSplitter() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    VResourceSplitter.prototype.getKeyInfo = function (props) {
+        var resourceDayTable = props.resourceDayTable;
+        var hash = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["mapHash"])(resourceDayTable.resourceIndex.indicesById, function (i) {
+            return resourceDayTable.resources[i]; // has `ui` AND `businessHours` keys!
+        }); // :(
+        hash[''] = {};
+        return hash;
+    };
+    VResourceSplitter.prototype.getKeysForDateSpan = function (dateSpan) {
+        return [dateSpan.resourceId || ''];
+    };
+    VResourceSplitter.prototype.getKeysForEventDef = function (eventDef) {
+        var resourceIds = eventDef.resourceIds;
+        if (!resourceIds.length) {
+            return [''];
+        }
+        return resourceIds;
+    };
+    return VResourceSplitter;
+}(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["Splitter"]));
+// joiner
+var NO_SEGS = []; // for memoizing
+var VResourceJoiner = /** @class */ (function () {
+    function VResourceJoiner() {
+        this.joinDateSelection = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["memoize"])(this.joinSegs);
+        this.joinBusinessHours = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["memoize"])(this.joinSegs);
+        this.joinFgEvents = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["memoize"])(this.joinSegs);
+        this.joinBgEvents = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["memoize"])(this.joinSegs);
+        this.joinEventDrags = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["memoize"])(this.joinInteractions);
+        this.joinEventResizes = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["memoize"])(this.joinInteractions);
+    }
+    /*
+    propSets also has a '' key for things with no resource
+    */
+    VResourceJoiner.prototype.joinProps = function (propSets, resourceDayTable) {
+        var dateSelectionSets = [];
+        var businessHoursSets = [];
+        var fgEventSets = [];
+        var bgEventSets = [];
+        var eventDrags = [];
+        var eventResizes = [];
+        var eventSelection = '';
+        var keys = resourceDayTable.resourceIndex.ids.concat(['']); // add in the all-resource key
+        for (var _i = 0, keys_1 = keys; _i < keys_1.length; _i++) {
+            var key = keys_1[_i];
+            var props = propSets[key];
+            dateSelectionSets.push(props.dateSelectionSegs);
+            businessHoursSets.push(key ? props.businessHourSegs : NO_SEGS); // don't include redundant all-resource businesshours
+            fgEventSets.push(key ? props.fgEventSegs : NO_SEGS); // don't include fg all-resource segs
+            bgEventSets.push(props.bgEventSegs);
+            eventDrags.push(props.eventDrag);
+            eventResizes.push(props.eventResize);
+            eventSelection = eventSelection || props.eventSelection;
+        }
+        return {
+            dateSelectionSegs: this.joinDateSelection.apply(this, [resourceDayTable].concat(dateSelectionSets)),
+            businessHourSegs: this.joinBusinessHours.apply(this, [resourceDayTable].concat(businessHoursSets)),
+            fgEventSegs: this.joinFgEvents.apply(this, [resourceDayTable].concat(fgEventSets)),
+            bgEventSegs: this.joinBgEvents.apply(this, [resourceDayTable].concat(bgEventSets)),
+            eventDrag: this.joinEventDrags.apply(this, [resourceDayTable].concat(eventDrags)),
+            eventResize: this.joinEventResizes.apply(this, [resourceDayTable].concat(eventResizes)),
+            eventSelection: eventSelection
+        };
+    };
+    VResourceJoiner.prototype.joinSegs = function (resourceDayTable) {
+        var segGroups = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            segGroups[_i - 1] = arguments[_i];
+        }
+        var resourceCnt = resourceDayTable.resources.length;
+        var transformedSegs = [];
+        for (var i = 0; i < resourceCnt; i++) {
+            for (var _a = 0, _b = segGroups[i]; _a < _b.length; _a++) {
+                var seg = _b[_a];
+                transformedSegs.push.apply(transformedSegs, this.transformSeg(seg, resourceDayTable, i));
+            }
+            for (var _c = 0, _d = segGroups[resourceCnt]; _c < _d.length; _c++) { // one beyond. the all-resource
+                var seg = _d[_c];
+                transformedSegs.push.apply(// one beyond. the all-resource
+                transformedSegs, this.transformSeg(seg, resourceDayTable, i));
+            }
+        }
+        return transformedSegs;
+    };
+    /*
+    for expanding non-resource segs to all resources.
+    only for public use.
+    no memoizing.
+    */
+    VResourceJoiner.prototype.expandSegs = function (resourceDayTable, segs) {
+        var resourceCnt = resourceDayTable.resources.length;
+        var transformedSegs = [];
+        for (var i = 0; i < resourceCnt; i++) {
+            for (var _i = 0, segs_1 = segs; _i < segs_1.length; _i++) {
+                var seg = segs_1[_i];
+                transformedSegs.push.apply(transformedSegs, this.transformSeg(seg, resourceDayTable, i));
+            }
+        }
+        return transformedSegs;
+    };
+    VResourceJoiner.prototype.joinInteractions = function (resourceDayTable) {
+        var interactions = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            interactions[_i - 1] = arguments[_i];
+        }
+        var resourceCnt = resourceDayTable.resources.length;
+        var affectedInstances = {};
+        var transformedSegs = [];
+        var isEvent = false;
+        var sourceSeg = null;
+        for (var i = 0; i < resourceCnt; i++) {
+            var interaction = interactions[i];
+            if (interaction) {
+                for (var _a = 0, _b = interaction.segs; _a < _b.length; _a++) {
+                    var seg = _b[_a];
+                    transformedSegs.push.apply(transformedSegs, this.transformSeg(seg, resourceDayTable, i) // TODO: templateify Interaction::segs
+                    );
+                }
+                __assign(affectedInstances, interaction.affectedInstances);
+                isEvent = isEvent || interaction.isEvent;
+                sourceSeg = sourceSeg || interaction.sourceSeg;
+            }
+            if (interactions[resourceCnt]) { // one beyond. the all-resource
+                for (var _c = 0, _d = interactions[resourceCnt].segs; _c < _d.length; _c++) {
+                    var seg = _d[_c];
+                    transformedSegs.push.apply(transformedSegs, this.transformSeg(seg, resourceDayTable, i) // TODO: templateify Interaction::segs
+                    );
+                }
+            }
+        }
+        return {
+            affectedInstances: affectedInstances,
+            segs: transformedSegs,
+            isEvent: isEvent,
+            sourceSeg: sourceSeg
+        };
+    };
+    return VResourceJoiner;
+}());
+
+/*
+doesn't accept grouping
+*/
+function flattenResources(resourceStore, orderSpecs) {
+    return buildRowNodes(resourceStore, [], orderSpecs, false, {}, true)
+        .map(function (node) {
+        return node.resource;
+    });
+}
+function buildRowNodes(resourceStore, groupSpecs, orderSpecs, isVGrouping, expansions, expansionDefault) {
+    var complexNodes = buildHierarchy(resourceStore, isVGrouping ? -1 : 1, groupSpecs, orderSpecs);
+    var flatNodes = [];
+    flattenNodes(complexNodes, flatNodes, isVGrouping, [], 0, expansions, expansionDefault);
+    return flatNodes;
+}
+function flattenNodes(complexNodes, res, isVGrouping, rowSpans, depth, expansions, expansionDefault) {
+    for (var i = 0; i < complexNodes.length; i++) {
+        var complexNode = complexNodes[i];
+        var group = complexNode.group;
+        if (group) {
+            if (isVGrouping) {
+                var firstRowIndex = res.length;
+                var rowSpanIndex = rowSpans.length;
+                flattenNodes(complexNode.children, res, isVGrouping, rowSpans.concat(0), depth, expansions, expansionDefault);
+                if (firstRowIndex < res.length) {
+                    var firstRow = res[firstRowIndex];
+                    var firstRowSpans = firstRow.rowSpans = firstRow.rowSpans.slice();
+                    firstRowSpans[rowSpanIndex] = res.length - firstRowIndex;
+                }
+            }
+            else {
+                var id = group.spec.field + ':' + group.value;
+                var isExpanded = expansions[id] != null ? expansions[id] : expansionDefault;
+                res.push({ id: id, group: group, isExpanded: isExpanded });
+                if (isExpanded) {
+                    flattenNodes(complexNode.children, res, isVGrouping, rowSpans, depth + 1, expansions, expansionDefault);
+                }
+            }
+        }
+        else if (complexNode.resource) {
+            var id = complexNode.resource.id;
+            var isExpanded = expansions[id] != null ? expansions[id] : expansionDefault;
+            res.push({
+                id: id,
+                rowSpans: rowSpans,
+                depth: depth,
+                isExpanded: isExpanded,
+                hasChildren: Boolean(complexNode.children.length),
+                resource: complexNode.resource,
+                resourceFields: complexNode.resourceFields
+            });
+            if (isExpanded) {
+                flattenNodes(complexNode.children, res, isVGrouping, rowSpans, depth + 1, expansions, expansionDefault);
+            }
+        }
+    }
+}
+function buildHierarchy(resourceStore, maxDepth, groupSpecs, orderSpecs) {
+    var resourceNodes = buildResourceNodes(resourceStore, orderSpecs);
+    var builtNodes = [];
+    for (var resourceId in resourceNodes) {
+        var resourceNode = resourceNodes[resourceId];
+        if (!resourceNode.resource.parentId) {
+            insertResourceNode(resourceNode, builtNodes, groupSpecs, 0, maxDepth, orderSpecs);
+        }
+    }
+    return builtNodes;
+}
+function buildResourceNodes(resourceStore, orderSpecs) {
+    var nodeHash = {};
+    for (var resourceId in resourceStore) {
+        var resource = resourceStore[resourceId];
+        nodeHash[resourceId] = {
+            resource: resource,
+            resourceFields: buildResourceFields(resource),
+            children: []
+        };
+    }
+    for (var resourceId in resourceStore) {
+        var resource = resourceStore[resourceId];
+        if (resource.parentId) {
+            var parentNode = nodeHash[resource.parentId];
+            if (parentNode) {
+                insertResourceNodeInSiblings(nodeHash[resourceId], parentNode.children, orderSpecs);
+            }
+        }
+    }
+    return nodeHash;
+}
+function insertResourceNode(resourceNode, nodes, groupSpecs, depth, maxDepth, orderSpecs) {
+    if (groupSpecs.length && (maxDepth === -1 || depth <= maxDepth)) {
+        var groupNode = ensureGroupNodes(resourceNode, nodes, groupSpecs[0]);
+        insertResourceNode(resourceNode, groupNode.children, groupSpecs.slice(1), depth + 1, maxDepth, orderSpecs);
+    }
+    else {
+        insertResourceNodeInSiblings(resourceNode, nodes, orderSpecs);
+    }
+}
+function ensureGroupNodes(resourceNode, nodes, groupSpec) {
+    var groupValue = resourceNode.resourceFields[groupSpec.field];
+    var groupNode;
+    var newGroupIndex;
+    // find an existing group that matches, or determine the position for a new group
+    if (groupSpec.order) {
+        for (newGroupIndex = 0; newGroupIndex < nodes.length; newGroupIndex++) {
+            var node = nodes[newGroupIndex];
+            if (node.group) {
+                var cmp = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["flexibleCompare"])(groupValue, node.group.value) * groupSpec.order;
+                if (cmp === 0) {
+                    groupNode = node;
+                    break;
+                }
+                else if (cmp < 0) {
+                    break;
+                }
+            }
+        }
+    }
+    else { // the groups are unordered
+        for (newGroupIndex = 0; newGroupIndex < nodes.length; newGroupIndex++) {
+            var node = nodes[newGroupIndex];
+            if (node.group && groupValue === node.group.value) {
+                groupNode = node;
+                break;
+            }
+        }
+    }
+    if (!groupNode) {
+        groupNode = {
+            group: {
+                value: groupValue,
+                spec: groupSpec
+            },
+            children: []
+        };
+        nodes.splice(newGroupIndex, 0, groupNode);
+    }
+    return groupNode;
+}
+function insertResourceNodeInSiblings(resourceNode, siblings, orderSpecs) {
+    var i;
+    for (i = 0; i < siblings.length; i++) {
+        var cmp = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["compareByFieldSpecs"])(siblings[i].resourceFields, resourceNode.resourceFields, orderSpecs);
+        if (cmp > 0) { // went 1 past. insert at i
+            break;
+        }
+    }
+    siblings.splice(i, 0, resourceNode);
+}
+function buildResourceFields(resource) {
+    var obj = __assign({}, resource.extendedProps, resource.ui, resource);
+    delete obj.ui;
+    delete obj.extendedProps;
+    return obj;
+}
+function isGroupsEqual(group0, group1) {
+    return group0.spec === group1.spec && group0.value === group1.value;
+}
+
+var main = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["createPlugin"])({
+    reducers: [resourcesReducers],
+    eventDefParsers: [parseEventDef],
+    isDraggableTransformers: [transformIsDraggable],
+    eventDragMutationMassagers: [massageEventDragMutation],
+    eventDefMutationAppliers: [applyEventDefMutation],
+    dateSelectionTransformers: [transformDateSelectionJoin],
+    datePointTransforms: [transformDatePoint],
+    dateSpanTransforms: [transformDateSpan],
+    viewPropsTransformers: [ResourceDataAdder, ResourceEventConfigAdder],
+    isPropsValid: isPropsValidWithResources,
+    externalDefTransforms: [transformExternalDef],
+    eventResizeJoinTransforms: [transformEventResizeJoin],
+    viewContainerModifiers: [injectLicenseWarning],
+    eventDropTransformers: [transformEventDrop],
+    optionChangeHandlers: optionChangeHandlers
+});
+
+/* harmony default export */ __webpack_exports__["default"] = (main);
+
+
+
+/***/ }),
+
+/***/ "./node_modules/@fullcalendar/resource-daygrid/main.esm.js":
+/*!*****************************************************************!*\
+  !*** ./node_modules/@fullcalendar/resource-daygrid/main.esm.js ***!
+  \*****************************************************************/
+/*! exports provided: default, ResourceDayGrid, ResourceDayGridView */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ResourceDayGrid", function() { return ResourceDayGrid; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ResourceDayGridView", function() { return ResourceDayGridView; });
+/* harmony import */ var _fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @fullcalendar/core */ "./node_modules/@fullcalendar/core/main.esm.js");
+/* harmony import */ var _fullcalendar_resource_common__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @fullcalendar/resource-common */ "./node_modules/@fullcalendar/resource-common/main.esm.js");
+/* harmony import */ var _fullcalendar_daygrid__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @fullcalendar/daygrid */ "./node_modules/@fullcalendar/daygrid/main.esm.js");
+/*!
+FullCalendar Resource Day Grid Plugin v4.4.0
+Docs & License: https://fullcalendar.io/scheduler
+(c) 2019 Adam Shaw
+*/
+
+
+
+
+
+/*! *****************************************************************************
+Copyright (c) Microsoft Corporation. All rights reserved.
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+this file except in compliance with the License. You may obtain a copy of the
+License at http://www.apache.org/licenses/LICENSE-2.0
+
+THIS CODE IS PROVIDED ON AN *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED
+WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
+MERCHANTABLITY OR NON-INFRINGEMENT.
+
+See the Apache Version 2.0 License for specific language governing permissions
+and limitations under the License.
+***************************************************************************** */
+/* global Reflect, Promise */
+
+var extendStatics = function(d, b) {
+    extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return extendStatics(d, b);
+};
+
+function __extends(d, b) {
+    extendStatics(d, b);
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+}
+
+var __assign = function() {
+    __assign = Object.assign || function __assign(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+
+var ResourceDayGrid = /** @class */ (function (_super) {
+    __extends(ResourceDayGrid, _super);
+    function ResourceDayGrid(dayGrid) {
+        var _this = _super.call(this, dayGrid.el) || this;
+        _this.splitter = new _fullcalendar_resource_common__WEBPACK_IMPORTED_MODULE_1__["VResourceSplitter"]();
+        _this.slicers = {};
+        _this.joiner = new ResourceDayGridJoiner();
+        _this.dayGrid = dayGrid;
+        return _this;
+    }
+    ResourceDayGrid.prototype.firstContext = function (context) {
+        context.calendar.registerInteractiveComponent(this, {
+            el: this.dayGrid.el
+        });
+    };
+    ResourceDayGrid.prototype.destroy = function () {
+        _super.prototype.destroy.call(this);
+        this.context.calendar.unregisterInteractiveComponent(this);
+    };
+    ResourceDayGrid.prototype.render = function (props, context) {
+        var _this = this;
+        var dayGrid = this.dayGrid;
+        var dateProfile = props.dateProfile, resourceDayTable = props.resourceDayTable, nextDayThreshold = props.nextDayThreshold;
+        var splitProps = this.splitter.splitProps(props);
+        this.slicers = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["mapHash"])(splitProps, function (split, resourceId) {
+            return _this.slicers[resourceId] || new _fullcalendar_daygrid__WEBPACK_IMPORTED_MODULE_2__["DayGridSlicer"]();
+        });
+        var slicedProps = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["mapHash"])(this.slicers, function (slicer, resourceId) {
+            return slicer.sliceProps(splitProps[resourceId], dateProfile, nextDayThreshold, context.calendar, dayGrid, resourceDayTable.dayTable);
+        });
+        dayGrid.allowAcrossResources = resourceDayTable.dayTable.colCnt === 1;
+        dayGrid.receiveProps(__assign({}, this.joiner.joinProps(slicedProps, resourceDayTable), { dateProfile: dateProfile, cells: resourceDayTable.cells, isRigid: props.isRigid }), context);
+    };
+    ResourceDayGrid.prototype.buildPositionCaches = function () {
+        this.dayGrid.buildPositionCaches();
+    };
+    ResourceDayGrid.prototype.queryHit = function (positionLeft, positionTop) {
+        var rawHit = this.dayGrid.positionToHit(positionLeft, positionTop);
+        if (rawHit) {
+            return {
+                component: this.dayGrid,
+                dateSpan: {
+                    range: rawHit.dateSpan.range,
+                    allDay: rawHit.dateSpan.allDay,
+                    resourceId: this.props.resourceDayTable.cells[rawHit.row][rawHit.col].resource.id
+                },
+                dayEl: rawHit.dayEl,
+                rect: {
+                    left: rawHit.relativeRect.left,
+                    right: rawHit.relativeRect.right,
+                    top: rawHit.relativeRect.top,
+                    bottom: rawHit.relativeRect.bottom
+                },
+                layer: 0
+            };
+        }
+    };
+    return ResourceDayGrid;
+}(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["DateComponent"]));
+var ResourceDayGridJoiner = /** @class */ (function (_super) {
+    __extends(ResourceDayGridJoiner, _super);
+    function ResourceDayGridJoiner() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    ResourceDayGridJoiner.prototype.transformSeg = function (seg, resourceDayTable, resourceI) {
+        var colRanges = resourceDayTable.computeColRanges(seg.firstCol, seg.lastCol, resourceI);
+        return colRanges.map(function (colRange) {
+            return __assign({}, seg, colRange, { isStart: seg.isStart && colRange.isStart, isEnd: seg.isEnd && colRange.isEnd });
+        });
+    };
+    return ResourceDayGridJoiner;
+}(_fullcalendar_resource_common__WEBPACK_IMPORTED_MODULE_1__["VResourceJoiner"]));
+
+var ResourceDayGridView = /** @class */ (function (_super) {
+    __extends(ResourceDayGridView, _super);
+    function ResourceDayGridView() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.flattenResources = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["memoize"])(_fullcalendar_resource_common__WEBPACK_IMPORTED_MODULE_1__["flattenResources"]);
+        _this.buildResourceDayTable = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["memoize"])(buildResourceDayTable);
+        return _this;
+    }
+    ResourceDayGridView.prototype._processOptions = function (options) {
+        _super.prototype._processOptions.call(this, options);
+        this.resourceOrderSpecs = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["parseFieldSpecs"])(options.resourceOrder);
+    };
+    ResourceDayGridView.prototype.render = function (props, context) {
+        _super.prototype.render.call(this, props, context); // for flags for updateSize. also _renderSkeleton/_unrenderSkeleton
+        var options = context.options, nextDayThreshold = context.nextDayThreshold;
+        var resources = this.flattenResources(props.resourceStore, this.resourceOrderSpecs);
+        var resourceDayTable = this.buildResourceDayTable(props.dateProfile, props.dateProfileGenerator, resources, options.datesAboveResources);
+        if (this.header) {
+            this.header.receiveProps({
+                resources: resources,
+                dates: resourceDayTable.dayTable.headerDates,
+                dateProfile: props.dateProfile,
+                datesRepDistinctDays: true,
+                renderIntroHtml: this.renderHeadIntroHtml
+            }, context);
+        }
+        this.resourceDayGrid.receiveProps({
+            dateProfile: props.dateProfile,
+            resourceDayTable: resourceDayTable,
+            businessHours: props.businessHours,
+            eventStore: props.eventStore,
+            eventUiBases: props.eventUiBases,
+            dateSelection: props.dateSelection,
+            eventSelection: props.eventSelection,
+            eventDrag: props.eventDrag,
+            eventResize: props.eventResize,
+            isRigid: this.hasRigidRows(),
+            nextDayThreshold: nextDayThreshold
+        }, context);
+    };
+    ResourceDayGridView.prototype._renderSkeleton = function (context) {
+        _super.prototype._renderSkeleton.call(this, context);
+        if (context.options.columnHeader) {
+            this.header = new _fullcalendar_resource_common__WEBPACK_IMPORTED_MODULE_1__["ResourceDayHeader"](this.el.querySelector('.fc-head-container'));
+        }
+        this.resourceDayGrid = new ResourceDayGrid(this.dayGrid);
+    };
+    ResourceDayGridView.prototype._unrenderSkeleton = function () {
+        _super.prototype._unrenderSkeleton.call(this);
+        if (this.header) {
+            this.header.destroy();
+        }
+        this.resourceDayGrid.destroy();
+    };
+    ResourceDayGridView.needsResourceData = true; // for ResourceViewProps
+    return ResourceDayGridView;
+}(_fullcalendar_daygrid__WEBPACK_IMPORTED_MODULE_2__["AbstractDayGridView"]));
+function buildResourceDayTable(dateProfile, dateProfileGenerator, resources, datesAboveResources) {
+    var dayTable = Object(_fullcalendar_daygrid__WEBPACK_IMPORTED_MODULE_2__["buildBasicDayTable"])(dateProfile, dateProfileGenerator);
+    return datesAboveResources ?
+        new _fullcalendar_resource_common__WEBPACK_IMPORTED_MODULE_1__["DayResourceTable"](dayTable, resources) :
+        new _fullcalendar_resource_common__WEBPACK_IMPORTED_MODULE_1__["ResourceDayTable"](dayTable, resources);
+}
+
+var main = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["createPlugin"])({
+    deps: [_fullcalendar_resource_common__WEBPACK_IMPORTED_MODULE_1__["default"], _fullcalendar_daygrid__WEBPACK_IMPORTED_MODULE_2__["default"]],
+    defaultView: 'resourceDayGridDay',
+    views: {
+        resourceDayGrid: ResourceDayGridView,
+        resourceDayGridDay: {
+            type: 'resourceDayGrid',
+            duration: { days: 1 }
+        },
+        resourceDayGridWeek: {
+            type: 'resourceDayGrid',
+            duration: { weeks: 1 }
+        },
+        resourceDayGridMonth: {
+            type: 'resourceDayGrid',
+            duration: { months: 1 },
+            // TODO: wish we didn't have to C&P from dayGrid's file
+            monthMode: true,
+            fixedWeekCount: true
+        }
+    }
+});
+
+/* harmony default export */ __webpack_exports__["default"] = (main);
+
+
+
+/***/ }),
+
+/***/ "./node_modules/@fullcalendar/resource-timegrid/main.esm.js":
+/*!******************************************************************!*\
+  !*** ./node_modules/@fullcalendar/resource-timegrid/main.esm.js ***!
+  \******************************************************************/
+/*! exports provided: default, ResourceTimeGrid, ResourceTimeGridView */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ResourceTimeGrid", function() { return ResourceTimeGrid; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ResourceTimeGridView", function() { return ResourceTimeGridView; });
+/* harmony import */ var _fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @fullcalendar/core */ "./node_modules/@fullcalendar/core/main.esm.js");
+/* harmony import */ var _fullcalendar_resource_common__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @fullcalendar/resource-common */ "./node_modules/@fullcalendar/resource-common/main.esm.js");
+/* harmony import */ var _fullcalendar_timegrid__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @fullcalendar/timegrid */ "./node_modules/@fullcalendar/timegrid/main.esm.js");
+/* harmony import */ var _fullcalendar_resource_daygrid__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @fullcalendar/resource-daygrid */ "./node_modules/@fullcalendar/resource-daygrid/main.esm.js");
+/*!
+FullCalendar Resource Time Grid Plugin v4.4.0
+Docs & License: https://fullcalendar.io/scheduler
+(c) 2019 Adam Shaw
+*/
+
+
+
+
+
+
+/*! *****************************************************************************
+Copyright (c) Microsoft Corporation. All rights reserved.
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+this file except in compliance with the License. You may obtain a copy of the
+License at http://www.apache.org/licenses/LICENSE-2.0
+
+THIS CODE IS PROVIDED ON AN *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED
+WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
+MERCHANTABLITY OR NON-INFRINGEMENT.
+
+See the Apache Version 2.0 License for specific language governing permissions
+and limitations under the License.
+***************************************************************************** */
+/* global Reflect, Promise */
+
+var extendStatics = function(d, b) {
+    extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return extendStatics(d, b);
+};
+
+function __extends(d, b) {
+    extendStatics(d, b);
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+}
+
+var __assign = function() {
+    __assign = Object.assign || function __assign(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+
+var ResourceTimeGrid = /** @class */ (function (_super) {
+    __extends(ResourceTimeGrid, _super);
+    function ResourceTimeGrid(timeGrid) {
+        var _this = _super.call(this, timeGrid.el) || this;
+        _this.buildDayRanges = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["memoize"])(_fullcalendar_timegrid__WEBPACK_IMPORTED_MODULE_2__["buildDayRanges"]);
+        _this.splitter = new _fullcalendar_resource_common__WEBPACK_IMPORTED_MODULE_1__["VResourceSplitter"]();
+        _this.slicers = {};
+        _this.joiner = new ResourceTimeGridJoiner();
+        _this.timeGrid = timeGrid;
+        return _this;
+    }
+    ResourceTimeGrid.prototype.firstContext = function (context) {
+        context.calendar.registerInteractiveComponent(this, {
+            el: this.timeGrid.el
+        });
+    };
+    ResourceTimeGrid.prototype.destroy = function () {
+        this.context.calendar.unregisterInteractiveComponent(this);
+    };
+    ResourceTimeGrid.prototype.render = function (props, context) {
+        var _this = this;
+        var timeGrid = this.timeGrid;
+        var dateEnv = context.dateEnv;
+        var dateProfile = props.dateProfile, resourceDayTable = props.resourceDayTable;
+        var dayRanges = this.dayRanges = this.buildDayRanges(resourceDayTable.dayTable, dateProfile, dateEnv);
+        var splitProps = this.splitter.splitProps(props);
+        this.slicers = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["mapHash"])(splitProps, function (split, resourceId) {
+            return _this.slicers[resourceId] || new _fullcalendar_timegrid__WEBPACK_IMPORTED_MODULE_2__["TimeGridSlicer"]();
+        });
+        var slicedProps = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["mapHash"])(this.slicers, function (slicer, resourceId) {
+            return slicer.sliceProps(splitProps[resourceId], dateProfile, null, context.calendar, timeGrid, dayRanges);
+        });
+        timeGrid.allowAcrossResources = dayRanges.length === 1;
+        timeGrid.receiveProps(__assign({}, this.joiner.joinProps(slicedProps, resourceDayTable), { dateProfile: dateProfile, cells: resourceDayTable.cells[0] }), context);
+    };
+    ResourceTimeGrid.prototype.renderNowIndicator = function (date) {
+        var timeGrid = this.timeGrid;
+        var resourceDayTable = this.props.resourceDayTable;
+        var nonResourceSegs = this.slicers[''].sliceNowDate(date, timeGrid, this.dayRanges);
+        var segs = this.joiner.expandSegs(resourceDayTable, nonResourceSegs);
+        timeGrid.renderNowIndicator(segs, date);
+    };
+    ResourceTimeGrid.prototype.buildPositionCaches = function () {
+        this.timeGrid.buildPositionCaches();
+    };
+    ResourceTimeGrid.prototype.queryHit = function (positionLeft, positionTop) {
+        var rawHit = this.timeGrid.positionToHit(positionLeft, positionTop);
+        if (rawHit) {
+            return {
+                component: this.timeGrid,
+                dateSpan: {
+                    range: rawHit.dateSpan.range,
+                    allDay: rawHit.dateSpan.allDay,
+                    resourceId: this.props.resourceDayTable.cells[0][rawHit.col].resource.id
+                },
+                dayEl: rawHit.dayEl,
+                rect: {
+                    left: rawHit.relativeRect.left,
+                    right: rawHit.relativeRect.right,
+                    top: rawHit.relativeRect.top,
+                    bottom: rawHit.relativeRect.bottom
+                },
+                layer: 0
+            };
+        }
+    };
+    return ResourceTimeGrid;
+}(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["DateComponent"]));
+var ResourceTimeGridJoiner = /** @class */ (function (_super) {
+    __extends(ResourceTimeGridJoiner, _super);
+    function ResourceTimeGridJoiner() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    ResourceTimeGridJoiner.prototype.transformSeg = function (seg, resourceDayTable, resourceI) {
+        return [
+            __assign({}, seg, { col: resourceDayTable.computeCol(seg.col, resourceI) })
+        ];
+    };
+    return ResourceTimeGridJoiner;
+}(_fullcalendar_resource_common__WEBPACK_IMPORTED_MODULE_1__["VResourceJoiner"]));
+
+var ResourceTimeGridView = /** @class */ (function (_super) {
+    __extends(ResourceTimeGridView, _super);
+    function ResourceTimeGridView() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.processOptions = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["memoize"])(_this._processOptions);
+        _this.flattenResources = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["memoize"])(_fullcalendar_resource_common__WEBPACK_IMPORTED_MODULE_1__["flattenResources"]);
+        _this.buildResourceDayTable = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["memoize"])(buildResourceDayTable);
+        return _this;
+    }
+    ResourceTimeGridView.prototype._processOptions = function (options) {
+        this.resourceOrderSpecs = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["parseFieldSpecs"])(options.resourceOrder);
+    };
+    ResourceTimeGridView.prototype.render = function (props, context) {
+        _super.prototype.render.call(this, props, context); // for flags for updateSize. and will call _renderSkeleton/_unrenderSkeleton
+        var options = context.options, nextDayThreshold = context.nextDayThreshold;
+        this.processOptions(options);
+        var splitProps = this.splitter.splitProps(props);
+        var resources = this.flattenResources(props.resourceStore, this.resourceOrderSpecs);
+        var resourceDayTable = this.buildResourceDayTable(props.dateProfile, props.dateProfileGenerator, resources, options.datesAboveResources);
+        if (this.header) {
+            this.header.receiveProps({
+                resources: resources,
+                dates: resourceDayTable.dayTable.headerDates,
+                dateProfile: props.dateProfile,
+                datesRepDistinctDays: true,
+                renderIntroHtml: this.renderHeadIntroHtml
+            }, context);
+        }
+        this.resourceTimeGrid.receiveProps(__assign({}, splitProps['timed'], { dateProfile: props.dateProfile, resourceDayTable: resourceDayTable }), context);
+        if (this.resourceDayGrid) {
+            this.resourceDayGrid.receiveProps(__assign({}, splitProps['allDay'], { dateProfile: props.dateProfile, resourceDayTable: resourceDayTable, isRigid: false, nextDayThreshold: nextDayThreshold }), context);
+        }
+        this.startNowIndicator(props.dateProfile, props.dateProfileGenerator);
+    };
+    ResourceTimeGridView.prototype._renderSkeleton = function (context) {
+        _super.prototype._renderSkeleton.call(this, context);
+        if (context.options.columnHeader) {
+            this.header = new _fullcalendar_resource_common__WEBPACK_IMPORTED_MODULE_1__["ResourceDayHeader"](this.el.querySelector('.fc-head-container'));
+        }
+        this.resourceTimeGrid = new ResourceTimeGrid(this.timeGrid);
+        if (this.dayGrid) {
+            this.resourceDayGrid = new _fullcalendar_resource_daygrid__WEBPACK_IMPORTED_MODULE_3__["ResourceDayGrid"](this.dayGrid);
+        }
+    };
+    ResourceTimeGridView.prototype._unrenderSkeleton = function () {
+        _super.prototype._unrenderSkeleton.call(this);
+        if (this.header) {
+            this.header.destroy();
+        }
+        this.resourceTimeGrid.destroy();
+        if (this.resourceDayGrid) {
+            this.resourceDayGrid.destroy();
+        }
+    };
+    ResourceTimeGridView.prototype.renderNowIndicator = function (date) {
+        this.resourceTimeGrid.renderNowIndicator(date);
+    };
+    ResourceTimeGridView.needsResourceData = true; // for ResourceViewProps
+    return ResourceTimeGridView;
+}(_fullcalendar_timegrid__WEBPACK_IMPORTED_MODULE_2__["AbstractTimeGridView"]));
+function buildResourceDayTable(dateProfile, dateProfileGenerator, resources, datesAboveResources) {
+    var dayTable = Object(_fullcalendar_timegrid__WEBPACK_IMPORTED_MODULE_2__["buildDayTable"])(dateProfile, dateProfileGenerator);
+    return datesAboveResources ?
+        new _fullcalendar_resource_common__WEBPACK_IMPORTED_MODULE_1__["DayResourceTable"](dayTable, resources) :
+        new _fullcalendar_resource_common__WEBPACK_IMPORTED_MODULE_1__["ResourceDayTable"](dayTable, resources);
+}
+
+var main = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["createPlugin"])({
+    deps: [_fullcalendar_resource_common__WEBPACK_IMPORTED_MODULE_1__["default"], _fullcalendar_timegrid__WEBPACK_IMPORTED_MODULE_2__["default"]],
+    defaultView: 'resourceTimeGridDay',
+    views: {
+        resourceTimeGrid: {
+            class: ResourceTimeGridView,
+            // TODO: wish we didn't have to C&P from timeGrid's file
+            allDaySlot: true,
+            slotDuration: '00:30:00',
+            slotEventOverlap: true // a bad name. confused with overlap/constraint system
+        },
+        resourceTimeGridDay: {
+            type: 'resourceTimeGrid',
+            duration: { days: 1 }
+        },
+        resourceTimeGridWeek: {
+            type: 'resourceTimeGrid',
+            duration: { weeks: 1 }
+        }
+    }
+});
+
+/* harmony default export */ __webpack_exports__["default"] = (main);
+
+
+
+/***/ }),
+
+/***/ "./node_modules/@fullcalendar/timegrid/main.esm.js":
+/*!*********************************************************!*\
+  !*** ./node_modules/@fullcalendar/timegrid/main.esm.js ***!
+  \*********************************************************/
+/*! exports provided: default, AbstractTimeGridView, TimeGrid, TimeGridSlicer, TimeGridView, buildDayRanges, buildDayTable */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AbstractTimeGridView", function() { return AbstractTimeGridView; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TimeGrid", function() { return TimeGrid; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TimeGridSlicer", function() { return TimeGridSlicer; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TimeGridView", function() { return TimeGridView; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "buildDayRanges", function() { return buildDayRanges; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "buildDayTable", function() { return buildDayTable; });
+/* harmony import */ var _fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @fullcalendar/core */ "./node_modules/@fullcalendar/core/main.esm.js");
+/* harmony import */ var _fullcalendar_daygrid__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @fullcalendar/daygrid */ "./node_modules/@fullcalendar/daygrid/main.esm.js");
+/*!
+FullCalendar Time Grid Plugin v4.4.0
+Docs & License: https://fullcalendar.io/
+(c) 2019 Adam Shaw
+*/
+
+
+
+
+/*! *****************************************************************************
+Copyright (c) Microsoft Corporation. All rights reserved.
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+this file except in compliance with the License. You may obtain a copy of the
+License at http://www.apache.org/licenses/LICENSE-2.0
+
+THIS CODE IS PROVIDED ON AN *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED
+WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
+MERCHANTABLITY OR NON-INFRINGEMENT.
+
+See the Apache Version 2.0 License for specific language governing permissions
+and limitations under the License.
+***************************************************************************** */
+/* global Reflect, Promise */
+
+var extendStatics = function(d, b) {
+    extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return extendStatics(d, b);
+};
+
+function __extends(d, b) {
+    extendStatics(d, b);
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+}
+
+var __assign = function() {
+    __assign = Object.assign || function __assign(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+
+/*
+Only handles foreground segs.
+Does not own rendering. Use for low-level util methods by TimeGrid.
+*/
+var TimeGridEventRenderer = /** @class */ (function (_super) {
+    __extends(TimeGridEventRenderer, _super);
+    function TimeGridEventRenderer(timeGrid) {
+        var _this = _super.call(this) || this;
+        _this.timeGrid = timeGrid;
+        return _this;
+    }
+    TimeGridEventRenderer.prototype.renderSegs = function (context, segs, mirrorInfo) {
+        _super.prototype.renderSegs.call(this, context, segs, mirrorInfo);
+        // TODO: dont do every time. memoize
+        this.fullTimeFormat = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["createFormatter"])({
+            hour: 'numeric',
+            minute: '2-digit',
+            separator: this.context.options.defaultRangeSeparator
+        });
+    };
+    // Given an array of foreground segments, render a DOM element for each, computes position,
+    // and attaches to the column inner-container elements.
+    TimeGridEventRenderer.prototype.attachSegs = function (segs, mirrorInfo) {
+        var segsByCol = this.timeGrid.groupSegsByCol(segs);
+        // order the segs within each column
+        // TODO: have groupSegsByCol do this?
+        for (var col = 0; col < segsByCol.length; col++) {
+            segsByCol[col] = this.sortEventSegs(segsByCol[col]);
+        }
+        this.segsByCol = segsByCol;
+        this.timeGrid.attachSegsByCol(segsByCol, this.timeGrid.fgContainerEls);
+    };
+    TimeGridEventRenderer.prototype.detachSegs = function (segs) {
+        segs.forEach(function (seg) {
+            Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["removeElement"])(seg.el);
+        });
+        this.segsByCol = null;
+    };
+    TimeGridEventRenderer.prototype.computeSegSizes = function (allSegs) {
+        var _a = this, timeGrid = _a.timeGrid, segsByCol = _a.segsByCol;
+        var colCnt = timeGrid.colCnt;
+        timeGrid.computeSegVerticals(allSegs); // horizontals relies on this
+        if (segsByCol) {
+            for (var col = 0; col < colCnt; col++) {
+                this.computeSegHorizontals(segsByCol[col]); // compute horizontal coordinates, z-index's, and reorder the array
+            }
+        }
+    };
+    TimeGridEventRenderer.prototype.assignSegSizes = function (allSegs) {
+        var _a = this, timeGrid = _a.timeGrid, segsByCol = _a.segsByCol;
+        var colCnt = timeGrid.colCnt;
+        timeGrid.assignSegVerticals(allSegs); // horizontals relies on this
+        if (segsByCol) {
+            for (var col = 0; col < colCnt; col++) {
+                this.assignSegCss(segsByCol[col]);
+            }
+        }
+    };
+    // Computes a default event time formatting string if `eventTimeFormat` is not explicitly defined
+    TimeGridEventRenderer.prototype.computeEventTimeFormat = function () {
+        return {
+            hour: 'numeric',
+            minute: '2-digit',
+            meridiem: false
+        };
+    };
+    // Computes a default `displayEventEnd` value if one is not expliclty defined
+    TimeGridEventRenderer.prototype.computeDisplayEventEnd = function () {
+        return true;
+    };
+    // Renders the HTML for a single event segment's default rendering
+    TimeGridEventRenderer.prototype.renderSegHtml = function (seg, mirrorInfo) {
+        var eventRange = seg.eventRange;
+        var eventDef = eventRange.def;
+        var eventUi = eventRange.ui;
+        var allDay = eventDef.allDay;
+        var isDraggable = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["computeEventDraggable"])(this.context, eventDef, eventUi);
+        var isResizableFromStart = seg.isStart && Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["computeEventStartResizable"])(this.context, eventDef, eventUi);
+        var isResizableFromEnd = seg.isEnd && Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["computeEventEndResizable"])(this.context, eventDef, eventUi);
+        var classes = this.getSegClasses(seg, isDraggable, isResizableFromStart || isResizableFromEnd, mirrorInfo);
+        var skinCss = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["cssToStr"])(this.getSkinCss(eventUi));
+        var timeText;
+        var fullTimeText; // more verbose time text. for the print stylesheet
+        var startTimeText; // just the start time text
+        classes.unshift('fc-time-grid-event');
+        // if the event appears to span more than one day...
+        if (Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["isMultiDayRange"])(eventRange.range)) {
+            // Don't display time text on segments that run entirely through a day.
+            // That would appear as midnight-midnight and would look dumb.
+            // Otherwise, display the time text for the *segment's* times (like 6pm-midnight or midnight-10am)
+            if (seg.isStart || seg.isEnd) {
+                var unzonedStart = seg.start;
+                var unzonedEnd = seg.end;
+                timeText = this._getTimeText(unzonedStart, unzonedEnd, allDay); // TODO: give the timezones
+                fullTimeText = this._getTimeText(unzonedStart, unzonedEnd, allDay, this.fullTimeFormat);
+                startTimeText = this._getTimeText(unzonedStart, unzonedEnd, allDay, null, false); // displayEnd=false
+            }
+        }
+        else {
+            // Display the normal time text for the *event's* times
+            timeText = this.getTimeText(eventRange);
+            fullTimeText = this.getTimeText(eventRange, this.fullTimeFormat);
+            startTimeText = this.getTimeText(eventRange, null, false); // displayEnd=false
+        }
+        return '<a class="' + classes.join(' ') + '"' +
+            (eventDef.url ?
+                ' href="' + Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["htmlEscape"])(eventDef.url) + '"' :
+                '') +
+            (skinCss ?
+                ' style="' + skinCss + '"' :
+                '') +
+            '>' +
+            '<div class="fc-content">' +
+            (timeText ?
+                '<div class="fc-time"' +
+                    ' data-start="' + Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["htmlEscape"])(startTimeText) + '"' +
+                    ' data-full="' + Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["htmlEscape"])(fullTimeText) + '"' +
+                    '>' +
+                    '<span>' + Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["htmlEscape"])(timeText) + '</span>' +
+                    '</div>' :
+                '') +
+            (eventDef.title ?
+                '<div class="fc-title">' +
+                    Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["htmlEscape"])(eventDef.title) +
+                    '</div>' :
+                '') +
+            '</div>' +
+            /* TODO: write CSS for this
+            (isResizableFromStart ?
+              '<div class="fc-resizer fc-start-resizer"></div>' :
+              ''
+              ) +
+            */
+            (isResizableFromEnd ?
+                '<div class="fc-resizer fc-end-resizer"></div>' :
+                '') +
+            '</a>';
+    };
+    // Given an array of segments that are all in the same column, sets the backwardCoord and forwardCoord on each.
+    // Assumed the segs are already ordered.
+    // NOTE: Also reorders the given array by date!
+    TimeGridEventRenderer.prototype.computeSegHorizontals = function (segs) {
+        var levels;
+        var level0;
+        var i;
+        levels = buildSlotSegLevels(segs);
+        computeForwardSlotSegs(levels);
+        if ((level0 = levels[0])) {
+            for (i = 0; i < level0.length; i++) {
+                computeSlotSegPressures(level0[i]);
+            }
+            for (i = 0; i < level0.length; i++) {
+                this.computeSegForwardBack(level0[i], 0, 0);
+            }
+        }
+    };
+    // Calculate seg.forwardCoord and seg.backwardCoord for the segment, where both values range
+    // from 0 to 1. If the calendar is left-to-right, the seg.backwardCoord maps to "left" and
+    // seg.forwardCoord maps to "right" (via percentage). Vice-versa if the calendar is right-to-left.
+    //
+    // The segment might be part of a "series", which means consecutive segments with the same pressure
+    // who's width is unknown until an edge has been hit. `seriesBackwardPressure` is the number of
+    // segments behind this one in the current series, and `seriesBackwardCoord` is the starting
+    // coordinate of the first segment in the series.
+    TimeGridEventRenderer.prototype.computeSegForwardBack = function (seg, seriesBackwardPressure, seriesBackwardCoord) {
+        var forwardSegs = seg.forwardSegs;
+        var i;
+        if (seg.forwardCoord === undefined) { // not already computed
+            if (!forwardSegs.length) {
+                // if there are no forward segments, this segment should butt up against the edge
+                seg.forwardCoord = 1;
+            }
+            else {
+                // sort highest pressure first
+                this.sortForwardSegs(forwardSegs);
+                // this segment's forwardCoord will be calculated from the backwardCoord of the
+                // highest-pressure forward segment.
+                this.computeSegForwardBack(forwardSegs[0], seriesBackwardPressure + 1, seriesBackwardCoord);
+                seg.forwardCoord = forwardSegs[0].backwardCoord;
+            }
+            // calculate the backwardCoord from the forwardCoord. consider the series
+            seg.backwardCoord = seg.forwardCoord -
+                (seg.forwardCoord - seriesBackwardCoord) / // available width for series
+                    (seriesBackwardPressure + 1); // # of segments in the series
+            // use this segment's coordinates to computed the coordinates of the less-pressurized
+            // forward segments
+            for (i = 0; i < forwardSegs.length; i++) {
+                this.computeSegForwardBack(forwardSegs[i], 0, seg.forwardCoord);
+            }
+        }
+    };
+    TimeGridEventRenderer.prototype.sortForwardSegs = function (forwardSegs) {
+        var objs = forwardSegs.map(buildTimeGridSegCompareObj);
+        var specs = [
+            // put higher-pressure first
+            { field: 'forwardPressure', order: -1 },
+            // put segments that are closer to initial edge first (and favor ones with no coords yet)
+            { field: 'backwardCoord', order: 1 }
+        ].concat(this.context.eventOrderSpecs);
+        objs.sort(function (obj0, obj1) {
+            return Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["compareByFieldSpecs"])(obj0, obj1, specs);
+        });
+        return objs.map(function (c) {
+            return c._seg;
+        });
+    };
+    // Given foreground event segments that have already had their position coordinates computed,
+    // assigns position-related CSS values to their elements.
+    TimeGridEventRenderer.prototype.assignSegCss = function (segs) {
+        for (var _i = 0, segs_1 = segs; _i < segs_1.length; _i++) {
+            var seg = segs_1[_i];
+            Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["applyStyle"])(seg.el, this.generateSegCss(seg));
+            if (seg.level > 0) {
+                seg.el.classList.add('fc-time-grid-event-inset');
+            }
+            // if the event is short that the title will be cut off,
+            // attach a className that condenses the title into the time area.
+            if (seg.eventRange.def.title && seg.bottom - seg.top < 30) {
+                seg.el.classList.add('fc-short'); // TODO: "condensed" is a better name
+            }
+        }
+    };
+    // Generates an object with CSS properties/values that should be applied to an event segment element.
+    // Contains important positioning-related properties that should be applied to any event element, customized or not.
+    TimeGridEventRenderer.prototype.generateSegCss = function (seg) {
+        var shouldOverlap = this.context.options.slotEventOverlap;
+        var backwardCoord = seg.backwardCoord; // the left side if LTR. the right side if RTL. floating-point
+        var forwardCoord = seg.forwardCoord; // the right side if LTR. the left side if RTL. floating-point
+        var props = this.timeGrid.generateSegVerticalCss(seg); // get top/bottom first
+        var isRtl = this.context.isRtl;
+        var left; // amount of space from left edge, a fraction of the total width
+        var right; // amount of space from right edge, a fraction of the total width
+        if (shouldOverlap) {
+            // double the width, but don't go beyond the maximum forward coordinate (1.0)
+            forwardCoord = Math.min(1, backwardCoord + (forwardCoord - backwardCoord) * 2);
+        }
+        if (isRtl) {
+            left = 1 - forwardCoord;
+            right = backwardCoord;
+        }
+        else {
+            left = backwardCoord;
+            right = 1 - forwardCoord;
+        }
+        props.zIndex = seg.level + 1; // convert from 0-base to 1-based
+        props.left = left * 100 + '%';
+        props.right = right * 100 + '%';
+        if (shouldOverlap && seg.forwardPressure) {
+            // add padding to the edge so that forward stacked events don't cover the resizer's icon
+            props[isRtl ? 'marginLeft' : 'marginRight'] = 10 * 2; // 10 is a guesstimate of the icon's width
+        }
+        return props;
+    };
+    return TimeGridEventRenderer;
+}(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["FgEventRenderer"]));
+// Builds an array of segments "levels". The first level will be the leftmost tier of segments if the calendar is
+// left-to-right, or the rightmost if the calendar is right-to-left. Assumes the segments are already ordered by date.
+function buildSlotSegLevels(segs) {
+    var levels = [];
+    var i;
+    var seg;
+    var j;
+    for (i = 0; i < segs.length; i++) {
+        seg = segs[i];
+        // go through all the levels and stop on the first level where there are no collisions
+        for (j = 0; j < levels.length; j++) {
+            if (!computeSlotSegCollisions(seg, levels[j]).length) {
+                break;
+            }
+        }
+        seg.level = j;
+        (levels[j] || (levels[j] = [])).push(seg);
+    }
+    return levels;
+}
+// For every segment, figure out the other segments that are in subsequent
+// levels that also occupy the same vertical space. Accumulate in seg.forwardSegs
+function computeForwardSlotSegs(levels) {
+    var i;
+    var level;
+    var j;
+    var seg;
+    var k;
+    for (i = 0; i < levels.length; i++) {
+        level = levels[i];
+        for (j = 0; j < level.length; j++) {
+            seg = level[j];
+            seg.forwardSegs = [];
+            for (k = i + 1; k < levels.length; k++) {
+                computeSlotSegCollisions(seg, levels[k], seg.forwardSegs);
+            }
+        }
+    }
+}
+// Figure out which path forward (via seg.forwardSegs) results in the longest path until
+// the furthest edge is reached. The number of segments in this path will be seg.forwardPressure
+function computeSlotSegPressures(seg) {
+    var forwardSegs = seg.forwardSegs;
+    var forwardPressure = 0;
+    var i;
+    var forwardSeg;
+    if (seg.forwardPressure === undefined) { // not already computed
+        for (i = 0; i < forwardSegs.length; i++) {
+            forwardSeg = forwardSegs[i];
+            // figure out the child's maximum forward path
+            computeSlotSegPressures(forwardSeg);
+            // either use the existing maximum, or use the child's forward pressure
+            // plus one (for the forwardSeg itself)
+            forwardPressure = Math.max(forwardPressure, 1 + forwardSeg.forwardPressure);
+        }
+        seg.forwardPressure = forwardPressure;
+    }
+}
+// Find all the segments in `otherSegs` that vertically collide with `seg`.
+// Append into an optionally-supplied `results` array and return.
+function computeSlotSegCollisions(seg, otherSegs, results) {
+    if (results === void 0) { results = []; }
+    for (var i = 0; i < otherSegs.length; i++) {
+        if (isSlotSegCollision(seg, otherSegs[i])) {
+            results.push(otherSegs[i]);
+        }
+    }
+    return results;
+}
+// Do these segments occupy the same vertical space?
+function isSlotSegCollision(seg1, seg2) {
+    return seg1.bottom > seg2.top && seg1.top < seg2.bottom;
+}
+function buildTimeGridSegCompareObj(seg) {
+    var obj = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["buildSegCompareObj"])(seg);
+    obj.forwardPressure = seg.forwardPressure;
+    obj.backwardCoord = seg.backwardCoord;
+    return obj;
+}
+
+var TimeGridMirrorRenderer = /** @class */ (function (_super) {
+    __extends(TimeGridMirrorRenderer, _super);
+    function TimeGridMirrorRenderer() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    TimeGridMirrorRenderer.prototype.attachSegs = function (segs, mirrorInfo) {
+        this.segsByCol = this.timeGrid.groupSegsByCol(segs);
+        this.timeGrid.attachSegsByCol(this.segsByCol, this.timeGrid.mirrorContainerEls);
+        this.sourceSeg = mirrorInfo.sourceSeg;
+    };
+    TimeGridMirrorRenderer.prototype.generateSegCss = function (seg) {
+        var props = _super.prototype.generateSegCss.call(this, seg);
+        var sourceSeg = this.sourceSeg;
+        if (sourceSeg && sourceSeg.col === seg.col) {
+            var sourceSegProps = _super.prototype.generateSegCss.call(this, sourceSeg);
+            props.left = sourceSegProps.left;
+            props.right = sourceSegProps.right;
+            props.marginLeft = sourceSegProps.marginLeft;
+            props.marginRight = sourceSegProps.marginRight;
+        }
+        return props;
+    };
+    return TimeGridMirrorRenderer;
+}(TimeGridEventRenderer));
+
+var TimeGridFillRenderer = /** @class */ (function (_super) {
+    __extends(TimeGridFillRenderer, _super);
+    function TimeGridFillRenderer(timeGrid) {
+        var _this = _super.call(this) || this;
+        _this.timeGrid = timeGrid;
+        return _this;
+    }
+    TimeGridFillRenderer.prototype.attachSegs = function (type, segs) {
+        var timeGrid = this.timeGrid;
+        var containerEls;
+        // TODO: more efficient lookup
+        if (type === 'bgEvent') {
+            containerEls = timeGrid.bgContainerEls;
+        }
+        else if (type === 'businessHours') {
+            containerEls = timeGrid.businessContainerEls;
+        }
+        else if (type === 'highlight') {
+            containerEls = timeGrid.highlightContainerEls;
+        }
+        timeGrid.attachSegsByCol(timeGrid.groupSegsByCol(segs), containerEls);
+        return segs.map(function (seg) {
+            return seg.el;
+        });
+    };
+    TimeGridFillRenderer.prototype.computeSegSizes = function (segs) {
+        this.timeGrid.computeSegVerticals(segs);
+    };
+    TimeGridFillRenderer.prototype.assignSegSizes = function (segs) {
+        this.timeGrid.assignSegVerticals(segs);
+    };
+    return TimeGridFillRenderer;
+}(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["FillRenderer"]));
+
+/* A component that renders one or more columns of vertical time slots
+----------------------------------------------------------------------------------------------------------------------*/
+// potential nice values for the slot-duration and interval-duration
+// from largest to smallest
+var AGENDA_STOCK_SUB_DURATIONS = [
+    { hours: 1 },
+    { minutes: 30 },
+    { minutes: 15 },
+    { seconds: 30 },
+    { seconds: 15 }
+];
+var TimeGrid = /** @class */ (function (_super) {
+    __extends(TimeGrid, _super);
+    function TimeGrid(el, renderProps) {
+        var _this = _super.call(this, el) || this;
+        _this.isSlatSizesDirty = false;
+        _this.isColSizesDirty = false;
+        _this.processOptions = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["memoize"])(_this._processOptions);
+        _this.renderSkeleton = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["memoizeRendering"])(_this._renderSkeleton);
+        _this.renderSlats = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["memoizeRendering"])(_this._renderSlats, null, [_this.renderSkeleton]);
+        _this.renderColumns = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["memoizeRendering"])(_this._renderColumns, _this._unrenderColumns, [_this.renderSkeleton]);
+        _this.renderProps = renderProps;
+        var renderColumns = _this.renderColumns;
+        var eventRenderer = _this.eventRenderer = new TimeGridEventRenderer(_this);
+        var fillRenderer = _this.fillRenderer = new TimeGridFillRenderer(_this);
+        _this.mirrorRenderer = new TimeGridMirrorRenderer(_this);
+        _this.renderBusinessHours = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["memoizeRendering"])(fillRenderer.renderSegs.bind(fillRenderer, 'businessHours'), fillRenderer.unrender.bind(fillRenderer, 'businessHours'), [renderColumns]);
+        _this.renderDateSelection = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["memoizeRendering"])(_this._renderDateSelection, _this._unrenderDateSelection, [renderColumns]);
+        _this.renderFgEvents = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["memoizeRendering"])(eventRenderer.renderSegs.bind(eventRenderer), eventRenderer.unrender.bind(eventRenderer), [renderColumns]);
+        _this.renderBgEvents = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["memoizeRendering"])(fillRenderer.renderSegs.bind(fillRenderer, 'bgEvent'), fillRenderer.unrender.bind(fillRenderer, 'bgEvent'), [renderColumns]);
+        _this.renderEventSelection = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["memoizeRendering"])(eventRenderer.selectByInstanceId.bind(eventRenderer), eventRenderer.unselectByInstanceId.bind(eventRenderer), [_this.renderFgEvents]);
+        _this.renderEventDrag = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["memoizeRendering"])(_this._renderEventDrag, _this._unrenderEventDrag, [renderColumns]);
+        _this.renderEventResize = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["memoizeRendering"])(_this._renderEventResize, _this._unrenderEventResize, [renderColumns]);
+        return _this;
+    }
+    /* Options
+    ------------------------------------------------------------------------------------------------------------------*/
+    // Parses various options into properties of this object
+    // MUST have context already set
+    TimeGrid.prototype._processOptions = function (options) {
+        var slotDuration = options.slotDuration, snapDuration = options.snapDuration;
+        var snapsPerSlot;
+        var input;
+        slotDuration = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["createDuration"])(slotDuration);
+        snapDuration = snapDuration ? Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["createDuration"])(snapDuration) : slotDuration;
+        snapsPerSlot = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["wholeDivideDurations"])(slotDuration, snapDuration);
+        if (snapsPerSlot === null) {
+            snapDuration = slotDuration;
+            snapsPerSlot = 1;
+            // TODO: say warning?
+        }
+        this.slotDuration = slotDuration;
+        this.snapDuration = snapDuration;
+        this.snapsPerSlot = snapsPerSlot;
+        // might be an array value (for TimelineView).
+        // if so, getting the most granular entry (the last one probably).
+        input = options.slotLabelFormat;
+        if (Array.isArray(input)) {
+            input = input[input.length - 1];
+        }
+        this.labelFormat = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["createFormatter"])(input || {
+            hour: 'numeric',
+            minute: '2-digit',
+            omitZeroMinute: true,
+            meridiem: 'short'
+        });
+        input = options.slotLabelInterval;
+        this.labelInterval = input ?
+            Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["createDuration"])(input) :
+            this.computeLabelInterval(slotDuration);
+    };
+    // Computes an automatic value for slotLabelInterval
+    TimeGrid.prototype.computeLabelInterval = function (slotDuration) {
+        var i;
+        var labelInterval;
+        var slotsPerLabel;
+        // find the smallest stock label interval that results in more than one slots-per-label
+        for (i = AGENDA_STOCK_SUB_DURATIONS.length - 1; i >= 0; i--) {
+            labelInterval = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["createDuration"])(AGENDA_STOCK_SUB_DURATIONS[i]);
+            slotsPerLabel = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["wholeDivideDurations"])(labelInterval, slotDuration);
+            if (slotsPerLabel !== null && slotsPerLabel > 1) {
+                return labelInterval;
+            }
+        }
+        return slotDuration; // fall back
+    };
+    /* Rendering
+    ------------------------------------------------------------------------------------------------------------------*/
+    TimeGrid.prototype.render = function (props, context) {
+        this.processOptions(context.options);
+        var cells = props.cells;
+        this.colCnt = cells.length;
+        this.renderSkeleton(context.theme);
+        this.renderSlats(props.dateProfile);
+        this.renderColumns(props.cells, props.dateProfile);
+        this.renderBusinessHours(context, props.businessHourSegs);
+        this.renderDateSelection(props.dateSelectionSegs);
+        this.renderFgEvents(context, props.fgEventSegs);
+        this.renderBgEvents(context, props.bgEventSegs);
+        this.renderEventSelection(props.eventSelection);
+        this.renderEventDrag(props.eventDrag);
+        this.renderEventResize(props.eventResize);
+    };
+    TimeGrid.prototype.destroy = function () {
+        _super.prototype.destroy.call(this);
+        // should unrender everything else too
+        this.renderSlats.unrender();
+        this.renderColumns.unrender();
+        this.renderSkeleton.unrender();
+    };
+    TimeGrid.prototype.updateSize = function (isResize) {
+        var _a = this, fillRenderer = _a.fillRenderer, eventRenderer = _a.eventRenderer, mirrorRenderer = _a.mirrorRenderer;
+        if (isResize || this.isSlatSizesDirty) {
+            this.buildSlatPositions();
+            this.isSlatSizesDirty = false;
+        }
+        if (isResize || this.isColSizesDirty) {
+            this.buildColPositions();
+            this.isColSizesDirty = false;
+        }
+        fillRenderer.computeSizes(isResize);
+        eventRenderer.computeSizes(isResize);
+        mirrorRenderer.computeSizes(isResize);
+        fillRenderer.assignSizes(isResize);
+        eventRenderer.assignSizes(isResize);
+        mirrorRenderer.assignSizes(isResize);
+    };
+    TimeGrid.prototype._renderSkeleton = function (theme) {
+        var el = this.el;
+        el.innerHTML =
+            '<div class="fc-bg"></div>' +
+                '<div class="fc-slats"></div>' +
+                '<hr class="fc-divider ' + theme.getClass('widgetHeader') + '" style="display:none" />';
+        this.rootBgContainerEl = el.querySelector('.fc-bg');
+        this.slatContainerEl = el.querySelector('.fc-slats');
+        this.bottomRuleEl = el.querySelector('.fc-divider');
+    };
+    TimeGrid.prototype._renderSlats = function (dateProfile) {
+        var theme = this.context.theme;
+        this.slatContainerEl.innerHTML =
+            '<table class="' + theme.getClass('tableGrid') + '">' +
+                this.renderSlatRowHtml(dateProfile) +
+                '</table>';
+        this.slatEls = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["findElements"])(this.slatContainerEl, 'tr');
+        this.slatPositions = new _fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["PositionCache"](this.el, this.slatEls, false, true // vertical
+        );
+        this.isSlatSizesDirty = true;
+    };
+    // Generates the HTML for the horizontal "slats" that run width-wise. Has a time axis on a side. Depends on RTL.
+    TimeGrid.prototype.renderSlatRowHtml = function (dateProfile) {
+        var _a = this.context, dateEnv = _a.dateEnv, theme = _a.theme, isRtl = _a.isRtl;
+        var html = '';
+        var dayStart = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["startOfDay"])(dateProfile.renderRange.start);
+        var slotTime = dateProfile.minTime;
+        var slotIterator = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["createDuration"])(0);
+        var slotDate; // will be on the view's first day, but we only care about its time
+        var isLabeled;
+        var axisHtml;
+        // Calculate the time for each slot
+        while (Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["asRoughMs"])(slotTime) < Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["asRoughMs"])(dateProfile.maxTime)) {
+            slotDate = dateEnv.add(dayStart, slotTime);
+            isLabeled = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["wholeDivideDurations"])(slotIterator, this.labelInterval) !== null;
+            axisHtml =
+                '<td class="fc-axis fc-time ' + theme.getClass('widgetContent') + '">' +
+                    (isLabeled ?
+                        '<span>' + // for matchCellWidths
+                            Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["htmlEscape"])(dateEnv.format(slotDate, this.labelFormat)) +
+                            '</span>' :
+                        '') +
+                    '</td>';
+            html +=
+                '<tr data-time="' + Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["formatIsoTimeString"])(slotDate) + '"' +
+                    (isLabeled ? '' : ' class="fc-minor"') +
+                    '>' +
+                    (!isRtl ? axisHtml : '') +
+                    '<td class="' + theme.getClass('widgetContent') + '"></td>' +
+                    (isRtl ? axisHtml : '') +
+                    '</tr>';
+            slotTime = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["addDurations"])(slotTime, this.slotDuration);
+            slotIterator = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["addDurations"])(slotIterator, this.slotDuration);
+        }
+        return html;
+    };
+    TimeGrid.prototype._renderColumns = function (cells, dateProfile) {
+        var _a = this.context, calendar = _a.calendar, view = _a.view, isRtl = _a.isRtl, theme = _a.theme, dateEnv = _a.dateEnv;
+        var bgRow = new _fullcalendar_daygrid__WEBPACK_IMPORTED_MODULE_1__["DayBgRow"](this.context);
+        this.rootBgContainerEl.innerHTML =
+            '<table class="' + theme.getClass('tableGrid') + '">' +
+                bgRow.renderHtml({
+                    cells: cells,
+                    dateProfile: dateProfile,
+                    renderIntroHtml: this.renderProps.renderBgIntroHtml
+                }) +
+                '</table>';
+        this.colEls = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["findElements"])(this.el, '.fc-day, .fc-disabled-day');
+        for (var col = 0; col < this.colCnt; col++) {
+            calendar.publiclyTrigger('dayRender', [
+                {
+                    date: dateEnv.toDate(cells[col].date),
+                    el: this.colEls[col],
+                    view: view
+                }
+            ]);
+        }
+        if (isRtl) {
+            this.colEls.reverse();
+        }
+        this.colPositions = new _fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["PositionCache"](this.el, this.colEls, true, // horizontal
+        false);
+        this.renderContentSkeleton();
+        this.isColSizesDirty = true;
+    };
+    TimeGrid.prototype._unrenderColumns = function () {
+        this.unrenderContentSkeleton();
+    };
+    /* Content Skeleton
+    ------------------------------------------------------------------------------------------------------------------*/
+    // Renders the DOM that the view's content will live in
+    TimeGrid.prototype.renderContentSkeleton = function () {
+        var isRtl = this.context.isRtl;
+        var parts = [];
+        var skeletonEl;
+        parts.push(this.renderProps.renderIntroHtml());
+        for (var i = 0; i < this.colCnt; i++) {
+            parts.push('<td>' +
+                '<div class="fc-content-col">' +
+                '<div class="fc-event-container fc-mirror-container"></div>' +
+                '<div class="fc-event-container"></div>' +
+                '<div class="fc-highlight-container"></div>' +
+                '<div class="fc-bgevent-container"></div>' +
+                '<div class="fc-business-container"></div>' +
+                '</div>' +
+                '</td>');
+        }
+        if (isRtl) {
+            parts.reverse();
+        }
+        skeletonEl = this.contentSkeletonEl = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["htmlToElement"])('<div class="fc-content-skeleton">' +
+            '<table>' +
+            '<tr>' + parts.join('') + '</tr>' +
+            '</table>' +
+            '</div>');
+        this.colContainerEls = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["findElements"])(skeletonEl, '.fc-content-col');
+        this.mirrorContainerEls = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["findElements"])(skeletonEl, '.fc-mirror-container');
+        this.fgContainerEls = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["findElements"])(skeletonEl, '.fc-event-container:not(.fc-mirror-container)');
+        this.bgContainerEls = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["findElements"])(skeletonEl, '.fc-bgevent-container');
+        this.highlightContainerEls = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["findElements"])(skeletonEl, '.fc-highlight-container');
+        this.businessContainerEls = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["findElements"])(skeletonEl, '.fc-business-container');
+        if (isRtl) {
+            this.colContainerEls.reverse();
+            this.mirrorContainerEls.reverse();
+            this.fgContainerEls.reverse();
+            this.bgContainerEls.reverse();
+            this.highlightContainerEls.reverse();
+            this.businessContainerEls.reverse();
+        }
+        this.el.appendChild(skeletonEl);
+    };
+    TimeGrid.prototype.unrenderContentSkeleton = function () {
+        Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["removeElement"])(this.contentSkeletonEl);
+    };
+    // Given a flat array of segments, return an array of sub-arrays, grouped by each segment's col
+    TimeGrid.prototype.groupSegsByCol = function (segs) {
+        var segsByCol = [];
+        var i;
+        for (i = 0; i < this.colCnt; i++) {
+            segsByCol.push([]);
+        }
+        for (i = 0; i < segs.length; i++) {
+            segsByCol[segs[i].col].push(segs[i]);
+        }
+        return segsByCol;
+    };
+    // Given segments grouped by column, insert the segments' elements into a parallel array of container
+    // elements, each living within a column.
+    TimeGrid.prototype.attachSegsByCol = function (segsByCol, containerEls) {
+        var col;
+        var segs;
+        var i;
+        for (col = 0; col < this.colCnt; col++) { // iterate each column grouping
+            segs = segsByCol[col];
+            for (i = 0; i < segs.length; i++) {
+                containerEls[col].appendChild(segs[i].el);
+            }
+        }
+    };
+    /* Now Indicator
+    ------------------------------------------------------------------------------------------------------------------*/
+    TimeGrid.prototype.getNowIndicatorUnit = function () {
+        return 'minute'; // will refresh on the minute
+    };
+    TimeGrid.prototype.renderNowIndicator = function (segs, date) {
+        // HACK: if date columns not ready for some reason (scheduler)
+        if (!this.colContainerEls) {
+            return;
+        }
+        var top = this.computeDateTop(date);
+        var nodes = [];
+        var i;
+        // render lines within the columns
+        for (i = 0; i < segs.length; i++) {
+            var lineEl = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["createElement"])('div', { className: 'fc-now-indicator fc-now-indicator-line' });
+            lineEl.style.top = top + 'px';
+            this.colContainerEls[segs[i].col].appendChild(lineEl);
+            nodes.push(lineEl);
+        }
+        // render an arrow over the axis
+        if (segs.length > 0) { // is the current time in view?
+            var arrowEl = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["createElement"])('div', { className: 'fc-now-indicator fc-now-indicator-arrow' });
+            arrowEl.style.top = top + 'px';
+            this.contentSkeletonEl.appendChild(arrowEl);
+            nodes.push(arrowEl);
+        }
+        this.nowIndicatorEls = nodes;
+    };
+    TimeGrid.prototype.unrenderNowIndicator = function () {
+        if (this.nowIndicatorEls) {
+            this.nowIndicatorEls.forEach(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["removeElement"]);
+            this.nowIndicatorEls = null;
+        }
+    };
+    /* Coordinates
+    ------------------------------------------------------------------------------------------------------------------*/
+    TimeGrid.prototype.getTotalSlatHeight = function () {
+        return this.slatContainerEl.getBoundingClientRect().height;
+    };
+    // Computes the top coordinate, relative to the bounds of the grid, of the given date.
+    // A `startOfDayDate` must be given for avoiding ambiguity over how to treat midnight.
+    TimeGrid.prototype.computeDateTop = function (when, startOfDayDate) {
+        if (!startOfDayDate) {
+            startOfDayDate = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["startOfDay"])(when);
+        }
+        return this.computeTimeTop(Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["createDuration"])(when.valueOf() - startOfDayDate.valueOf()));
+    };
+    // Computes the top coordinate, relative to the bounds of the grid, of the given time (a Duration).
+    TimeGrid.prototype.computeTimeTop = function (duration) {
+        var len = this.slatEls.length;
+        var dateProfile = this.props.dateProfile;
+        var slatCoverage = (duration.milliseconds - Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["asRoughMs"])(dateProfile.minTime)) / Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["asRoughMs"])(this.slotDuration); // floating-point value of # of slots covered
+        var slatIndex;
+        var slatRemainder;
+        // compute a floating-point number for how many slats should be progressed through.
+        // from 0 to number of slats (inclusive)
+        // constrained because minTime/maxTime might be customized.
+        slatCoverage = Math.max(0, slatCoverage);
+        slatCoverage = Math.min(len, slatCoverage);
+        // an integer index of the furthest whole slat
+        // from 0 to number slats (*exclusive*, so len-1)
+        slatIndex = Math.floor(slatCoverage);
+        slatIndex = Math.min(slatIndex, len - 1);
+        // how much further through the slatIndex slat (from 0.0-1.0) must be covered in addition.
+        // could be 1.0 if slatCoverage is covering *all* the slots
+        slatRemainder = slatCoverage - slatIndex;
+        return this.slatPositions.tops[slatIndex] +
+            this.slatPositions.getHeight(slatIndex) * slatRemainder;
+    };
+    // For each segment in an array, computes and assigns its top and bottom properties
+    TimeGrid.prototype.computeSegVerticals = function (segs) {
+        var options = this.context.options;
+        var eventMinHeight = options.timeGridEventMinHeight;
+        var i;
+        var seg;
+        var dayDate;
+        for (i = 0; i < segs.length; i++) {
+            seg = segs[i];
+            dayDate = this.props.cells[seg.col].date;
+            seg.top = this.computeDateTop(seg.start, dayDate);
+            seg.bottom = Math.max(seg.top + eventMinHeight, this.computeDateTop(seg.end, dayDate));
+        }
+    };
+    // Given segments that already have their top/bottom properties computed, applies those values to
+    // the segments' elements.
+    TimeGrid.prototype.assignSegVerticals = function (segs) {
+        var i;
+        var seg;
+        for (i = 0; i < segs.length; i++) {
+            seg = segs[i];
+            Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["applyStyle"])(seg.el, this.generateSegVerticalCss(seg));
+        }
+    };
+    // Generates an object with CSS properties for the top/bottom coordinates of a segment element
+    TimeGrid.prototype.generateSegVerticalCss = function (seg) {
+        return {
+            top: seg.top,
+            bottom: -seg.bottom // flipped because needs to be space beyond bottom edge of event container
+        };
+    };
+    /* Sizing
+    ------------------------------------------------------------------------------------------------------------------*/
+    TimeGrid.prototype.buildPositionCaches = function () {
+        this.buildColPositions();
+        this.buildSlatPositions();
+    };
+    TimeGrid.prototype.buildColPositions = function () {
+        this.colPositions.build();
+    };
+    TimeGrid.prototype.buildSlatPositions = function () {
+        this.slatPositions.build();
+    };
+    /* Hit System
+    ------------------------------------------------------------------------------------------------------------------*/
+    TimeGrid.prototype.positionToHit = function (positionLeft, positionTop) {
+        var dateEnv = this.context.dateEnv;
+        var _a = this, snapsPerSlot = _a.snapsPerSlot, slatPositions = _a.slatPositions, colPositions = _a.colPositions;
+        var colIndex = colPositions.leftToIndex(positionLeft);
+        var slatIndex = slatPositions.topToIndex(positionTop);
+        if (colIndex != null && slatIndex != null) {
+            var slatTop = slatPositions.tops[slatIndex];
+            var slatHeight = slatPositions.getHeight(slatIndex);
+            var partial = (positionTop - slatTop) / slatHeight; // floating point number between 0 and 1
+            var localSnapIndex = Math.floor(partial * snapsPerSlot); // the snap # relative to start of slat
+            var snapIndex = slatIndex * snapsPerSlot + localSnapIndex;
+            var dayDate = this.props.cells[colIndex].date;
+            var time = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["addDurations"])(this.props.dateProfile.minTime, Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["multiplyDuration"])(this.snapDuration, snapIndex));
+            var start = dateEnv.add(dayDate, time);
+            var end = dateEnv.add(start, this.snapDuration);
+            return {
+                col: colIndex,
+                dateSpan: {
+                    range: { start: start, end: end },
+                    allDay: false
+                },
+                dayEl: this.colEls[colIndex],
+                relativeRect: {
+                    left: colPositions.lefts[colIndex],
+                    right: colPositions.rights[colIndex],
+                    top: slatTop,
+                    bottom: slatTop + slatHeight
+                }
+            };
+        }
+    };
+    /* Event Drag Visualization
+    ------------------------------------------------------------------------------------------------------------------*/
+    TimeGrid.prototype._renderEventDrag = function (state) {
+        if (state) {
+            this.eventRenderer.hideByHash(state.affectedInstances);
+            if (state.isEvent) {
+                this.mirrorRenderer.renderSegs(this.context, state.segs, { isDragging: true, sourceSeg: state.sourceSeg });
+            }
+            else {
+                this.fillRenderer.renderSegs('highlight', this.context, state.segs);
+            }
+        }
+    };
+    TimeGrid.prototype._unrenderEventDrag = function (state) {
+        if (state) {
+            this.eventRenderer.showByHash(state.affectedInstances);
+            if (state.isEvent) {
+                this.mirrorRenderer.unrender(this.context, state.segs, { isDragging: true, sourceSeg: state.sourceSeg });
+            }
+            else {
+                this.fillRenderer.unrender('highlight', this.context);
+            }
+        }
+    };
+    /* Event Resize Visualization
+    ------------------------------------------------------------------------------------------------------------------*/
+    TimeGrid.prototype._renderEventResize = function (state) {
+        if (state) {
+            this.eventRenderer.hideByHash(state.affectedInstances);
+            this.mirrorRenderer.renderSegs(this.context, state.segs, { isResizing: true, sourceSeg: state.sourceSeg });
+        }
+    };
+    TimeGrid.prototype._unrenderEventResize = function (state) {
+        if (state) {
+            this.eventRenderer.showByHash(state.affectedInstances);
+            this.mirrorRenderer.unrender(this.context, state.segs, { isResizing: true, sourceSeg: state.sourceSeg });
+        }
+    };
+    /* Selection
+    ------------------------------------------------------------------------------------------------------------------*/
+    // Renders a visual indication of a selection. Overrides the default, which was to simply render a highlight.
+    TimeGrid.prototype._renderDateSelection = function (segs) {
+        if (segs) {
+            if (this.context.options.selectMirror) {
+                this.mirrorRenderer.renderSegs(this.context, segs, { isSelecting: true });
+            }
+            else {
+                this.fillRenderer.renderSegs('highlight', this.context, segs);
+            }
+        }
+    };
+    TimeGrid.prototype._unrenderDateSelection = function (segs) {
+        if (segs) {
+            if (this.context.options.selectMirror) {
+                this.mirrorRenderer.unrender(this.context, segs, { isSelecting: true });
+            }
+            else {
+                this.fillRenderer.unrender('highlight', this.context);
+            }
+        }
+    };
+    return TimeGrid;
+}(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["DateComponent"]));
+
+var AllDaySplitter = /** @class */ (function (_super) {
+    __extends(AllDaySplitter, _super);
+    function AllDaySplitter() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    AllDaySplitter.prototype.getKeyInfo = function () {
+        return {
+            allDay: {},
+            timed: {}
+        };
+    };
+    AllDaySplitter.prototype.getKeysForDateSpan = function (dateSpan) {
+        if (dateSpan.allDay) {
+            return ['allDay'];
+        }
+        else {
+            return ['timed'];
+        }
+    };
+    AllDaySplitter.prototype.getKeysForEventDef = function (eventDef) {
+        if (!eventDef.allDay) {
+            return ['timed'];
+        }
+        else if (Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["hasBgRendering"])(eventDef)) {
+            return ['timed', 'allDay'];
+        }
+        else {
+            return ['allDay'];
+        }
+    };
+    return AllDaySplitter;
+}(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["Splitter"]));
+
+var TIMEGRID_ALL_DAY_EVENT_LIMIT = 5;
+var WEEK_HEADER_FORMAT = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["createFormatter"])({ week: 'short' });
+/* An abstract class for all timegrid-related views. Displays one more columns with time slots running vertically.
+----------------------------------------------------------------------------------------------------------------------*/
+// Is a manager for the TimeGrid subcomponent and possibly the DayGrid subcomponent (if allDaySlot is on).
+// Responsible for managing width/height.
+var AbstractTimeGridView = /** @class */ (function (_super) {
+    __extends(AbstractTimeGridView, _super);
+    function AbstractTimeGridView() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.splitter = new AllDaySplitter();
+        _this.renderSkeleton = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["memoizeRendering"])(_this._renderSkeleton, _this._unrenderSkeleton);
+        /* Header Render Methods
+        ------------------------------------------------------------------------------------------------------------------*/
+        // Generates the HTML that will go before the day-of week header cells
+        _this.renderHeadIntroHtml = function () {
+            var _a = _this.context, theme = _a.theme, dateEnv = _a.dateEnv, options = _a.options;
+            var range = _this.props.dateProfile.renderRange;
+            var dayCnt = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["diffDays"])(range.start, range.end);
+            var weekText;
+            if (options.weekNumbers) {
+                weekText = dateEnv.format(range.start, WEEK_HEADER_FORMAT);
+                return '' +
+                    '<th class="fc-axis fc-week-number ' + theme.getClass('widgetHeader') + '" ' + _this.axisStyleAttr() + '>' +
+                    Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["buildGotoAnchorHtml"])(// aside from link, important for matchCellWidths
+                    options, dateEnv, { date: range.start, type: 'week', forceOff: dayCnt > 1 }, Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["htmlEscape"])(weekText) // inner HTML
+                    ) +
+                    '</th>';
+            }
+            else {
+                return '<th class="fc-axis ' + theme.getClass('widgetHeader') + '" ' + _this.axisStyleAttr() + '></th>';
+            }
+        };
+        /* Time Grid Render Methods
+        ------------------------------------------------------------------------------------------------------------------*/
+        // Generates the HTML that goes before the bg of the TimeGrid slot area. Long vertical column.
+        _this.renderTimeGridBgIntroHtml = function () {
+            var theme = _this.context.theme;
+            return '<td class="fc-axis ' + theme.getClass('widgetContent') + '" ' + _this.axisStyleAttr() + '></td>';
+        };
+        // Generates the HTML that goes before all other types of cells.
+        // Affects content-skeleton, mirror-skeleton, highlight-skeleton for both the time-grid and day-grid.
+        _this.renderTimeGridIntroHtml = function () {
+            return '<td class="fc-axis" ' + _this.axisStyleAttr() + '></td>';
+        };
+        /* Day Grid Render Methods
+        ------------------------------------------------------------------------------------------------------------------*/
+        // Generates the HTML that goes before the all-day cells
+        _this.renderDayGridBgIntroHtml = function () {
+            var _a = _this.context, theme = _a.theme, options = _a.options;
+            return '' +
+                '<td class="fc-axis ' + theme.getClass('widgetContent') + '" ' + _this.axisStyleAttr() + '>' +
+                '<span>' + // needed for matchCellWidths
+                Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["getAllDayHtml"])(options) +
+                '</span>' +
+                '</td>';
+        };
+        // Generates the HTML that goes before all other types of cells.
+        // Affects content-skeleton, mirror-skeleton, highlight-skeleton for both the time-grid and day-grid.
+        _this.renderDayGridIntroHtml = function () {
+            return '<td class="fc-axis" ' + _this.axisStyleAttr() + '></td>';
+        };
+        return _this;
+    }
+    AbstractTimeGridView.prototype.render = function (props, context) {
+        _super.prototype.render.call(this, props, context);
+        this.renderSkeleton(context);
+    };
+    AbstractTimeGridView.prototype.destroy = function () {
+        _super.prototype.destroy.call(this);
+        this.renderSkeleton.unrender();
+    };
+    AbstractTimeGridView.prototype._renderSkeleton = function (context) {
+        this.el.classList.add('fc-timeGrid-view');
+        this.el.innerHTML = this.renderSkeletonHtml();
+        this.scroller = new _fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["ScrollComponent"]('hidden', // overflow x
+        'auto' // overflow y
+        );
+        var timeGridWrapEl = this.scroller.el;
+        this.el.querySelector('.fc-body > tr > td').appendChild(timeGridWrapEl);
+        timeGridWrapEl.classList.add('fc-time-grid-container');
+        var timeGridEl = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["createElement"])('div', { className: 'fc-time-grid' });
+        timeGridWrapEl.appendChild(timeGridEl);
+        this.timeGrid = new TimeGrid(timeGridEl, {
+            renderBgIntroHtml: this.renderTimeGridBgIntroHtml,
+            renderIntroHtml: this.renderTimeGridIntroHtml
+        });
+        if (context.options.allDaySlot) { // should we display the "all-day" area?
+            this.dayGrid = new _fullcalendar_daygrid__WEBPACK_IMPORTED_MODULE_1__["DayGrid"](// the all-day subcomponent of this view
+            this.el.querySelector('.fc-day-grid'), {
+                renderNumberIntroHtml: this.renderDayGridIntroHtml,
+                renderBgIntroHtml: this.renderDayGridBgIntroHtml,
+                renderIntroHtml: this.renderDayGridIntroHtml,
+                colWeekNumbersVisible: false,
+                cellWeekNumbersVisible: false
+            });
+            // have the day-grid extend it's coordinate area over the <hr> dividing the two grids
+            var dividerEl = this.el.querySelector('.fc-divider');
+            this.dayGrid.bottomCoordPadding = dividerEl.getBoundingClientRect().height;
+        }
+    };
+    AbstractTimeGridView.prototype._unrenderSkeleton = function () {
+        this.el.classList.remove('fc-timeGrid-view');
+        this.timeGrid.destroy();
+        if (this.dayGrid) {
+            this.dayGrid.destroy();
+        }
+        this.scroller.destroy();
+    };
+    /* Rendering
+    ------------------------------------------------------------------------------------------------------------------*/
+    // Builds the HTML skeleton for the view.
+    // The day-grid and time-grid components will render inside containers defined by this HTML.
+    AbstractTimeGridView.prototype.renderSkeletonHtml = function () {
+        var _a = this.context, theme = _a.theme, options = _a.options;
+        return '' +
+            '<table class="' + theme.getClass('tableGrid') + '">' +
+            (options.columnHeader ?
+                '<thead class="fc-head">' +
+                    '<tr>' +
+                    '<td class="fc-head-container ' + theme.getClass('widgetHeader') + '">&nbsp;</td>' +
+                    '</tr>' +
+                    '</thead>' :
+                '') +
+            '<tbody class="fc-body">' +
+            '<tr>' +
+            '<td class="' + theme.getClass('widgetContent') + '">' +
+            (options.allDaySlot ?
+                '<div class="fc-day-grid"></div>' +
+                    '<hr class="fc-divider ' + theme.getClass('widgetHeader') + '" />' :
+                '') +
+            '</td>' +
+            '</tr>' +
+            '</tbody>' +
+            '</table>';
+    };
+    /* Now Indicator
+    ------------------------------------------------------------------------------------------------------------------*/
+    AbstractTimeGridView.prototype.getNowIndicatorUnit = function () {
+        return this.timeGrid.getNowIndicatorUnit();
+    };
+    // subclasses should implement
+    // renderNowIndicator(date: DateMarker) {
+    // }
+    AbstractTimeGridView.prototype.unrenderNowIndicator = function () {
+        this.timeGrid.unrenderNowIndicator();
+    };
+    /* Dimensions
+    ------------------------------------------------------------------------------------------------------------------*/
+    AbstractTimeGridView.prototype.updateSize = function (isResize, viewHeight, isAuto) {
+        _super.prototype.updateSize.call(this, isResize, viewHeight, isAuto); // will call updateBaseSize. important that executes first
+        this.timeGrid.updateSize(isResize);
+        if (this.dayGrid) {
+            this.dayGrid.updateSize(isResize);
+        }
+    };
+    // Adjusts the vertical dimensions of the view to the specified values
+    AbstractTimeGridView.prototype.updateBaseSize = function (isResize, viewHeight, isAuto) {
+        var _this = this;
+        var eventLimit;
+        var scrollerHeight;
+        var scrollbarWidths;
+        // make all axis cells line up
+        this.axisWidth = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["matchCellWidths"])(Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["findElements"])(this.el, '.fc-axis'));
+        // hack to give the view some height prior to timeGrid's columns being rendered
+        // TODO: separate setting height from scroller VS timeGrid.
+        if (!this.timeGrid.colEls) {
+            if (!isAuto) {
+                scrollerHeight = this.computeScrollerHeight(viewHeight);
+                this.scroller.setHeight(scrollerHeight);
+            }
+            return;
+        }
+        // set of fake row elements that must compensate when scroller has scrollbars
+        var noScrollRowEls = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["findElements"])(this.el, '.fc-row').filter(function (node) {
+            return !_this.scroller.el.contains(node);
+        });
+        // reset all dimensions back to the original state
+        this.timeGrid.bottomRuleEl.style.display = 'none'; // will be shown later if this <hr> is necessary
+        this.scroller.clear(); // sets height to 'auto' and clears overflow
+        noScrollRowEls.forEach(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["uncompensateScroll"]);
+        // limit number of events in the all-day area
+        if (this.dayGrid) {
+            this.dayGrid.removeSegPopover(); // kill the "more" popover if displayed
+            eventLimit = this.context.options.eventLimit;
+            if (eventLimit && typeof eventLimit !== 'number') {
+                eventLimit = TIMEGRID_ALL_DAY_EVENT_LIMIT; // make sure "auto" goes to a real number
+            }
+            if (eventLimit) {
+                this.dayGrid.limitRows(eventLimit);
+            }
+        }
+        if (!isAuto) { // should we force dimensions of the scroll container?
+            scrollerHeight = this.computeScrollerHeight(viewHeight);
+            this.scroller.setHeight(scrollerHeight);
+            scrollbarWidths = this.scroller.getScrollbarWidths();
+            if (scrollbarWidths.left || scrollbarWidths.right) { // using scrollbars?
+                // make the all-day and header rows lines up
+                noScrollRowEls.forEach(function (rowEl) {
+                    Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["compensateScroll"])(rowEl, scrollbarWidths);
+                });
+                // the scrollbar compensation might have changed text flow, which might affect height, so recalculate
+                // and reapply the desired height to the scroller.
+                scrollerHeight = this.computeScrollerHeight(viewHeight);
+                this.scroller.setHeight(scrollerHeight);
+            }
+            // guarantees the same scrollbar widths
+            this.scroller.lockOverflow(scrollbarWidths);
+            // if there's any space below the slats, show the horizontal rule.
+            // this won't cause any new overflow, because lockOverflow already called.
+            if (this.timeGrid.getTotalSlatHeight() < scrollerHeight) {
+                this.timeGrid.bottomRuleEl.style.display = '';
+            }
+        }
+    };
+    // given a desired total height of the view, returns what the height of the scroller should be
+    AbstractTimeGridView.prototype.computeScrollerHeight = function (viewHeight) {
+        return viewHeight -
+            Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["subtractInnerElHeight"])(this.el, this.scroller.el); // everything that's NOT the scroller
+    };
+    /* Scroll
+    ------------------------------------------------------------------------------------------------------------------*/
+    // Computes the initial pre-configured scroll state prior to allowing the user to change it
+    AbstractTimeGridView.prototype.computeDateScroll = function (duration) {
+        var top = this.timeGrid.computeTimeTop(duration);
+        // zoom can give weird floating-point values. rather scroll a little bit further
+        top = Math.ceil(top);
+        if (top) {
+            top++; // to overcome top border that slots beyond the first have. looks better
+        }
+        return { top: top };
+    };
+    AbstractTimeGridView.prototype.queryDateScroll = function () {
+        return { top: this.scroller.getScrollTop() };
+    };
+    AbstractTimeGridView.prototype.applyDateScroll = function (scroll) {
+        if (scroll.top !== undefined) {
+            this.scroller.setScrollTop(scroll.top);
+        }
+    };
+    // Generates an HTML attribute string for setting the width of the axis, if it is known
+    AbstractTimeGridView.prototype.axisStyleAttr = function () {
+        if (this.axisWidth != null) {
+            return 'style="width:' + this.axisWidth + 'px"';
+        }
+        return '';
+    };
+    return AbstractTimeGridView;
+}(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["View"]));
+AbstractTimeGridView.prototype.usesMinMaxTime = true; // indicates that minTime/maxTime affects rendering
+
+var SimpleTimeGrid = /** @class */ (function (_super) {
+    __extends(SimpleTimeGrid, _super);
+    function SimpleTimeGrid(timeGrid) {
+        var _this = _super.call(this, timeGrid.el) || this;
+        _this.buildDayRanges = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["memoize"])(buildDayRanges);
+        _this.slicer = new TimeGridSlicer();
+        _this.timeGrid = timeGrid;
+        return _this;
+    }
+    SimpleTimeGrid.prototype.firstContext = function (context) {
+        context.calendar.registerInteractiveComponent(this, {
+            el: this.timeGrid.el
+        });
+    };
+    SimpleTimeGrid.prototype.destroy = function () {
+        _super.prototype.destroy.call(this);
+        this.context.calendar.unregisterInteractiveComponent(this);
+    };
+    SimpleTimeGrid.prototype.render = function (props, context) {
+        var dateEnv = this.context.dateEnv;
+        var dateProfile = props.dateProfile, dayTable = props.dayTable;
+        var dayRanges = this.dayRanges = this.buildDayRanges(dayTable, dateProfile, dateEnv);
+        this.timeGrid.receiveProps(__assign({}, this.slicer.sliceProps(props, dateProfile, null, context.calendar, this.timeGrid, dayRanges), { dateProfile: dateProfile, cells: dayTable.cells[0] }), context);
+    };
+    SimpleTimeGrid.prototype.renderNowIndicator = function (date) {
+        this.timeGrid.renderNowIndicator(this.slicer.sliceNowDate(date, this.timeGrid, this.dayRanges), date);
+    };
+    SimpleTimeGrid.prototype.buildPositionCaches = function () {
+        this.timeGrid.buildPositionCaches();
+    };
+    SimpleTimeGrid.prototype.queryHit = function (positionLeft, positionTop) {
+        var rawHit = this.timeGrid.positionToHit(positionLeft, positionTop);
+        if (rawHit) {
+            return {
+                component: this.timeGrid,
+                dateSpan: rawHit.dateSpan,
+                dayEl: rawHit.dayEl,
+                rect: {
+                    left: rawHit.relativeRect.left,
+                    right: rawHit.relativeRect.right,
+                    top: rawHit.relativeRect.top,
+                    bottom: rawHit.relativeRect.bottom
+                },
+                layer: 0
+            };
+        }
+    };
+    return SimpleTimeGrid;
+}(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["DateComponent"]));
+function buildDayRanges(dayTable, dateProfile, dateEnv) {
+    var ranges = [];
+    for (var _i = 0, _a = dayTable.headerDates; _i < _a.length; _i++) {
+        var date = _a[_i];
+        ranges.push({
+            start: dateEnv.add(date, dateProfile.minTime),
+            end: dateEnv.add(date, dateProfile.maxTime)
+        });
+    }
+    return ranges;
+}
+var TimeGridSlicer = /** @class */ (function (_super) {
+    __extends(TimeGridSlicer, _super);
+    function TimeGridSlicer() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    TimeGridSlicer.prototype.sliceRange = function (range, dayRanges) {
+        var segs = [];
+        for (var col = 0; col < dayRanges.length; col++) {
+            var segRange = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["intersectRanges"])(range, dayRanges[col]);
+            if (segRange) {
+                segs.push({
+                    start: segRange.start,
+                    end: segRange.end,
+                    isStart: segRange.start.valueOf() === range.start.valueOf(),
+                    isEnd: segRange.end.valueOf() === range.end.valueOf(),
+                    col: col
+                });
+            }
+        }
+        return segs;
+    };
+    return TimeGridSlicer;
+}(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["Slicer"]));
+
+var TimeGridView = /** @class */ (function (_super) {
+    __extends(TimeGridView, _super);
+    function TimeGridView() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.buildDayTable = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["memoize"])(buildDayTable);
+        return _this;
+    }
+    TimeGridView.prototype.render = function (props, context) {
+        _super.prototype.render.call(this, props, context); // for flags for updateSize. also _renderSkeleton/_unrenderSkeleton
+        var _a = this.props, dateProfile = _a.dateProfile, dateProfileGenerator = _a.dateProfileGenerator;
+        var nextDayThreshold = context.nextDayThreshold;
+        var dayTable = this.buildDayTable(dateProfile, dateProfileGenerator);
+        var splitProps = this.splitter.splitProps(props);
+        if (this.header) {
+            this.header.receiveProps({
+                dateProfile: dateProfile,
+                dates: dayTable.headerDates,
+                datesRepDistinctDays: true,
+                renderIntroHtml: this.renderHeadIntroHtml
+            }, context);
+        }
+        this.simpleTimeGrid.receiveProps(__assign({}, splitProps['timed'], { dateProfile: dateProfile,
+            dayTable: dayTable }), context);
+        if (this.simpleDayGrid) {
+            this.simpleDayGrid.receiveProps(__assign({}, splitProps['allDay'], { dateProfile: dateProfile,
+                dayTable: dayTable,
+                nextDayThreshold: nextDayThreshold, isRigid: false }), context);
+        }
+        this.startNowIndicator(dateProfile, dateProfileGenerator);
+    };
+    TimeGridView.prototype._renderSkeleton = function (context) {
+        _super.prototype._renderSkeleton.call(this, context);
+        if (context.options.columnHeader) {
+            this.header = new _fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["DayHeader"](this.el.querySelector('.fc-head-container'));
+        }
+        this.simpleTimeGrid = new SimpleTimeGrid(this.timeGrid);
+        if (this.dayGrid) {
+            this.simpleDayGrid = new _fullcalendar_daygrid__WEBPACK_IMPORTED_MODULE_1__["SimpleDayGrid"](this.dayGrid);
+        }
+    };
+    TimeGridView.prototype._unrenderSkeleton = function () {
+        _super.prototype._unrenderSkeleton.call(this);
+        if (this.header) {
+            this.header.destroy();
+        }
+        this.simpleTimeGrid.destroy();
+        if (this.simpleDayGrid) {
+            this.simpleDayGrid.destroy();
+        }
+    };
+    TimeGridView.prototype.renderNowIndicator = function (date) {
+        this.simpleTimeGrid.renderNowIndicator(date);
+    };
+    return TimeGridView;
+}(AbstractTimeGridView));
+function buildDayTable(dateProfile, dateProfileGenerator) {
+    var daySeries = new _fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["DaySeries"](dateProfile.renderRange, dateProfileGenerator);
+    return new _fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["DayTable"](daySeries, false);
+}
+
+var main = Object(_fullcalendar_core__WEBPACK_IMPORTED_MODULE_0__["createPlugin"])({
+    defaultView: 'timeGridWeek',
+    views: {
+        timeGrid: {
+            class: TimeGridView,
+            allDaySlot: true,
+            slotDuration: '00:30:00',
+            slotEventOverlap: true // a bad name. confused with overlap/constraint system
+        },
+        timeGridDay: {
+            type: 'timeGrid',
+            duration: { days: 1 }
+        },
+        timeGridWeek: {
+            type: 'timeGrid',
+            duration: { weeks: 1 }
+        }
+    }
+});
+
+/* harmony default export */ __webpack_exports__["default"] = (main);
+
+
+
+/***/ }),
+
 /***/ "./node_modules/@fullcalendar/vue/main.esm.js":
 /*!****************************************************!*\
   !*** ./node_modules/@fullcalendar/vue/main.esm.js ***!
@@ -15776,6 +19252,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
     FullCalendar: FullCalendar // make the <FullCalendar> tag available
@@ -15787,7 +19270,6 @@ __webpack_require__.r(__webpack_exports__);
       editMode: false,
       url: "api/calendar/",
       events: "",
-      indexToUpdate: "",
       form: new Form({
         id: "",
         student_id: "",
@@ -19107,6 +22589,303 @@ __webpack_require__.r(__webpack_exports__);
     },
     reloadTable: function reloadTable(tableProps) {
       this.getData(this.url, tableProps);
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Timetable.vue?vue&type=script&lang=js&":
+/*!********************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Timetable.vue?vue&type=script&lang=js& ***!
+  \********************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  components: {
+    FullCalendar: FullCalendar // make the <FullCalendar> tag available
+
+  },
+  data: function data() {
+    return {
+      calendarPlugins: [resourceTimeGridPlugin, interactionPlugin],
+      editMode: false,
+      url: "api/timetable/",
+      eventExample: [{
+        id: 1,
+        resourceId: "mon",
+        title: "test",
+        start: "2020-03-14 12:00:00",
+        end: "2020-03-14 13:00:00"
+      }],
+      events: "",
+      form: new Form({
+        id: "",
+        student_id: "",
+        course_name: "",
+        class_type: "",
+        day: "",
+        start: "",
+        end: "",
+        room: "",
+        building: "",
+        details: ""
+      })
+    };
+  },
+  created: function created() {
+    this.getEvents();
+  },
+  methods: {
+    getEvents: function getEvents() {
+      var _this = this;
+
+      var url = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.url;
+      axios.get(url).then(function (res) {
+        _this.events = res.data.data;
+      })["catch"](function (err) {
+        console.error(err.response.data);
+      });
+    },
+    createModal: function createModal() {//
+    },
+    createClass: function createClass() {//
+    },
+    editClass: function editClass() {//
+    },
+    deleteClass: function deleteClass() {//
+    },
+    showClass: function showClass() {//
     }
   }
 });
@@ -87566,36 +91345,33 @@ var render = function() {
         ]
       ),
       _vm._v(" "),
-      _c("div", { staticClass: "col-md-8" }, [
+      _c("div", { staticClass: "col-md-10" }, [
+        _c("h1", { staticClass: "text-center" }, [_vm._v("Calendar")]),
+        _vm._v(" "),
+        _c("hr"),
+        _vm._v(" "),
         _c(
           "div",
           { staticClass: "card" },
           [
-            _c(
-              "button",
-              {
-                staticClass: "btn btn-success",
-                attrs: { type: "button" },
-                on: {
-                  click: function($event) {
-                    return _vm.createModal()
-                  }
-                }
-              },
-              [
-                _c("i", {
-                  staticClass: "fa fa-plus",
-                  attrs: { "aria-hidden": "true" }
-                }),
-                _vm._v("\n                    Add New Event\n                ")
-              ]
-            ),
-            _vm._v(" "),
             _c("FullCalendar", {
               attrs: {
                 defaultView: "dayGridMonth",
                 plugins: _vm.calendarPlugins,
-                events: _vm.events
+                events: _vm.events,
+                customButtons: {
+                  addEvent: {
+                    text: "Add New Event",
+                    click: function() {
+                      _vm.createModal()
+                    }
+                  }
+                },
+                header: {
+                  left: "title",
+                  center: "addEvent",
+                  right: "today prev next"
+                }
               },
               on: { eventClick: _vm.showEvent }
             })
@@ -91702,6 +95478,497 @@ var render = function() {
   ])
 }
 var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Timetable.vue?vue&type=template&id=8e6c5a74&":
+/*!************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Timetable.vue?vue&type=template&id=8e6c5a74& ***!
+  \************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "container" }, [
+    _c("div", { staticClass: "row justify-content-center" }, [
+      _c(
+        "div",
+        {
+          staticClass: "modal fade",
+          attrs: {
+            id: "newModal",
+            tabindex: "-1",
+            role: "dialog",
+            "aria-labelledby": "newModalLabel",
+            "aria-hidden": "true"
+          }
+        },
+        [
+          _c(
+            "div",
+            { staticClass: "modal-dialog", attrs: { role: "document" } },
+            [
+              _c("div", { staticClass: "modal-content" }, [
+                _c("div", { staticClass: "modal-header" }, [
+                  _c("h4", { staticClass: "modal-title" }, [
+                    _vm._v(
+                      "\n                            " +
+                        _vm._s(
+                          _vm.editMode ? "Edit Class" : "Create New Class"
+                        ) +
+                        "\n                        "
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _vm._m(0)
+                ]),
+                _vm._v(" "),
+                _c(
+                  "form",
+                  {
+                    on: {
+                      submit: function($event) {
+                        $event.preventDefault()
+                        _vm.editMode ? _vm.editClass() : _vm.createClass()
+                      }
+                    }
+                  },
+                  [
+                    _c("div", { staticClass: "modal-body" }, [
+                      _c(
+                        "div",
+                        { staticClass: "form-group" },
+                        [
+                          _c("label", { attrs: { for: "inputName" } }, [
+                            _vm._v("Name:")
+                          ]),
+                          _vm._v(" "),
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.form.name,
+                                expression: "form.name"
+                              }
+                            ],
+                            staticClass: "form-control",
+                            class: {
+                              "is-invalid": _vm.form.errors.has("name")
+                            },
+                            attrs: {
+                              type: "text",
+                              id: "inputName",
+                              placeholder: "",
+                              field: "name"
+                            },
+                            domProps: { value: _vm.form.name },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(_vm.form, "name", $event.target.value)
+                              }
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c("has-error", {
+                            attrs: { form: _vm.form, field: "name" }
+                          })
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        { staticClass: "form-group" },
+                        [
+                          _c("label", { attrs: { for: "inputStartDate" } }, [
+                            _vm._v("Start Date:")
+                          ]),
+                          _vm._v(" "),
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.form.start_date,
+                                expression: "form.start_date"
+                              }
+                            ],
+                            staticClass: "custom-select",
+                            class: {
+                              "is-invalid": _vm.form.errors.has("start_date")
+                            },
+                            attrs: {
+                              type: "date",
+                              id: "inputStartDate",
+                              name: "start_date"
+                            },
+                            domProps: { value: _vm.form.start_date },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.form,
+                                  "start_date",
+                                  $event.target.value
+                                )
+                              }
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c("has-error", {
+                            attrs: { form: _vm.form, field: "start_date" }
+                          })
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        { staticClass: "form-group" },
+                        [
+                          _c("label", { attrs: { for: "inputEndDate" } }, [
+                            _vm._v("End Date:")
+                          ]),
+                          _vm._v(" "),
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.form.end_date,
+                                expression: "form.end_date"
+                              }
+                            ],
+                            staticClass: "custom-select",
+                            class: {
+                              "is-invalid": _vm.form.errors.has("end_date")
+                            },
+                            attrs: {
+                              type: "date",
+                              id: "inputEndDate",
+                              name: "end_date"
+                            },
+                            domProps: { value: _vm.form.end_date },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.form,
+                                  "end_date",
+                                  $event.target.value
+                                )
+                              }
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c("has-error", {
+                            attrs: { form: _vm.form, field: "end_date" }
+                          })
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        { staticClass: "form-group" },
+                        [
+                          _c("label", { attrs: { for: "inputStartTime" } }, [
+                            _vm._v("Start Time:")
+                          ]),
+                          _vm._v(" "),
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.form.start_time,
+                                expression: "form.start_time"
+                              }
+                            ],
+                            staticClass: "custom-select",
+                            class: {
+                              "is-invalid": _vm.form.errors.has("start_time")
+                            },
+                            attrs: {
+                              type: "time",
+                              id: "inputStartTime",
+                              name: "start_time"
+                            },
+                            domProps: { value: _vm.form.start_time },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.form,
+                                  "start_time",
+                                  $event.target.value
+                                )
+                              }
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c("has-error", {
+                            attrs: { form: _vm.form, field: "start_time" }
+                          })
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        { staticClass: "form-group" },
+                        [
+                          _c("label", { attrs: { for: "inputEndTime" } }, [
+                            _vm._v("End Time:")
+                          ]),
+                          _vm._v(" "),
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.form.end_time,
+                                expression: "form.end_time"
+                              }
+                            ],
+                            staticClass: "custom-select",
+                            class: {
+                              "is-invalid": _vm.form.errors.has("end_time")
+                            },
+                            attrs: {
+                              type: "time",
+                              id: "inputEndTime",
+                              name: "end_time"
+                            },
+                            domProps: { value: _vm.form.end_time },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.form,
+                                  "end_time",
+                                  $event.target.value
+                                )
+                              }
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c("has-error", {
+                            attrs: { form: _vm.form, field: "end_time" }
+                          })
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        { staticClass: "form-group" },
+                        [
+                          _c("label", { attrs: { for: "inputDetails" } }, [
+                            _vm._v("Details:")
+                          ]),
+                          _vm._v(" "),
+                          _c("textarea", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.form.details,
+                                expression: "form.details"
+                              }
+                            ],
+                            staticClass: "form-control",
+                            class: {
+                              "is-invalid": _vm.form.errors.has("details")
+                            },
+                            attrs: {
+                              name: "details",
+                              id: "inputDetails",
+                              placeholder: ""
+                            },
+                            domProps: { value: _vm.form.details },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.form,
+                                  "details",
+                                  $event.target.value
+                                )
+                              }
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c("has-error", {
+                            attrs: { form: _vm.form, field: "details" }
+                          })
+                        ],
+                        1
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "modal-footer justify-content-between" },
+                      [
+                        _c(
+                          "button",
+                          {
+                            staticClass: "btn btn-danger",
+                            attrs: { type: "button", "data-dismiss": "modal" }
+                          },
+                          [
+                            _vm._v(
+                              "\n                                Close\n                            "
+                            )
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "button",
+                          {
+                            directives: [
+                              {
+                                name: "show",
+                                rawName: "v-show",
+                                value: _vm.editMode,
+                                expression: "editMode"
+                              }
+                            ],
+                            staticClass: "btn btn-danger",
+                            attrs: { type: "button" },
+                            on: {
+                              click: function($event) {
+                                return _vm.deleteClass()
+                              }
+                            }
+                          },
+                          [
+                            _vm._v(
+                              "\n                                Delete\n                            "
+                            )
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "button",
+                          {
+                            staticClass: "btn",
+                            class: {
+                              "btn-success": !_vm.editMode,
+                              "btn-primary": _vm.editMode
+                            },
+                            attrs: { type: "submit" }
+                          },
+                          [
+                            _vm._v(
+                              "\n                                " +
+                                _vm._s(_vm.editMode ? "Update" : "Create") +
+                                "\n                            "
+                            )
+                          ]
+                        )
+                      ]
+                    )
+                  ]
+                )
+              ])
+            ]
+          )
+        ]
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "col-md-12" },
+        [
+          _c("h1", { staticClass: "text-center" }, [_vm._v("Timetable")]),
+          _vm._v(" "),
+          _c("hr"),
+          _vm._v(" "),
+          _c("FullCalendar", {
+            attrs: {
+              defaultView: "resourceTimeGridDay",
+              plugins: _vm.calendarPlugins,
+              events: _vm.events,
+              visibleRange: {
+                start: "2020-03-09",
+                end: "2020-03-15"
+              },
+              resources: [
+                { id: "mon", title: "Monday" },
+                { id: "tues", title: "Tuesday" },
+                { id: "wed", title: "Wednesday" },
+                { id: "thurs", title: "Thursday" },
+                { id: "fri", title: "Friday" },
+                { id: "sat", title: "Saturday" },
+                { id: "sun", title: "Sunday" }
+              ],
+              customButtons: {
+                addEvent: {
+                  text: "Add New Class",
+                  click: function() {
+                    _vm.createModal()
+                  }
+                }
+              },
+              header: {
+                left: "",
+                center: "addEvent",
+                right: ""
+              }
+            },
+            on: { eventClick: _vm.showClass }
+          })
+        ],
+        1
+      )
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "button",
+      {
+        staticClass: "close",
+        attrs: {
+          type: "button",
+          "data-dismiss": "modal",
+          "aria-label": "Close"
+        }
+      },
+      [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+    )
+  }
+]
 render._withStripped = true
 
 
@@ -108861,13 +113128,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _fullcalendar_vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @fullcalendar/vue */ "./node_modules/@fullcalendar/vue/main.esm.js");
 /* harmony import */ var _fullcalendar_daygrid__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @fullcalendar/daygrid */ "./node_modules/@fullcalendar/daygrid/main.esm.js");
 /* harmony import */ var _fullcalendar_interaction__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @fullcalendar/interaction */ "./node_modules/@fullcalendar/interaction/main.esm.js");
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_7__);
-/* harmony import */ var vform__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! vform */ "./node_modules/vform/dist/vform.common.js");
-/* harmony import */ var vform__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(vform__WEBPACK_IMPORTED_MODULE_8__);
-/* harmony import */ var vue_progressbar__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! vue-progressbar */ "./node_modules/vue-progressbar/dist/vue-progressbar.js");
-/* harmony import */ var vue_progressbar__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(vue_progressbar__WEBPACK_IMPORTED_MODULE_9__);
-/* harmony import */ var vue_router__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! vue-router */ "./node_modules/vue-router/dist/vue-router.esm.js");
+/* harmony import */ var _fullcalendar_resource_timegrid__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @fullcalendar/resource-timegrid */ "./node_modules/@fullcalendar/resource-timegrid/main.esm.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_8__);
+/* harmony import */ var vform__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! vform */ "./node_modules/vform/dist/vform.common.js");
+/* harmony import */ var vform__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(vform__WEBPACK_IMPORTED_MODULE_9__);
+/* harmony import */ var vue_progressbar__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! vue-progressbar */ "./node_modules/vue-progressbar/dist/vue-progressbar.js");
+/* harmony import */ var vue_progressbar__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(vue_progressbar__WEBPACK_IMPORTED_MODULE_10__);
+/* harmony import */ var vue_router__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! vue-router */ "./node_modules/vue-router/dist/vue-router.esm.js");
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
@@ -108887,13 +113155,15 @@ window.ButtonCheck = _components_ButtonCheck_vue__WEBPACK_IMPORTED_MODULE_3__["d
 
 
 
+
 window.FullCalendar = _fullcalendar_vue__WEBPACK_IMPORTED_MODULE_4__["default"];
 window.dayGridPlugin = _fullcalendar_daygrid__WEBPACK_IMPORTED_MODULE_5__["default"];
 window.interactionPlugin = _fullcalendar_interaction__WEBPACK_IMPORTED_MODULE_6__["default"];
+window.resourceTimeGridPlugin = _fullcalendar_resource_timegrid__WEBPACK_IMPORTED_MODULE_7__["default"];
 
 
 
-Vue.use(vue_progressbar__WEBPACK_IMPORTED_MODULE_9___default.a, {
+Vue.use(vue_progressbar__WEBPACK_IMPORTED_MODULE_10___default.a, {
   color: "rgb(143, 255, 199)",
   failedColor: "red",
   height: "3px",
@@ -108908,11 +113178,11 @@ window.Toast = Swal.mixin({
   timerProgressBar: false
 }); // VForm
 
-window.Form = vform__WEBPACK_IMPORTED_MODULE_8__["Form"];
-Vue.component(vform__WEBPACK_IMPORTED_MODULE_8__["HasError"].name, vform__WEBPACK_IMPORTED_MODULE_8__["HasError"]);
-Vue.component(vform__WEBPACK_IMPORTED_MODULE_8__["AlertError"].name, vform__WEBPACK_IMPORTED_MODULE_8__["AlertError"]);
+window.Form = vform__WEBPACK_IMPORTED_MODULE_9__["Form"];
+Vue.component(vform__WEBPACK_IMPORTED_MODULE_9__["HasError"].name, vform__WEBPACK_IMPORTED_MODULE_9__["HasError"]);
+Vue.component(vform__WEBPACK_IMPORTED_MODULE_9__["AlertError"].name, vform__WEBPACK_IMPORTED_MODULE_9__["AlertError"]);
 
-Vue.use(vue_router__WEBPACK_IMPORTED_MODULE_10__["default"]);
+Vue.use(vue_router__WEBPACK_IMPORTED_MODULE_11__["default"]);
 var routes = [{
   path: "/home",
   component: __webpack_require__(/*! ./components/Dashboard.vue */ "./resources/js/components/Dashboard.vue")["default"]
@@ -108956,10 +113226,13 @@ var routes = [{
   path: "/calendar",
   component: __webpack_require__(/*! ./components/Calendar.vue */ "./resources/js/components/Calendar.vue")["default"]
 }, {
+  path: "/timetable",
+  component: __webpack_require__(/*! ./components/Timetable.vue */ "./resources/js/components/Timetable.vue")["default"]
+}, {
   path: "*",
   component: __webpack_require__(/*! ./components/404.vue */ "./resources/js/components/404.vue")["default"]
 }];
-var router = new vue_router__WEBPACK_IMPORTED_MODULE_10__["default"]({
+var router = new vue_router__WEBPACK_IMPORTED_MODULE_11__["default"]({
   mode: "history",
   routes: routes,
   // short for `routes: routes`
@@ -108973,7 +113246,7 @@ Vue.filter("upText", function (text) {
 }); // reformat date
 
 Vue.filter("myDate", function (created) {
-  return moment__WEBPACK_IMPORTED_MODULE_7___default()(created).format("MMMM Do YYYY, h:mm a");
+  return moment__WEBPACK_IMPORTED_MODULE_8___default()(created).format("MMMM Do YYYY, h:mm a");
 });
 window.Fire = new Vue(); // custom global event bus
 
@@ -110219,6 +114492,75 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Teachers_vue_vue_type_template_id_1687f5bc___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Teachers_vue_vue_type_template_id_1687f5bc___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/Timetable.vue":
+/*!***********************************************!*\
+  !*** ./resources/js/components/Timetable.vue ***!
+  \***********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _Timetable_vue_vue_type_template_id_8e6c5a74___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Timetable.vue?vue&type=template&id=8e6c5a74& */ "./resources/js/components/Timetable.vue?vue&type=template&id=8e6c5a74&");
+/* harmony import */ var _Timetable_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Timetable.vue?vue&type=script&lang=js& */ "./resources/js/components/Timetable.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _Timetable_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _Timetable_vue_vue_type_template_id_8e6c5a74___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _Timetable_vue_vue_type_template_id_8e6c5a74___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/Timetable.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/Timetable.vue?vue&type=script&lang=js&":
+/*!************************************************************************!*\
+  !*** ./resources/js/components/Timetable.vue?vue&type=script&lang=js& ***!
+  \************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Timetable_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./Timetable.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Timetable.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Timetable_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/Timetable.vue?vue&type=template&id=8e6c5a74&":
+/*!******************************************************************************!*\
+  !*** ./resources/js/components/Timetable.vue?vue&type=template&id=8e6c5a74& ***!
+  \******************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Timetable_vue_vue_type_template_id_8e6c5a74___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./Timetable.vue?vue&type=template&id=8e6c5a74& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Timetable.vue?vue&type=template&id=8e6c5a74&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Timetable_vue_vue_type_template_id_8e6c5a74___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Timetable_vue_vue_type_template_id_8e6c5a74___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

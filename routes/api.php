@@ -28,7 +28,8 @@ Route::group(['middleware' => 'auth:api'], function () {
         'teacher' => 'API\TeacherController',
         'grade' => 'API\GradeController',
         'todo' => 'API\TodoController',
-        'calendar' => 'API\EventController'
+        'calendar' => 'API\EventController',
+        'timetable' => 'API\TimetableController',
     ]);
 });
 

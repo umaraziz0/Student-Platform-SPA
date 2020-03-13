@@ -185,21 +185,28 @@
                 </div>
             </div>
             <!-- Modal End -->
-            <div class="col-md-8">
+            <div class="col-md-10">
+                <h1 class="text-center">Calendar</h1>
+                <hr />
                 <div class="card">
-                    <button
-                        type="button"
-                        class="btn btn-success"
-                        @click="createModal()"
-                    >
-                        <i class="fa fa-plus" aria-hidden="true"></i>
-                        Add New Event
-                    </button>
                     <FullCalendar
                         defaultView="dayGridMonth"
                         :plugins="calendarPlugins"
                         :events="events"
                         @eventClick="showEvent"
+                        :customButtons="{
+                            addEvent: {
+                                text: 'Add New Event',
+                                click: function() {
+                                    createModal();
+                                }
+                            }
+                        }"
+                        :header="{
+                            left: 'title',
+                            center: 'addEvent',
+                            right: 'today prev next'
+                        }"
                     />
                 </div>
             </div>
@@ -219,7 +226,6 @@ export default {
             editMode: false,
             url: "api/calendar/",
             events: "",
-            indexToUpdate: "",
             form: new Form({
                 id: "",
                 student_id: "",

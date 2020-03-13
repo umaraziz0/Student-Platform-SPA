@@ -182,7 +182,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 </router-link>
             </li>
             <li class="nav-item">
-                <router-link to="/editprofile" class="nav-link">
+                <router-link to="/edit-profile" class="nav-link">
                 <i class="fas fa-user nav-icon"></i>
                 <p>
                     Profiles
@@ -190,7 +190,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 </router-link>
             </li>
             <li class="nav-item">
-                <router-link to="/editcourses" class="nav-link">
+                <router-link to="/edit-courses" class="nav-link">
                 <i class="fas fa-graduation-cap nav-icon"></i>
                 <p>
                     Courses
@@ -198,7 +198,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 </router-link>
             </li>
             <li class="nav-item">
-                <router-link to="/editteachers" class="nav-link">
+                <router-link to="/edit-teachers" class="nav-link">
                 <i class="fas fa-user-graduate nav-icon"></i>
                 <p>
                     Teachers

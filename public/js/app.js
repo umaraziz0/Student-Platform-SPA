@@ -19882,9 +19882,85 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  mounted: function mounted() {
-    console.log('Component mounted.');
+  data: function data() {
+    return {//
+    };
+  },
+  created: function created() {//
+  },
+  methods: {//
   }
 });
 
@@ -92081,29 +92157,178 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
+  return _c("div", { staticClass: "container" }, [
+    _c("div", { staticClass: "row justify-content-center" }, [
+      _c("div", { staticClass: "col-lg-3 col-6" }, [
+        _c(
+          "div",
+          { staticClass: "small-box bg-info" },
+          [
+            _vm._m(0),
+            _vm._v(" "),
+            _vm._m(1),
+            _vm._v(" "),
+            _c(
+              "router-link",
+              {
+                staticClass: "small-box-footer",
+                attrs: { to: "/agenda/todo" }
+              },
+              [
+                _vm._v("\n                    More Info "),
+                _c("i", { staticClass: "fas fa-arrow-circle-right" })
+              ]
+            )
+          ],
+          1
+        )
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-lg-3 col-6" }, [
+        _c(
+          "div",
+          { staticClass: "small-box bg-success" },
+          [
+            _vm._m(2),
+            _vm._v(" "),
+            _vm._m(3),
+            _vm._v(" "),
+            _c(
+              "router-link",
+              {
+                staticClass: "small-box-footer",
+                attrs: { to: "/agenda/assignments" }
+              },
+              [
+                _vm._v("\n                    More Info "),
+                _c("i", { staticClass: "fas fa-arrow-circle-right" })
+              ]
+            )
+          ],
+          1
+        )
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-lg-3 col-6" }, [
+        _c(
+          "div",
+          { staticClass: "small-box bg-danger" },
+          [
+            _vm._m(4),
+            _vm._v(" "),
+            _vm._m(5),
+            _vm._v(" "),
+            _c(
+              "router-link",
+              {
+                staticClass: "small-box-footer",
+                attrs: { to: "/agenda/exams" }
+              },
+              [
+                _vm._v("\n                    More Info "),
+                _c("i", { staticClass: "fas fa-arrow-circle-right" })
+              ]
+            )
+          ],
+          1
+        )
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-lg-3 col-6" }, [
+        _c(
+          "div",
+          { staticClass: "small-box bg-warning" },
+          [
+            _vm._m(6),
+            _vm._v(" "),
+            _vm._m(7),
+            _vm._v(" "),
+            _c(
+              "router-link",
+              { staticClass: "small-box-footer", attrs: { to: "/calendar" } },
+              [
+                _vm._v("\n                    More Info "),
+                _c("i", { staticClass: "fas fa-arrow-circle-right" })
+              ]
+            )
+          ],
+          1
+        )
+      ])
+    ])
+  ])
 }
 var staticRenderFns = [
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "container" }, [
-      _c("div", { staticClass: "row justify-content-center" }, [
-        _c("div", { staticClass: "col-md-8" }, [
-          _c("div", { staticClass: "card" }, [
-            _c("div", { staticClass: "card-header" }, [
-              _vm._v("Dashboard Component")
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "card-body" }, [
-              _vm._v(
-                "\n                    I'm an example component.\n                "
-              )
-            ])
-          ])
-        ])
-      ])
+    return _c("div", { staticClass: "inner" }, [
+      _c("h3", [_vm._v("150")]),
+      _vm._v(" "),
+      _c("p", [_vm._v("Tasks")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "icon" }, [
+      _c("i", { staticClass: "fas fa-edit" })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "inner" }, [
+      _c("h3", [_vm._v("150")]),
+      _vm._v(" "),
+      _c("p", [_vm._v("Assignments")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "icon" }, [
+      _c("i", { staticClass: "fas fa-clipboard" })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "inner" }, [
+      _c("h3", [_vm._v("150")]),
+      _vm._v(" "),
+      _c("p", [_vm._v("Exams")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "icon" }, [
+      _c("i", { staticClass: "fas fa-book" })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "inner" }, [
+      _c("h3", [_vm._v("150")]),
+      _vm._v(" "),
+      _c("p", [_vm._v("Events")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "icon" }, [
+      _c("i", { staticClass: "fas fa-calendar" })
     ])
   }
 ]
@@ -113538,7 +113763,7 @@ var routes = [{
   path: "/agenda/assignments",
   component: __webpack_require__(/*! ./components/Assignments.vue */ "./resources/js/components/Assignments.vue")["default"]
 }, {
-  path: "/editprofile",
+  path: "/edit-profile",
   component: __webpack_require__(/*! ./components/EditProfile.vue */ "./resources/js/components/EditProfile.vue")["default"]
 }, {
   path: "/developer",
@@ -113550,19 +113775,19 @@ var routes = [{
   path: "/courses",
   component: __webpack_require__(/*! ./components/Courses.vue */ "./resources/js/components/Courses.vue")["default"]
 }, {
-  path: "/editcourses",
+  path: "/edit-courses",
   component: __webpack_require__(/*! ./components/EditCourses.vue */ "./resources/js/components/EditCourses.vue")["default"]
 }, {
   path: "/teachers",
   component: __webpack_require__(/*! ./components/Teachers.vue */ "./resources/js/components/Teachers.vue")["default"]
 }, {
-  path: "/editteachers",
+  path: "/edit-teachers",
   component: __webpack_require__(/*! ./components/EditTeachers.vue */ "./resources/js/components/EditTeachers.vue")["default"]
 }, {
   path: "/grades",
   component: __webpack_require__(/*! ./components/Grades.vue */ "./resources/js/components/Grades.vue")["default"]
 }, {
-  path: "/todo",
+  path: "/agenda/todo",
   component: __webpack_require__(/*! ./components/Todo.vue */ "./resources/js/components/Todo.vue")["default"]
 }, {
   path: "/calendar",

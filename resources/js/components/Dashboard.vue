@@ -1,13 +1,84 @@
 <template>
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card">
-                    <div class="card-header">Dashboard Component</div>
+            <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box bg-info">
+                    <div class="inner">
+                        <h3>150</h3>
 
-                    <div class="card-body">
-                        I'm an example component.
+                        <p>Tasks</p>
                     </div>
+                    <div class="icon">
+                        <i class="fas fa-edit"></i>
+                    </div>
+                    <router-link
+                        to="/agenda/todo"
+                        class="small-box-footer"
+                        style=""
+                    >
+                        More Info <i class="fas fa-arrow-circle-right"></i>
+                    </router-link>
+                </div>
+            </div>
+            <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box bg-success">
+                    <div class="inner">
+                        <h3>150</h3>
+
+                        <p>Assignments</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-clipboard"></i>
+                    </div>
+                    <router-link
+                        to="/agenda/assignments"
+                        class="small-box-footer"
+                        style=""
+                    >
+                        More Info <i class="fas fa-arrow-circle-right"></i>
+                    </router-link>
+                </div>
+            </div>
+            <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box bg-danger">
+                    <div class="inner">
+                        <h3>150</h3>
+
+                        <p>Exams</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <router-link
+                        to="/agenda/exams"
+                        class="small-box-footer"
+                        style=""
+                    >
+                        More Info <i class="fas fa-arrow-circle-right"></i>
+                    </router-link>
+                </div>
+            </div>
+            <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box bg-warning">
+                    <div class="inner">
+                        <h3>150</h3>
+
+                        <p>Events</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-calendar"></i>
+                    </div>
+                    <router-link
+                        to="/calendar"
+                        class="small-box-footer"
+                        style=""
+                    >
+                        More Info <i class="fas fa-arrow-circle-right"></i>
+                    </router-link>
                 </div>
             </div>
         </div>
@@ -15,9 +86,19 @@
 </template>
 
 <script>
-    export default {
-        mounted() {
-            console.log('Component mounted.')
-        }
+export default {
+    data() {
+        return {
+            //
+        };
+    },
+
+    created() {
+        //
+    },
+
+    methods: {
+        //
     }
+};
 </script>

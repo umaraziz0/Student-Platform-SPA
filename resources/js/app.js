@@ -76,7 +76,7 @@ let routes = [
         component: require("./components/Assignments.vue").default
     },
     {
-        path: "/editprofile",
+        path: "/edit-profile",
         component: require("./components/EditProfile.vue").default
     },
     {
@@ -92,7 +92,7 @@ let routes = [
         component: require("./components/Courses.vue").default
     },
     {
-        path: "/editcourses",
+        path: "/edit-courses",
         component: require("./components/EditCourses.vue").default
     },
     {
@@ -100,7 +100,7 @@ let routes = [
         component: require("./components/Teachers.vue").default
     },
     {
-        path: "/editteachers",
+        path: "/edit-teachers",
         component: require("./components/EditTeachers.vue").default
     },
     {
@@ -108,7 +108,7 @@ let routes = [
         component: require("./components/Grades.vue").default
     },
     {
-        path: "/todo",
+        path: "/agenda/todo",
         component: require("./components/Todo.vue").default
     },
     {

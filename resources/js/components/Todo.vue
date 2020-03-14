@@ -69,6 +69,7 @@
                                             <div
                                                 v-if="!todo.editing"
                                                 class="form-check-label"
+                                                @dblclick="editTodo(todo)"
                                             >
                                                 {{ todo.title }}
                                             </div>
@@ -76,6 +77,7 @@
                                                 v-if="todo.editing"
                                                 type="text"
                                                 v-model="todo.title"
+                                                @blur="cancelEdit(todo)"
                                                 @keyup.enter="doneEdit(todo)"
                                                 @keyup.escape="cancelEdit(todo)"
                                                 v-focus
@@ -235,6 +237,9 @@ export default {
     },
 
     methods: {
+        log() {
+            console.log("test");
+        },
         getTodos(url = this.url) {
             axios
                 .get(url)

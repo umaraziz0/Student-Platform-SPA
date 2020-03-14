@@ -19589,10 +19589,26 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
-    FullCalendar: FullCalendar // make the <FullCalendar> tag available
-
+    FullCalendar: FullCalendar
   },
   data: function data() {
     return {
@@ -19607,6 +19623,8 @@ __webpack_require__.r(__webpack_exports__);
         start: "",
         end: "",
         details: "",
+        color: "#3788d9",
+        text_color: "#ffffff",
         all_day: false
       })
     };
@@ -19635,7 +19653,7 @@ __webpack_require__.r(__webpack_exports__);
       this.editMode = true;
       this.form.clear();
       this.form.reset();
-      $("#newModal").modal("show");
+      $("#newModal").modal("show"); // get values from the event object
 
       var _this$events$find = this.events.find(function (event) {
         return event.id === +arg.event.id;
@@ -19646,6 +19664,8 @@ __webpack_require__.r(__webpack_exports__);
           start = _this$events$find.start,
           end = _this$events$find.end,
           details = _this$events$find.details,
+          backgroundColor = _this$events$find.backgroundColor,
+          textColor = _this$events$find.textColor,
           allDay = _this$events$find.allDay;
 
       var eventData = {
@@ -19655,6 +19675,8 @@ __webpack_require__.r(__webpack_exports__);
         start: start.replace(" ", "T"),
         end: end ? end.replace(" ", "T") : "",
         details: details,
+        color: backgroundColor,
+        text_color: textColor,
         all_day: allDay
       };
       this.form.fill(eventData);
@@ -21751,7 +21773,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
-    console.log('Component mounted.');
+    console.log("Component mounted.");
   }
 });
 
@@ -23692,6 +23714,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "todo-list",
   data: function data() {
@@ -23751,6 +23775,9 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   methods: {
+    log: function log() {
+      console.log("test");
+    },
     getTodos: function getTodos() {
       var _this2 = this;
 
@@ -91754,6 +91781,72 @@ var render = function() {
                         1
                       ),
                       _vm._v(" "),
+                      _c("div", { staticClass: "form-group" }, [
+                        _c("label", { attrs: { for: "color" } }, [
+                          _vm._v("Color: ")
+                        ]),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.form.color,
+                              expression: "form.color"
+                            }
+                          ],
+                          attrs: { type: "color", id: "color" },
+                          domProps: { value: _vm.form.color },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(_vm.form, "color", $event.target.value)
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.form.text_color,
+                              expression: "form.text_color"
+                            }
+                          ],
+                          staticClass: "float-right",
+                          attrs: { type: "color", id: "textColor" },
+                          domProps: { value: _vm.form.text_color },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.form,
+                                "text_color",
+                                $event.target.value
+                              )
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c(
+                          "label",
+                          {
+                            staticClass: "float-right",
+                            attrs: { for: "textColor" }
+                          },
+                          [
+                            _vm._v(
+                              "Text Color: \n                                "
+                            )
+                          ]
+                        )
+                      ]),
+                      _vm._v(" "),
                       _c("div", { staticClass: "form-check" }, [
                         _c("input", {
                           directives: [
@@ -97039,7 +97132,14 @@ var render = function() {
                               !todo.editing
                                 ? _c(
                                     "div",
-                                    { staticClass: "form-check-label" },
+                                    {
+                                      staticClass: "form-check-label",
+                                      on: {
+                                        dblclick: function($event) {
+                                          return _vm.editTodo(todo)
+                                        }
+                                      }
+                                    },
                                     [
                                       _vm._v(
                                         "\n                                            " +
@@ -97064,6 +97164,9 @@ var render = function() {
                                     attrs: { type: "text" },
                                     domProps: { value: todo.title },
                                     on: {
+                                      blur: function($event) {
+                                        return _vm.cancelEdit(todo)
+                                      },
                                       keyup: [
                                         function($event) {
                                           if (

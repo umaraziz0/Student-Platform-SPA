@@ -108,6 +108,23 @@
                                         field="details"
                                     ></has-error>
                                 </div>
+                                <div class="form-group">
+                                    <label for="color">Color: </label>
+                                    <input
+                                        type="color"
+                                        id="color"
+                                        v-model="form.color"
+                                    />
+                                    <input
+                                        type="color"
+                                        id="textColor"
+                                        v-model="form.text_color"
+                                        class="float-right"
+                                    />
+                                    <label for="textColor" class="float-right"
+                                        >Text Color:&nbsp;
+                                    </label>
+                                </div>
                                 <div class="form-check">
                                     <input
                                         type="checkbox"
@@ -184,7 +201,7 @@
 <script>
 export default {
     components: {
-        FullCalendar // make the <FullCalendar> tag available
+        FullCalendar
     },
 
     data() {
@@ -200,6 +217,8 @@ export default {
                 start: "",
                 end: "",
                 details: "",
+                color: "#3788d9",
+                text_color: "#ffffff",
                 all_day: false
             })
         };
@@ -234,6 +253,7 @@ export default {
             this.form.reset();
             $("#newModal").modal("show");
 
+            // get values from the event object
             const {
                 id,
                 student_id,
@@ -241,6 +261,8 @@ export default {
                 start,
                 end,
                 details,
+                backgroundColor,
+                textColor,
                 allDay
             } = this.events.find(event => event.id === +arg.event.id);
 
@@ -251,6 +273,8 @@ export default {
                 start: start.replace(" ", "T"),
                 end: end ? end.replace(" ", "T") : "",
                 details: details,
+                color: backgroundColor,
+                text_color: textColor,
                 all_day: allDay
             };
 

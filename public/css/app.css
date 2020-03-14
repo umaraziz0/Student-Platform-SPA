@@ -38307,7 +38307,6 @@ temporary rendered events).
     /* default BACKGROUND color */
 }
 
-.fc-content,
 .fc-event,
 .fc-event:hover {
     color: #fff;
@@ -38316,7 +38315,6 @@ temporary rendered events).
     /* if <a> has an href */
 }
 
-.fc-content,
 .fc-event[href],
 .fc-event.fc-draggable {
     cursor: pointer;

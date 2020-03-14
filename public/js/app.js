@@ -20316,15 +20316,47 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
+  components: {
+    FullCalendar: FullCalendar
+  },
   data: function data() {
     return {
+      calendarPlugins: [listPlugin, interactionPlugin],
       url: "api/dashboard/",
-      items: ""
+      range: "",
+      items: "",
+      eventExample: [{
+        title: "test",
+        start: "2020-03-14",
+        allDay: true
+      }]
     };
   },
   created: function created() {
     this.getInfo();
+    this.dateRange();
   },
   methods: {
     getInfo: function getInfo() {
@@ -20336,6 +20368,16 @@ __webpack_require__.r(__webpack_exports__);
       })["catch"](function (err) {
         console.error(err);
       });
+    },
+    dateRange: function dateRange() {
+      var startDate = new Date();
+      var endDate = new Date();
+      startDate.setDate(startDate.getDate());
+      endDate.setDate(startDate.getDate() + 7);
+      this.range = {
+        start: startDate,
+        end: endDate
+      };
     }
   }
 });
@@ -92628,6 +92670,35 @@ var render = function() {
           1
         )
       ])
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "row justify-content center" }, [
+      _c(
+        "div",
+        { staticClass: "col-lg-6" },
+        [
+          _c("FullCalendar", {
+            attrs: {
+              defaultView: "upcomingWeek",
+              plugins: _vm.calendarPlugins,
+              header: {
+                left: "title",
+                center: "",
+                right: "today prev next"
+              },
+              events: _vm.eventExample,
+              views: {
+                upcomingWeek: {
+                  type: "listWeek",
+                  duration: { days: 7 },
+                  visibleRange: _vm.range
+                }
+              }
+            }
+          })
+        ],
+        1
+      )
     ])
   ])
 }

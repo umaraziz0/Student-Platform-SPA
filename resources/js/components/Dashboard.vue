@@ -82,20 +82,55 @@
                 </div>
             </div>
         </div>
+        <div class="row justify-content center">
+            <div class="col-lg-6">
+                <FullCalendar
+                    defaultView="upcomingWeek"
+                    :plugins="calendarPlugins"
+                    :header="{
+                        left: 'title',
+                        center: '',
+                        right: 'today prev next'
+                    }"
+                    :events="eventExample"
+                    :views="{
+                        upcomingWeek: {
+                            type: 'listWeek',
+                            duration: { days: 7 },
+                            visibleRange: range
+                        }
+                    }"
+                />
+            </div>
+        </div>
     </div>
 </template>
 
 <script>
 export default {
+    components: {
+        FullCalendar
+    },
+
     data() {
         return {
+            calendarPlugins: [listPlugin, interactionPlugin],
             url: "api/dashboard/",
-            items: ""
+            range: "",
+            items: "",
+            eventExample: [
+                {
+                    title: "test",
+                    start: "2020-03-14",
+                    allDay: true
+                }
+            ]
         };
     },
 
     created() {
         this.getInfo();
+        this.dateRange();
     },
 
     methods: {
@@ -108,6 +143,19 @@ export default {
                 .catch(err => {
                     console.error(err);
                 });
+        },
+
+        dateRange() {
+            var startDate = new Date();
+            var endDate = new Date();
+
+            startDate.setDate(startDate.getDate());
+            endDate.setDate(startDate.getDate() + 7);
+
+            this.range = {
+                start: startDate,
+                end: endDate
+            };
         }
     }
 };

@@ -257,6 +257,8 @@
                 <hr />
                 <FullCalendar
                     defaultView="resourceTimeGridDay"
+                    :minTime="minTime"
+                    :maxTime="maxTime"
                     :plugins="calendarPlugins"
                     :events="classes"
                     @eventClick="showClass"
@@ -282,6 +284,7 @@
                         center: 'addEvent',
                         right: ''
                     }"
+                    :allDaySlot="false"
                 />
             </div>
         </div>
@@ -296,6 +299,8 @@ export default {
     data() {
         return {
             calendarPlugins: [resourceTimeGridPlugin, interactionPlugin],
+            minTime: "06:00:00",
+            maxTime: "22:00:00",
             editMode: false,
             url: "api/timetable/",
             eventExample: [

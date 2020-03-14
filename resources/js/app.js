@@ -23,11 +23,13 @@ import FullCalendar from "@fullcalendar/vue";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import resourceTimeGridPlugin from "@fullcalendar/resource-timegrid";
+import listPlugin from "@fullcalendar/list";
 
 window.FullCalendar = FullCalendar;
 window.dayGridPlugin = dayGridPlugin;
 window.interactionPlugin = interactionPlugin;
 window.resourceTimeGridPlugin = resourceTimeGridPlugin;
+window.listPlugin = listPlugin;
 
 import moment from "moment";
 import {

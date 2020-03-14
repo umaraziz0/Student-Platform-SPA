@@ -92,7 +92,7 @@
                         center: '',
                         right: 'today prev next'
                     }"
-                    :events="eventExample"
+                    :events="events"
                     :views="{
                         upcomingWeek: {
                             type: 'listWeek',
@@ -121,16 +121,18 @@ export default {
             eventExample: [
                 {
                     title: "test",
-                    start: "2020-03-14",
+                    start: "2020-03-16",
                     allDay: true
                 }
-            ]
+            ],
+            events: ""
         };
     },
 
     created() {
         this.getInfo();
         this.dateRange();
+        this.getEvents();
     },
 
     methods: {
@@ -156,6 +158,17 @@ export default {
                 start: startDate,
                 end: endDate
             };
+        },
+
+        getEvents() {
+            axios
+                .get("api/calendar")
+                .then(res => {
+                    this.events = res.data.data;
+                })
+                .catch(err => {
+                    console.error(err);
+                });
         }
     }
 };

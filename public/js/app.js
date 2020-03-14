@@ -20335,14 +20335,16 @@ __webpack_require__.r(__webpack_exports__);
       items: "",
       eventExample: [{
         title: "test",
-        start: "2020-03-14",
+        start: "2020-03-16",
         allDay: true
-      }]
+      }],
+      events: ""
     };
   },
   created: function created() {
     this.getInfo();
     this.dateRange();
+    this.getEvents();
   },
   methods: {
     getInfo: function getInfo() {
@@ -20364,6 +20366,15 @@ __webpack_require__.r(__webpack_exports__);
         start: startDate,
         end: endDate
       };
+    },
+    getEvents: function getEvents() {
+      var _this2 = this;
+
+      axios.get("api/calendar").then(function (res) {
+        _this2.events = res.data.data;
+      })["catch"](function (err) {
+        console.error(err);
+      });
     }
   }
 });
@@ -92721,7 +92732,7 @@ var render = function() {
                 center: "",
                 right: "today prev next"
               },
-              events: _vm.eventExample,
+              events: _vm.events,
               views: {
                 upcomingWeek: {
                   type: "listWeek",

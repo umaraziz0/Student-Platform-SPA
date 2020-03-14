@@ -19589,39 +19589,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
     FullCalendar: FullCalendar // make the <FullCalendar> tag available
@@ -19637,11 +19604,10 @@ __webpack_require__.r(__webpack_exports__);
         id: "",
         student_id: "",
         name: "",
-        start_date: "",
-        end_date: "",
-        start_time: "",
-        end_time: "",
-        details: ""
+        start: "",
+        end: "",
+        details: "",
+        all_day: false
       })
     };
   },
@@ -19679,19 +19645,17 @@ __webpack_require__.r(__webpack_exports__);
           title = _this$events$find.title,
           start = _this$events$find.start,
           end = _this$events$find.end,
-          start_time = _this$events$find.start_time,
-          end_time = _this$events$find.end_time,
-          details = _this$events$find.details;
+          details = _this$events$find.details,
+          allDay = _this$events$find.allDay;
 
       var eventData = {
         id: id,
         student_id: student_id,
         name: title,
-        start_date: start,
-        end_date: end,
-        start_time: start_time,
-        end_time: end_time,
-        details: details
+        start: start.replace(" ", "T"),
+        end: end ? end.replace(" ", "T") : "",
+        details: details,
+        all_day: allDay
       };
       this.form.fill(eventData);
     },
@@ -91658,8 +91622,8 @@ var render = function() {
                         "div",
                         { staticClass: "form-group" },
                         [
-                          _c("label", { attrs: { for: "inputStartDate" } }, [
-                            _vm._v("Start Date:")
+                          _c("label", { attrs: { for: "inputStart" } }, [
+                            _vm._v("Start:")
                           ]),
                           _vm._v(" "),
                           _c("input", {
@@ -91667,36 +91631,32 @@ var render = function() {
                               {
                                 name: "model",
                                 rawName: "v-model",
-                                value: _vm.form.start_date,
-                                expression: "form.start_date"
+                                value: _vm.form.start,
+                                expression: "form.start"
                               }
                             ],
                             staticClass: "custom-select",
                             class: {
-                              "is-invalid": _vm.form.errors.has("start_date")
+                              "is-invalid": _vm.form.errors.has("start")
                             },
                             attrs: {
-                              type: "date",
-                              id: "inputStartDate",
-                              name: "start_date"
+                              type: "datetime-local",
+                              id: "inputStart",
+                              name: "start"
                             },
-                            domProps: { value: _vm.form.start_date },
+                            domProps: { value: _vm.form.start },
                             on: {
                               input: function($event) {
                                 if ($event.target.composing) {
                                   return
                                 }
-                                _vm.$set(
-                                  _vm.form,
-                                  "start_date",
-                                  $event.target.value
-                                )
+                                _vm.$set(_vm.form, "start", $event.target.value)
                               }
                             }
                           }),
                           _vm._v(" "),
                           _c("has-error", {
-                            attrs: { form: _vm.form, field: "start_date" }
+                            attrs: { form: _vm.form, field: "start" }
                           })
                         ],
                         1
@@ -91706,8 +91666,8 @@ var render = function() {
                         "div",
                         { staticClass: "form-group" },
                         [
-                          _c("label", { attrs: { for: "inputEndDate" } }, [
-                            _vm._v("End Date:")
+                          _c("label", { attrs: { for: "inputEnd" } }, [
+                            _vm._v("End:")
                           ]),
                           _vm._v(" "),
                           _c("input", {
@@ -91715,132 +91675,32 @@ var render = function() {
                               {
                                 name: "model",
                                 rawName: "v-model",
-                                value: _vm.form.end_date,
-                                expression: "form.end_date"
+                                value: _vm.form.end,
+                                expression: "form.end"
                               }
                             ],
                             staticClass: "custom-select",
                             class: {
-                              "is-invalid": _vm.form.errors.has("end_date")
+                              "is-invalid": _vm.form.errors.has("end")
                             },
                             attrs: {
-                              type: "date",
-                              id: "inputEndDate",
-                              name: "end_date"
+                              type: "datetime-local",
+                              id: "inputEnd",
+                              name: "end"
                             },
-                            domProps: { value: _vm.form.end_date },
+                            domProps: { value: _vm.form.end },
                             on: {
                               input: function($event) {
                                 if ($event.target.composing) {
                                   return
                                 }
-                                _vm.$set(
-                                  _vm.form,
-                                  "end_date",
-                                  $event.target.value
-                                )
+                                _vm.$set(_vm.form, "end", $event.target.value)
                               }
                             }
                           }),
                           _vm._v(" "),
                           _c("has-error", {
-                            attrs: { form: _vm.form, field: "end_date" }
-                          })
-                        ],
-                        1
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "div",
-                        { staticClass: "form-group" },
-                        [
-                          _c("label", { attrs: { for: "inputStartTime" } }, [
-                            _vm._v("Start Time:")
-                          ]),
-                          _vm._v(" "),
-                          _c("input", {
-                            directives: [
-                              {
-                                name: "model",
-                                rawName: "v-model",
-                                value: _vm.form.start_time,
-                                expression: "form.start_time"
-                              }
-                            ],
-                            staticClass: "custom-select",
-                            class: {
-                              "is-invalid": _vm.form.errors.has("start_time")
-                            },
-                            attrs: {
-                              type: "time",
-                              id: "inputStartTime",
-                              name: "start_time"
-                            },
-                            domProps: { value: _vm.form.start_time },
-                            on: {
-                              input: function($event) {
-                                if ($event.target.composing) {
-                                  return
-                                }
-                                _vm.$set(
-                                  _vm.form,
-                                  "start_time",
-                                  $event.target.value
-                                )
-                              }
-                            }
-                          }),
-                          _vm._v(" "),
-                          _c("has-error", {
-                            attrs: { form: _vm.form, field: "start_time" }
-                          })
-                        ],
-                        1
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "div",
-                        { staticClass: "form-group" },
-                        [
-                          _c("label", { attrs: { for: "inputEndTime" } }, [
-                            _vm._v("End Time:")
-                          ]),
-                          _vm._v(" "),
-                          _c("input", {
-                            directives: [
-                              {
-                                name: "model",
-                                rawName: "v-model",
-                                value: _vm.form.end_time,
-                                expression: "form.end_time"
-                              }
-                            ],
-                            staticClass: "custom-select",
-                            class: {
-                              "is-invalid": _vm.form.errors.has("end_time")
-                            },
-                            attrs: {
-                              type: "time",
-                              id: "inputEndTime",
-                              name: "end_time"
-                            },
-                            domProps: { value: _vm.form.end_time },
-                            on: {
-                              input: function($event) {
-                                if ($event.target.composing) {
-                                  return
-                                }
-                                _vm.$set(
-                                  _vm.form,
-                                  "end_time",
-                                  $event.target.value
-                                )
-                              }
-                            }
-                          }),
-                          _vm._v(" "),
-                          _c("has-error", {
-                            attrs: { form: _vm.form, field: "end_time" }
+                            attrs: { form: _vm.form, field: "end" }
                           })
                         ],
                         1
@@ -91892,7 +91752,66 @@ var render = function() {
                           })
                         ],
                         1
-                      )
+                      ),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "form-check" }, [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.form.all_day,
+                              expression: "form.all_day"
+                            }
+                          ],
+                          staticClass: "form-check-input",
+                          attrs: { type: "checkbox", id: "allDay" },
+                          domProps: {
+                            checked: Array.isArray(_vm.form.all_day)
+                              ? _vm._i(_vm.form.all_day, null) > -1
+                              : _vm.form.all_day
+                          },
+                          on: {
+                            change: function($event) {
+                              var $$a = _vm.form.all_day,
+                                $$el = $event.target,
+                                $$c = $$el.checked ? true : false
+                              if (Array.isArray($$a)) {
+                                var $$v = null,
+                                  $$i = _vm._i($$a, $$v)
+                                if ($$el.checked) {
+                                  $$i < 0 &&
+                                    _vm.$set(
+                                      _vm.form,
+                                      "all_day",
+                                      $$a.concat([$$v])
+                                    )
+                                } else {
+                                  $$i > -1 &&
+                                    _vm.$set(
+                                      _vm.form,
+                                      "all_day",
+                                      $$a
+                                        .slice(0, $$i)
+                                        .concat($$a.slice($$i + 1))
+                                    )
+                                }
+                              } else {
+                                _vm.$set(_vm.form, "all_day", $$c)
+                              }
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c(
+                          "label",
+                          {
+                            staticClass: "form-check-label",
+                            attrs: { for: "allDay" }
+                          },
+                          [_vm._v("All Day Event")]
+                        )
+                      ])
                     ]),
                     _vm._v(" "),
                     _c(

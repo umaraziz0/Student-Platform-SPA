@@ -54,83 +54,39 @@
                                     ></has-error>
                                 </div>
                                 <div class="form-group">
-                                    <label for="inputStartDate"
-                                        >Start Date:</label
-                                    >
+                                    <label for="inputStart">Start:</label>
                                     <input
-                                        type="date"
-                                        v-model="form.start_date"
+                                        type="datetime-local"
+                                        v-model="form.start"
                                         class="custom-select"
                                         :class="{
                                             'is-invalid': form.errors.has(
-                                                'start_date'
+                                                'start'
                                             )
                                         }"
-                                        id="inputStartDate"
-                                        name="start_date"
+                                        id="inputStart"
+                                        name="start"
                                     />
                                     <has-error
                                         :form="form"
-                                        field="start_date"
+                                        field="start"
                                     ></has-error>
                                 </div>
                                 <div class="form-group">
-                                    <label for="inputEndDate">End Date:</label>
+                                    <label for="inputEnd">End:</label>
                                     <input
-                                        type="date"
-                                        v-model="form.end_date"
+                                        type="datetime-local"
+                                        v-model="form.end"
                                         class="custom-select"
                                         :class="{
-                                            'is-invalid': form.errors.has(
-                                                'end_date'
-                                            )
+                                            'is-invalid': form.errors.has('end')
                                         }"
-                                        id="inputEndDate"
-                                        name="end_date"
+                                        id="inputEnd"
+                                        name="end"
                                     />
                                     <has-error
                                         :form="form"
-                                        field="end_date"
-                                    ></has-error>
-                                </div>
-                                <div class="form-group">
-                                    <label for="inputStartTime"
-                                        >Start Time:</label
-                                    >
-                                    <input
-                                        type="time"
-                                        v-model="form.start_time"
-                                        class="custom-select"
-                                        :class="{
-                                            'is-invalid': form.errors.has(
-                                                'start_time'
-                                            )
-                                        }"
-                                        id="inputStartTime"
-                                        name="start_time"
-                                    />
-                                    <has-error
-                                        :form="form"
-                                        field="start_time"
-                                    ></has-error>
-                                </div>
-                                <div class="form-group">
-                                    <label for="inputEndTime">End Time:</label>
-                                    <input
-                                        type="time"
-                                        v-model="form.end_time"
-                                        class="custom-select"
-                                        :class="{
-                                            'is-invalid': form.errors.has(
-                                                'end_time'
-                                            )
-                                        }"
-                                        id="inputEndTime"
-                                        name="end_time"
-                                    />
-                                    <has-error
-                                        :form="form"
-                                        field="end_time"
+                                        field="end"
                                     ></has-error>
                                 </div>
                                 <div class="form-group">
@@ -151,6 +107,17 @@
                                         :form="form"
                                         field="details"
                                     ></has-error>
+                                </div>
+                                <div class="form-check">
+                                    <input
+                                        type="checkbox"
+                                        class="form-check-input"
+                                        id="allDay"
+                                        v-model="form.all_day"
+                                    />
+                                    <label class="form-check-label" for="allDay"
+                                        >All Day Event</label
+                                    >
                                 </div>
                             </div>
                             <div class="modal-footer justify-content-between">
@@ -230,11 +197,10 @@ export default {
                 id: "",
                 student_id: "",
                 name: "",
-                start_date: "",
-                end_date: "",
-                start_time: "",
-                end_time: "",
-                details: ""
+                start: "",
+                end: "",
+                details: "",
+                all_day: false
             })
         };
     },
@@ -274,20 +240,18 @@ export default {
                 title,
                 start,
                 end,
-                start_time,
-                end_time,
-                details
+                details,
+                allDay
             } = this.events.find(event => event.id === +arg.event.id);
 
             let eventData = {
                 id: id,
                 student_id: student_id,
                 name: title,
-                start_date: start,
-                end_date: end,
-                start_time: start_time,
-                end_time: end_time,
-                details: details
+                start: start.replace(" ", "T"),
+                end: end ? end.replace(" ", "T") : "",
+                details: details,
+                all_day: allDay
             };
 
             this.form.fill(eventData);

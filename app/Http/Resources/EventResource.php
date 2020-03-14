@@ -18,11 +18,10 @@ class EventResource extends JsonResource
             'id' => $this->id,
             'student_id' => $this->student_id,
             'title' => $this->name,
-            'start' => $this->start_date,
-            'end' => $this->end_date,
-            'start_time' => $this->start_time,
-            'end_time' => $this->end_time,
-            'details' => $this->details
+            'start' => $this->start,
+            'end' => $this->end,
+            'details' => $this->details,
+            'allDay' => $this->all_day
         ];
     }
 }

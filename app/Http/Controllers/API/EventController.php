@@ -42,8 +42,8 @@ class EventController extends Controller
 
         $request->validate([
             'name' => 'required|string',
-            'start_date' => 'required|date',
-            'end_date' => 'required|date'
+            'start' => 'required|date',
+            'end' => 'nullable|date'
         ]);
 
         $new_calendar = Event::create($request->all());
@@ -78,8 +78,8 @@ class EventController extends Controller
 
         $request->validate([
             'name' => 'required|string',
-            'start_date' => 'required|date',
-            'end_date' => 'required|date'
+            'start' => 'required|date',
+            'end' => 'nullable|date'
         ]);
 
         $event->update($request->all());

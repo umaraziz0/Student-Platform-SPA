@@ -27,7 +27,9 @@ class TimetableResource extends JsonResource
             'end' => $date . ' ' . $this->end,
             'room' => $this->room,
             'building' => $this->building,
-            'details' => $this->details
+            'details' => $this->details,
+            'backgroundColor' => $this->color,
+            'textColor' => $this->text_color,
         ];
     }
 }

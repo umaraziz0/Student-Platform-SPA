@@ -38315,6 +38315,7 @@ temporary rendered events).
     /* if <a> has an href */
 }
 
+.fc-event:hover,
 .fc-event[href],
 .fc-event.fc-draggable {
     cursor: pointer;

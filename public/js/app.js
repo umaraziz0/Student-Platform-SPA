@@ -23382,6 +23382,23 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
     FullCalendar: FullCalendar // make the <FullCalendar> tag available
@@ -23412,7 +23429,9 @@ __webpack_require__.r(__webpack_exports__);
         end: "",
         room: "",
         building: "",
-        details: ""
+        details: "",
+        color: "#3788d9",
+        text_color: "#ffffff"
       })
     };
   },
@@ -23470,7 +23489,9 @@ __webpack_require__.r(__webpack_exports__);
           end = _this$classes$find.end,
           room = _this$classes$find.room,
           building = _this$classes$find.building,
-          details = _this$classes$find.details;
+          details = _this$classes$find.details,
+          backgroundColor = _this$classes$find.backgroundColor,
+          textColor = _this$classes$find.textColor;
 
       var classData = {
         id: id,
@@ -23482,7 +23503,9 @@ __webpack_require__.r(__webpack_exports__);
         end: end.slice(11),
         room: room,
         building: building,
-        details: details
+        details: details,
+        color: backgroundColor,
+        text_color: textColor
       };
       this.form.fill(classData);
     },
@@ -96815,7 +96838,73 @@ var render = function() {
                           })
                         ],
                         1
-                      )
+                      ),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "form-group" }, [
+                        _c("label", { attrs: { for: "color" } }, [
+                          _vm._v("Color: ")
+                        ]),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.form.color,
+                              expression: "form.color"
+                            }
+                          ],
+                          attrs: { type: "color", id: "color" },
+                          domProps: { value: _vm.form.color },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(_vm.form, "color", $event.target.value)
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.form.text_color,
+                              expression: "form.text_color"
+                            }
+                          ],
+                          staticClass: "float-right",
+                          attrs: { type: "color", id: "textColor" },
+                          domProps: { value: _vm.form.text_color },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.form,
+                                "text_color",
+                                $event.target.value
+                              )
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c(
+                          "label",
+                          {
+                            staticClass: "float-right",
+                            attrs: { for: "textColor" }
+                          },
+                          [
+                            _vm._v(
+                              "Text Color: \n                                "
+                            )
+                          ]
+                        )
+                      ])
                     ]),
                     _vm._v(" "),
                     _c(

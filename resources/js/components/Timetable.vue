@@ -219,6 +219,23 @@
                                         field="details"
                                     ></has-error>
                                 </div>
+                                <div class="form-group">
+                                    <label for="color">Color: </label>
+                                    <input
+                                        type="color"
+                                        id="color"
+                                        v-model="form.color"
+                                    />
+                                    <input
+                                        type="color"
+                                        id="textColor"
+                                        v-model="form.text_color"
+                                        class="float-right"
+                                    />
+                                    <label for="textColor" class="float-right"
+                                        >Text Color:&nbsp;
+                                    </label>
+                                </div>
                             </div>
                             <div class="modal-footer justify-content-between">
                                 <button
@@ -323,7 +340,9 @@ export default {
                 end: "",
                 room: "",
                 building: "",
-                details: ""
+                details: "",
+                color: "#3788d9",
+                text_color: "#ffffff"
             })
         };
     },
@@ -383,7 +402,9 @@ export default {
                 end,
                 room,
                 building,
-                details
+                details,
+                backgroundColor,
+                textColor
             } = this.classes.find(event => event.id === +arg.event.id);
 
             let classData = {
@@ -396,7 +417,9 @@ export default {
                 end: end.slice(11),
                 room: room,
                 building: building,
-                details: details
+                details: details,
+                color: backgroundColor,
+                text_color: textColor
             };
 
             this.form.fill(classData);

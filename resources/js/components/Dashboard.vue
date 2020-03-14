@@ -5,7 +5,7 @@
                 <!-- small box -->
                 <div class="small-box bg-info">
                     <div class="inner">
-                        <h3>150</h3>
+                        <h3>{{ items.tasks }}</h3>
 
                         <p>Tasks</p>
                     </div>
@@ -25,7 +25,7 @@
                 <!-- small box -->
                 <div class="small-box bg-success">
                     <div class="inner">
-                        <h3>150</h3>
+                        <h3>{{ items.assignments }}</h3>
 
                         <p>Assignments</p>
                     </div>
@@ -45,7 +45,7 @@
                 <!-- small box -->
                 <div class="small-box bg-danger">
                     <div class="inner">
-                        <h3>150</h3>
+                        <h3>{{ items.exams }}</h3>
 
                         <p>Exams</p>
                     </div>
@@ -65,7 +65,7 @@
                 <!-- small box -->
                 <div class="small-box bg-warning">
                     <div class="inner">
-                        <h3>150</h3>
+                        <h3>{{ items.events }}</h3>
 
                         <p>Events</p>
                     </div>
@@ -89,16 +89,26 @@
 export default {
     data() {
         return {
-            //
+            url: "api/dashboard/",
+            items: ""
         };
     },
 
     created() {
-        //
+        this.getInfo();
     },
 
     methods: {
-        //
+        getInfo(url = this.url) {
+            axios
+                .get(url)
+                .then(res => {
+                    this.items = res.data;
+                })
+                .catch(err => {
+                    console.error(err);
+                });
+        }
     }
 };
 </script>

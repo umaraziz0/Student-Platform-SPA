@@ -19955,12 +19955,25 @@ __webpack_require__.r(__webpack_exports__);
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
-    return {//
+    return {
+      url: "api/dashboard/",
+      items: ""
     };
   },
-  created: function created() {//
+  created: function created() {
+    this.getInfo();
   },
-  methods: {//
+  methods: {
+    getInfo: function getInfo() {
+      var _this = this;
+
+      var url = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.url;
+      axios.get(url).then(function (res) {
+        _this.items = res.data;
+      })["catch"](function (err) {
+        console.error(err);
+      });
+    }
   }
 });
 
@@ -23305,39 +23318,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "todo-list",
   data: function data() {
     return {
+      todos: [],
       newTodo: "",
       url: "api/todo/",
       beforeEditCache: "",
       filter: "all",
-      todos: [],
       studentId: ""
     };
   },
@@ -92164,9 +92153,13 @@ var render = function() {
           "div",
           { staticClass: "small-box bg-info" },
           [
-            _vm._m(0),
+            _c("div", { staticClass: "inner" }, [
+              _c("h3", [_vm._v(_vm._s(_vm.items.tasks))]),
+              _vm._v(" "),
+              _c("p", [_vm._v("Tasks")])
+            ]),
             _vm._v(" "),
-            _vm._m(1),
+            _vm._m(0),
             _vm._v(" "),
             _c(
               "router-link",
@@ -92189,9 +92182,13 @@ var render = function() {
           "div",
           { staticClass: "small-box bg-success" },
           [
-            _vm._m(2),
+            _c("div", { staticClass: "inner" }, [
+              _c("h3", [_vm._v(_vm._s(_vm.items.assignments))]),
+              _vm._v(" "),
+              _c("p", [_vm._v("Assignments")])
+            ]),
             _vm._v(" "),
-            _vm._m(3),
+            _vm._m(1),
             _vm._v(" "),
             _c(
               "router-link",
@@ -92214,9 +92211,13 @@ var render = function() {
           "div",
           { staticClass: "small-box bg-danger" },
           [
-            _vm._m(4),
+            _c("div", { staticClass: "inner" }, [
+              _c("h3", [_vm._v(_vm._s(_vm.items.exams))]),
+              _vm._v(" "),
+              _c("p", [_vm._v("Exams")])
+            ]),
             _vm._v(" "),
-            _vm._m(5),
+            _vm._m(2),
             _vm._v(" "),
             _c(
               "router-link",
@@ -92239,9 +92240,13 @@ var render = function() {
           "div",
           { staticClass: "small-box bg-warning" },
           [
-            _vm._m(6),
+            _c("div", { staticClass: "inner" }, [
+              _c("h3", [_vm._v(_vm._s(_vm.items.events))]),
+              _vm._v(" "),
+              _c("p", [_vm._v("Events")])
+            ]),
             _vm._v(" "),
-            _vm._m(7),
+            _vm._m(3),
             _vm._v(" "),
             _c(
               "router-link",
@@ -92263,28 +92268,8 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "inner" }, [
-      _c("h3", [_vm._v("150")]),
-      _vm._v(" "),
-      _c("p", [_vm._v("Tasks")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
     return _c("div", { staticClass: "icon" }, [
       _c("i", { staticClass: "fas fa-edit" })
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "inner" }, [
-      _c("h3", [_vm._v("150")]),
-      _vm._v(" "),
-      _c("p", [_vm._v("Assignments")])
     ])
   },
   function() {
@@ -92299,28 +92284,8 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "inner" }, [
-      _c("h3", [_vm._v("150")]),
-      _vm._v(" "),
-      _c("p", [_vm._v("Exams")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
     return _c("div", { staticClass: "icon" }, [
       _c("i", { staticClass: "fas fa-book" })
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "inner" }, [
-      _c("h3", [_vm._v("150")]),
-      _vm._v(" "),
-      _c("p", [_vm._v("Events")])
     ])
   },
   function() {
@@ -96948,7 +96913,7 @@ var staticRenderFns = [
     return _c("div", { staticClass: "card-header" }, [
       _c("h3", { staticClass: "card-title mb-0" }, [
         _c("i", { staticClass: "fas fa-edit" }),
-        _vm._v("\n                        To-Do List\n                        ")
+        _vm._v("\n                        To-Do List\n                    ")
       ])
     ])
   },
@@ -113787,7 +113752,7 @@ var routes = [{
   path: "/grades",
   component: __webpack_require__(/*! ./components/Grades.vue */ "./resources/js/components/Grades.vue")["default"]
 }, {
-  path: "/agenda/todo",
+  path: "/todo",
   component: __webpack_require__(/*! ./components/Todo.vue */ "./resources/js/components/Todo.vue")["default"]
 }, {
   path: "/calendar",

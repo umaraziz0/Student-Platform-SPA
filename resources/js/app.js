@@ -30,7 +30,11 @@ window.interactionPlugin = interactionPlugin;
 window.resourceTimeGridPlugin = resourceTimeGridPlugin;
 
 import moment from "moment";
-import { Form, HasError, AlertError } from "vform";
+import {
+    Form,
+    HasError,
+    AlertError
+} from "vform";
 import VueProgressBar from "vue-progressbar";
 
 Vue.use(VueProgressBar, {
@@ -58,8 +62,7 @@ Vue.component(AlertError.name, AlertError);
 import VueRouter from "vue-router";
 Vue.use(VueRouter);
 
-let routes = [
-    {
+let routes = [{
         path: "/home",
         component: require("./components/Dashboard.vue").default
     },
@@ -108,7 +111,7 @@ let routes = [
         component: require("./components/Grades.vue").default
     },
     {
-        path: "/agenda/todo",
+        path: "/todo",
         component: require("./components/Todo.vue").default
     },
     {
@@ -133,11 +136,11 @@ const router = new VueRouter({
 
 // Global vue filters
 // to uppercase first letter in text
-Vue.filter("upText", function(text) {
+Vue.filter("upText", function (text) {
     return text.charAt(0).toUpperCase() + text.slice(1);
 });
 // reformat date
-Vue.filter("myDate", function(created) {
+Vue.filter("myDate", function (created) {
     return moment(created).format("MMMM Do YYYY, h:mm a");
 });
 

@@ -7,25 +7,6 @@
                         <h3 class="card-title mb-0">
                             <i class="fas fa-edit"></i>
                             To-Do List
-                            <!-- <div class="card-tools">
-                            <ul class="pagination pagination-sm">
-                                <li class="page-item">
-                                    <a href="#" class="page-link">«</a>
-                                </li>
-                                <li class="page-item">
-                                    <a href="#" class="page-link">1</a>
-                                </li>
-                                <li class="page-item">
-                                    <a href="#" class="page-link">2</a>
-                                </li>
-                                <li class="page-item">
-                                    <a href="#" class="page-link">3</a>
-                                </li>
-                                <li class="page-item">
-                                    <a href="#" class="page-link">»</a>
-                                </li>
-                            </ul>
-                        </div> -->
                         </h3>
                     </div>
                     <!-- /.card-header -->
@@ -55,11 +36,6 @@
                             enter-active-class="animated fadeInDown"
                             leave-active-class="animated fadeOutRight"
                         >
-                            <!-- <ul
-                            class="todo-list ui-sortable"
-                            data-widget="todo-list"
-                        >
-                        </ul> -->
                             <ul
                                 class="todo-list ui-sortable"
                                 style="animation-duration: 0.5s"
@@ -209,11 +185,11 @@ export default {
     name: "todo-list",
     data() {
         return {
+            todos: [],
             newTodo: "",
             url: "api/todo/",
             beforeEditCache: "",
             filter: "all",
-            todos: [],
             studentId: ""
         };
     },

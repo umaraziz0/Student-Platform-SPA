@@ -26,7 +26,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-bars"></i></a>
       </li>
       <li class="nav-item d-none d-sm-inline-block">
-        <a href="home" class="nav-link">Home</a>
+        <a href="/home" class="nav-link">
+            Home
+        </a>
       </li>
     </ul>
     <!-- Right navbar links -->
@@ -127,7 +129,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <!-- Main Sidebar Container -->
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
-    <a href="home" class="brand-link">
+    <a href="/home" class="brand-link">
       <img src="./img/professor.png" alt="Student Platform Logo" class="brand-image img-circle elevation-3"
            style="opacity: .8">
       <span class="brand-text font-weight-light">Student Platform</span>
@@ -179,7 +181,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 </a>
                 <ul class="nav nav-treeview">
                     <li class="nav-item">
-                        <router-link to="/agenda/todo" class="nav-link">
+                        <router-link to="/todo" class="nav-link">
                             <i class="fas fa-edit nav-icon"></i>
                             <p>
                                 To-Do List

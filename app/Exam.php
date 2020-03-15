@@ -42,4 +42,10 @@ class Exam extends Model
             'searchable' => true,
         ]
     ];
+
+    protected $dates = [
+        'date'
+    ];
+
+    protected $dateFormat = 'Y-m-d';
 }

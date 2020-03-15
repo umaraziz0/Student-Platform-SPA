@@ -84,23 +84,57 @@
         </div>
         <div class="row justify-content center">
             <div class="col-lg-6">
-                <FullCalendar
-                    defaultView="upcomingWeek"
-                    :plugins="calendarPlugins"
-                    :header="{
-                        left: 'title',
-                        center: '',
-                        right: 'today prev next'
-                    }"
-                    :events="events"
-                    :views="{
-                        upcomingWeek: {
-                            type: 'listWeek',
-                            duration: { days: 7 },
-                            visibleRange: range
-                        }
-                    }"
-                />
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title mb-0">Upcoming</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body p-0">
+                        <table class="table table-condensed">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Type</th>
+                                    <th>Due Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr
+                                    v-for="upcomingItem in upcomingItems"
+                                    :key="upcomingItem.id"
+                                >
+                                    <td>{{ upcomingItem.name }}</td>
+                                    <td>{{ upcomingItem.type }}</td>
+                                    <td>
+                                        {{ upcomingItem.due_date }}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card">
+                    <FullCalendar
+                        defaultView="upcomingWeek"
+                        :plugins="calendarPlugins"
+                        :header="{
+                            left: 'title',
+                            center: '',
+                            right: 'today prev next'
+                        }"
+                        :events="events"
+                        :views="{
+                            upcomingWeek: {
+                                type: 'listWeek',
+                                duration: { days: 7 },
+                                visibleRange: range
+                            }
+                        }"
+                    />
+                </div>
             </div>
         </div>
     </div>
@@ -125,7 +159,8 @@ export default {
                     allDay: true
                 }
             ],
-            events: ""
+            events: "",
+            upcomingItems: ""
         };
     },
 
@@ -133,6 +168,7 @@ export default {
         this.getInfo();
         this.dateRange();
         this.getEvents();
+        this.getUpcoming();
     },
 
     methods: {
@@ -165,6 +201,17 @@ export default {
                 .get("api/calendar")
                 .then(res => {
                     this.events = res.data.data;
+                })
+                .catch(err => {
+                    console.error(err);
+                });
+        },
+
+        getUpcoming() {
+            axios
+                .get("api/getUpcoming")
+                .then(res => {
+                    this.upcomingItems = res.data;
                 })
                 .catch(err => {
                     console.error(err);

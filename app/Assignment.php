@@ -9,9 +9,7 @@ class Assignment extends Model
 {
     use LaravelVueDatatableTrait;
     //
-    protected $fillable = [
-        'student_id', 'name', 'course_name', 'due_date', 'details',
-    ];
+    protected $guarded = [];
 
     protected $dataTableColumns = [
         'id' => [

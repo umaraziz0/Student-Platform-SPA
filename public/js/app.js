@@ -20323,6 +20323,40 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
     FullCalendar: FullCalendar
@@ -20338,13 +20372,15 @@ __webpack_require__.r(__webpack_exports__);
         start: "2020-03-16",
         allDay: true
       }],
-      events: ""
+      events: "",
+      upcomingItems: ""
     };
   },
   created: function created() {
     this.getInfo();
     this.dateRange();
     this.getEvents();
+    this.getUpcoming();
   },
   methods: {
     getInfo: function getInfo() {
@@ -20372,6 +20408,15 @@ __webpack_require__.r(__webpack_exports__);
 
       axios.get("api/calendar").then(function (res) {
         _this2.events = res.data.data;
+      })["catch"](function (err) {
+        console.error(err);
+      });
+    },
+    getUpcoming: function getUpcoming() {
+      var _this3 = this;
+
+      axios.get("api/getUpcoming").then(function (res) {
+        _this3.upcomingItems = res.data;
       })["catch"](function (err) {
         console.error(err);
       });
@@ -92719,32 +92764,66 @@ var render = function() {
     ]),
     _vm._v(" "),
     _c("div", { staticClass: "row justify-content center" }, [
-      _c(
-        "div",
-        { staticClass: "col-lg-6" },
-        [
-          _c("FullCalendar", {
-            attrs: {
-              defaultView: "upcomingWeek",
-              plugins: _vm.calendarPlugins,
-              header: {
-                left: "title",
-                center: "",
-                right: "today prev next"
-              },
-              events: _vm.events,
-              views: {
-                upcomingWeek: {
-                  type: "listWeek",
-                  duration: { days: 7 },
-                  visibleRange: _vm.range
+      _c("div", { staticClass: "col-lg-6" }, [
+        _c("div", { staticClass: "card" }, [
+          _vm._m(4),
+          _vm._v(" "),
+          _c("div", { staticClass: "card-body p-0" }, [
+            _c("table", { staticClass: "table table-condensed" }, [
+              _vm._m(5),
+              _vm._v(" "),
+              _c(
+                "tbody",
+                _vm._l(_vm.upcomingItems, function(upcomingItem) {
+                  return _c("tr", { key: upcomingItem.id }, [
+                    _c("td", [_vm._v(_vm._s(upcomingItem.name))]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(upcomingItem.type))]),
+                    _vm._v(" "),
+                    _c("td", [
+                      _vm._v(
+                        "\n                                    " +
+                          _vm._s(upcomingItem.due_date) +
+                          "\n                                "
+                      )
+                    ])
+                  ])
+                }),
+                0
+              )
+            ])
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-lg-6" }, [
+        _c(
+          "div",
+          { staticClass: "card" },
+          [
+            _c("FullCalendar", {
+              attrs: {
+                defaultView: "upcomingWeek",
+                plugins: _vm.calendarPlugins,
+                header: {
+                  left: "title",
+                  center: "",
+                  right: "today prev next"
+                },
+                events: _vm.events,
+                views: {
+                  upcomingWeek: {
+                    type: "listWeek",
+                    duration: { days: 7 },
+                    visibleRange: _vm.range
+                  }
                 }
               }
-            }
-          })
-        ],
-        1
-      )
+            })
+          ],
+          1
+        )
+      ])
     ])
   ])
 }
@@ -92779,6 +92858,28 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "icon" }, [
       _c("i", { staticClass: "fas fa-calendar" })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "card-header" }, [
+      _c("h3", { staticClass: "card-title mb-0" }, [_vm._v("Upcoming")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("th", [_vm._v("Name")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Type")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Due Date")])
+      ])
     ])
   }
 ]

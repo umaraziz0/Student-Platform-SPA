@@ -151,7 +151,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
         <div class="image">
-          <img src="img/profile/{{{ Auth::user()->photo }}}" class="img-circle elevation-2" onerror="this.src='img/profile/default.png'">
+          <img src="img/profile/{{{ Auth::user()->photo }}}" class="img-circle elevation-2" onerror="this.src='img/profile/default.png';this.onerror=''">
         </div>
         <div class="info">
           <router-link to="/profile" class="d-block">
@@ -166,7 +166,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
             <li class="nav-item">
-                <router-link to="/home" class="nav-link">
+                <router-link to="/admin-dashboard" class="nav-link">
                     <i class="fas fa-home nav-icon"></i>
                     <p>
                         Dashboard
@@ -282,7 +282,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
       Student Platform
     </div>
     <!-- Default to the left -->
-    <strong>Copyright &copy; 2014-2019 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
+    <strong>Copyright &copy; 2014-2019 <a href="https:/lte.io">AdminLTE.io</a>.</strong> All rights reserved.
   </footer>
 </div>
 <!-- ./wrapper -->

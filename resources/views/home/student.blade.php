@@ -140,7 +140,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
         <div class="image">
-          <img src="img/profile/{{{ Auth::user()->photo }}}" class="img-circle elevation-2" onerror="this.src='img/profile/default.png'">
+          <img src="img/profile/{{{ Auth::user()->photo }}}" class="img-circle elevation-2" onerror="this.src='img/profile/default.png';this.onerror=''">
         </div>
         <div class="info">
           <router-link to="/profile" class="d-block">
@@ -189,7 +189,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         </router-link>
                     </li>
                     <li class="nav-item">
-                        <router-link to="/agenda/assignments" class="nav-link">
+                        <router-link to="/assignments" class="nav-link">
                             <i class="fas fa-clipboard nav-icon"></i>
                             <p>
                                 Assignments
@@ -197,7 +197,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         </router-link>
                     </li>
                     <li class="nav-item">
-                       <router-link to="/agenda/exams" class="nav-link">
+                       <router-link to="/exams" class="nav-link">
                             <i class="fas fa-book nav-icon"></i>
                             <p>
                                 Exams

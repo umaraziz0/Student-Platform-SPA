@@ -29,14 +29,14 @@ class HomeController extends Controller
         return view($isAdmin ? 'home.admin' : 'home.student');
     }
 
-    public function admin()
-    {
-        $isAdmin = Auth::user()->is_admin;
+    // public function admin()
+    // {
+    //     $isAdmin = Auth::user()->is_admin;
 
-        if ($isAdmin) {
-            return view('home.admin');
-        } else {
-            abort(401);
-        }
-    }
+    //     if ($isAdmin) {
+    //         return view('home.admin');
+    //     } else {
+    //         abort(401);
+    //     }
+    // }
 }

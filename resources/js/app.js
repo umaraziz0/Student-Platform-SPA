@@ -32,7 +32,11 @@ window.resourceTimeGridPlugin = resourceTimeGridPlugin;
 window.listPlugin = listPlugin;
 
 import moment from "moment";
-import { Form, HasError, AlertError } from "vform";
+import {
+    Form,
+    HasError,
+    AlertError
+} from "vform";
 import VueProgressBar from "vue-progressbar";
 
 Vue.use(VueProgressBar, {
@@ -60,10 +64,13 @@ Vue.component(AlertError.name, AlertError);
 import VueRouter from "vue-router";
 Vue.use(VueRouter);
 
-let routes = [
-    {
+let routes = [{
         path: "/home",
         component: require("./components/Dashboard.vue").default
+    },
+    {
+        path: "/admin-dashboard",
+        component: require("./components/AdminHome.vue").default
     },
     {
         path: "/profile",
@@ -74,19 +81,19 @@ let routes = [
         component: require("./components/Users.vue").default
     },
     {
-        path: "/agenda/assignments",
+        path: "/assignments",
         component: require("./components/Assignments.vue").default
     },
     {
         path: "/edit-profile",
         component: require("./components/EditProfile.vue").default
     },
+    // {
+    //     path: "/developer",
+    //     component: require("./components/Developer.vue").default
+    // },
     {
-        path: "/developer",
-        component: require("./components/Developer.vue").default
-    },
-    {
-        path: "/agenda/exams",
+        path: "/exams",
         component: require("./components/Exams.vue").default
     },
     {
@@ -135,11 +142,11 @@ const router = new VueRouter({
 
 // Global vue filters
 // to uppercase first letter in text
-Vue.filter("upText", function(text) {
+Vue.filter("upText", function (text) {
     return text.charAt(0).toUpperCase() + text.slice(1);
 });
 // reformat date
-Vue.filter("myDate", function(created) {
+Vue.filter("myDate", function (created) {
     return moment(created).format("MMMM Do YYYY, h:mm a");
 });
 

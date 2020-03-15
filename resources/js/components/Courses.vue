@@ -5,7 +5,7 @@
                 <h2 class="text-center">Courses Taken</h2>
                 <hr />
                 <data-table
-                    :data="dataTaken"
+                    :data="coursesTaken"
                     :columns="columnsTaken"
                     @onTablePropsChanged="reloadTable"
                     ><div slot="filters" slot-scope="{ tableData, perPage }">
@@ -39,7 +39,7 @@
                 <h2 class="text-center">Courses List</h2>
                 <hr />
                 <data-table
-                    :data="data"
+                    :data="courses"
                     :columns="columns"
                     @onTablePropsChanged="reloadTable"
                     ><div slot="filters" slot-scope="{ tableData, perPage }">
@@ -212,8 +212,8 @@ export default {
             editMode: false,
             url: "api/course/",
             urlTaken: "api/takencourse/",
-            data: {},
-            dataTaken: {},
+            courses: {},
+            coursesTaken: {},
             formData: {},
             tableProps: {
                 search: "",
@@ -309,8 +309,8 @@ export default {
         };
     },
     created() {
-        this.getData(this.url);
-        this.getDataTaken(this.urlTaken);
+        this.getCourses(this.url);
+        this.getCoursesTaken(this.urlTaken);
         this.getForm(this.url);
     },
 
@@ -320,13 +320,13 @@ export default {
     },
 
     methods: {
-        getData(url = this.url, options = this.tableProps) {
+        getCourses(url = this.url, options = this.tableProps) {
             axios
                 .get(url, {
                     params: options
                 })
                 .then(response => {
-                    this.data = response.data;
+                    this.courses = response.data;
                 })
                 // eslint-disable-next-line
                 .catch(errors => {
@@ -334,13 +334,13 @@ export default {
                 });
         },
 
-        getDataTaken(urlTaken = this.urlTaken, options = this.tableProps) {
+        getCoursesTaken(urlTaken = this.urlTaken, options = this.tableProps) {
             axios
                 .get(urlTaken, {
                     params: options
                 })
                 .then(response => {
-                    this.dataTaken = response.data;
+                    this.coursesTaken = response.data;
                 })
                 // eslint-disable-next-line
                 .catch(errors => {
@@ -353,8 +353,8 @@ export default {
         },
 
         reloadTable(tableProps) {
-            this.getData(this.url, tableProps);
-            this.getDataTaken(this.urlTaken, tableProps);
+            this.getCourses(this.url, tableProps);
+            this.getCoursesTaken(this.urlTaken, tableProps);
         },
 
         displayRow(data) {
@@ -437,7 +437,7 @@ export default {
                 });
         },
 
-        deleteCourse(dataTaken) {
+        deleteCourse(coursesTaken) {
             Swal.fire({
                 title: "Are you sure?",
                 icon: "warning",
@@ -448,7 +448,7 @@ export default {
             }).then(result => {
                 if (result.value) {
                     this.form
-                        .delete(this.urlTaken + `${dataTaken.id}`)
+                        .delete(this.urlTaken + `${coursesTaken.id}`)
                         .then(() => {
                             this.$Progress.start();
                             Swal.fire("Deleted!", "Course deleted.", "success");

@@ -69,23 +69,19 @@ let routes = [{
         component: require("./components/Dashboard.vue").default
     },
     {
-        path: "/admin-dashboard",
-        component: require("./components/AdminHome.vue").default
-    },
-    {
         path: "/profile",
         component: require("./components/Profile.vue").default
     },
     {
-        path: "/users",
+        path: "/admin/users",
         component: require("./components/Users.vue").default
     },
     {
-        path: "/assignments",
-        component: require("./components/Assignments.vue").default
+        path: "/agenda/assignments",
+        component: require("./components/Assignments.vue").default,
     },
     {
-        path: "/edit-profile",
+        path: "/admin/edit-profile",
         component: require("./components/EditProfile.vue").default
     },
     // {
@@ -93,7 +89,7 @@ let routes = [{
     //     component: require("./components/Developer.vue").default
     // },
     {
-        path: "/exams",
+        path: "/agenda/exams",
         component: require("./components/Exams.vue").default
     },
     {
@@ -109,7 +105,7 @@ let routes = [{
         component: require("./components/Teachers.vue").default
     },
     {
-        path: "/edit-teachers",
+        path: "/admin/edit-teachers",
         component: require("./components/EditTeachers.vue").default
     },
     {
@@ -181,6 +177,16 @@ Vue.component(
 Vue.component(
     "example-component",
     require("./components/ExampleComponent.vue").default
+);
+
+Vue.component(
+    "logo",
+    require("./components/Logo.vue").default
+);
+
+Vue.component(
+    "profile-pic",
+    require("./components/ProfilePicture.vue").default
 );
 
 /**

@@ -30,6 +30,8 @@ Route::group(['middleware' => 'isAdmin'], function () {
     Route::get('edit-courses', 'HomeController@index');
 });
 
+Route::get('admin/{path}', 'HomeController@index')->where('path', '.*');
+Route::get('agenda/{path}', 'HomeController@index')->where('path', '.*');
+
 Route::get('{path}', 'HomeController@index')->where('path', '.*');
-//Route::get('agenda/{path}', 'HomeController@index')->where('path', '.*');
 // fixes 404 error caused by trying to find a laravel page by fetching whatever values inside {path}

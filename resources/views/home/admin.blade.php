@@ -150,9 +150,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <div class="sidebar">
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-        <div class="image">
-          <img src="img/profile/{{{ Auth::user()->photo }}}" class="img-circle elevation-2" onerror="this.src='img/profile/default.png';this.onerror=''">
-        </div>
+        <profile-pic userphoto="{{ Auth::user()->photo }}"></profile-pic>
         <div class="info">
           <router-link to="/profile" class="d-block">
             {{ Auth::user()->name }}
@@ -166,7 +164,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
             <li class="nav-item">
-                <router-link to="/admin-dashboard" class="nav-link">
+                <router-link to="/admin/dashboard" class="nav-link">
                     <i class="fas fa-home nav-icon"></i>
                     <p>
                         Dashboard
@@ -174,7 +172,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 </router-link>
             </li>
             <li class="nav-item">
-                <router-link to="/users" class="nav-link">
+                <router-link to="/admin/users" class="nav-link">
                 <i class="fas fa-users nav-icon"></i>
                 <p>
                     Users
@@ -182,7 +180,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 </router-link>
             </li>
             <li class="nav-item">
-                <router-link to="/edit-profile" class="nav-link">
+                <router-link to="/admin/edit-profile" class="nav-link">
                 <i class="fas fa-user nav-icon"></i>
                 <p>
                     Profiles
@@ -190,7 +188,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 </router-link>
             </li>
             <li class="nav-item">
-                <router-link to="/edit-courses" class="nav-link">
+                <router-link to="/admin/edit-courses" class="nav-link">
                 <i class="fas fa-graduation-cap nav-icon"></i>
                 <p>
                     Courses
@@ -198,7 +196,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 </router-link>
             </li>
             <li class="nav-item">
-                <router-link to="/edit-teachers" class="nav-link">
+                <router-link to="/admin/edit-teachers" class="nav-link">
                 <i class="fas fa-user-graduate nav-icon"></i>
                 <p>
                     Teachers

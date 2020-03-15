@@ -130,8 +130,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
     <a href="/home" class="brand-link">
-      <img src="./img/professor.png" alt="Student Platform Logo" class="brand-image img-circle elevation-3"
-           style="opacity: .8">
+        <logo></logo>
       <span class="brand-text font-weight-light">Student Platform</span>
     </a>
 
@@ -139,10 +138,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <div class="sidebar">
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-        <div class="image">
-          <img src="img/profile/{{{ Auth::user()->photo }}}" class="img-circle elevation-2" onerror="this.src='img/profile/default.png';this.onerror=''">
-        </div>
-        <div class="info">
+        <profile-pic userphoto="{{ Auth::user()->photo }}"></profile-pic>        <div class="info">
           <router-link to="/profile" class="d-block">
             {{ Auth::user()->name }}
           </router-link>
@@ -189,7 +185,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         </router-link>
                     </li>
                     <li class="nav-item">
-                        <router-link to="/assignments" class="nav-link">
+                        <router-link to="/agenda/assignments" class="nav-link">
                             <i class="fas fa-clipboard nav-icon"></i>
                             <p>
                                 Assignments
@@ -197,7 +193,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         </router-link>
                     </li>
                     <li class="nav-item">
-                       <router-link to="/exams" class="nav-link">
+                       <router-link to="/agenda/exams" class="nav-link">
                             <i class="fas fa-book nav-icon"></i>
                             <p>
                                 Exams

@@ -10,8 +10,16 @@ export default {
 
     data() {
         return {
-            url: "/img/profile/" + this.userphoto
+            url: this.userphoto
+                ? "/img/profile/" + this.userphoto
+                : "/img/profile/default.png"
         };
+    },
+
+    methods: {
+        defaultPhoto() {
+            //
+        }
     }
 };
 </script>

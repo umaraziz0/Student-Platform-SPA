@@ -4,7 +4,7 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <h2 class="card-title">Users Table</h2>
+                        <h2 class="card-title mb-0">Users Table</h2>
 
                         <div class="card-tools">
                             <button
@@ -222,6 +222,7 @@ export default {
     data() {
         return {
             editMode: false,
+            url: "/api/user/",
             users: {},
             form: new Form({
                 id: "",
@@ -250,15 +251,15 @@ export default {
             this.form.fill(user);
         },
 
-        loadUsers() {
+        loadUsers(url = this.url) {
             //Send request to fetch data of all users
-            axios.get("api/user").then(({ data }) => (this.users = data.data));
+            axios.get(url).then(({ data }) => (this.users = data.data));
         },
 
-        createUser() {
+        createUser(url = this.url) {
             this.$Progress.start();
             this.form
-                .post("api/user")
+                .post(url)
                 .then(() => {
                     $("#addNew").modal("hide");
                     Toast.fire({
@@ -273,10 +274,10 @@ export default {
                 });
         },
 
-        editUser() {
+        editUser(url = this.url) {
             this.$Progress.start();
             this.form
-                .put("api/user/" + this.form.id)
+                .put(url + this.form.id)
                 .then(() => {
                     $("#addNew").modal("hide");
                     Toast.fire({
@@ -291,7 +292,7 @@ export default {
                 });
         },
 
-        deleteUser(id) {
+        deleteUser(id, url = this.url) {
             Swal.fire({
                 title: "Are you sure?",
                 icon: "warning",
@@ -303,7 +304,7 @@ export default {
                 if (result.value) {
                     // Send request to delete user
                     this.form
-                        .delete("api/user/" + id)
+                        .delete(url + id)
                         .then(() => {
                             this.$Progress.start();
                             Swal.fire("Deleted!", "User deleted.", "success");

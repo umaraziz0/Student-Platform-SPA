@@ -65,6 +65,26 @@ import VueRouter from "vue-router";
 Vue.use(VueRouter);
 
 let routes = [{
+        path: "/admin/dashboard",
+        component: require("./components/AdminHome.vue").default
+    },
+    {
+        path: "/admin/users",
+        component: require("./components/Users.vue").default
+    },
+    {
+        path: "/edit-profile",
+        component: require("./components/EditProfile.vue").default
+    },
+    {
+        path: "/admin/edit-courses",
+        component: require("./components/EditCourses.vue").default
+    },
+    {
+        path: "/admin/edit-teachers",
+        component: require("./components/EditTeachers.vue").default
+    },
+    {
         path: "/home",
         component: require("./components/Dashboard.vue").default
     },
@@ -73,48 +93,16 @@ let routes = [{
         component: require("./components/Profile.vue").default
     },
     {
-        path: "/admin/users",
-        component: require("./components/Users.vue").default
+        path: "/todo",
+        component: require("./components/Todo.vue").default
     },
     {
         path: "/agenda/assignments",
         component: require("./components/Assignments.vue").default,
     },
     {
-        path: "/admin/edit-profile",
-        component: require("./components/EditProfile.vue").default
-    },
-    // {
-    //     path: "/developer",
-    //     component: require("./components/Developer.vue").default
-    // },
-    {
         path: "/agenda/exams",
         component: require("./components/Exams.vue").default
-    },
-    {
-        path: "/courses",
-        component: require("./components/Courses.vue").default
-    },
-    {
-        path: "/edit-courses",
-        component: require("./components/EditCourses.vue").default
-    },
-    {
-        path: "/teachers",
-        component: require("./components/Teachers.vue").default
-    },
-    {
-        path: "/admin/edit-teachers",
-        component: require("./components/EditTeachers.vue").default
-    },
-    {
-        path: "/grades",
-        component: require("./components/Grades.vue").default
-    },
-    {
-        path: "/todo",
-        component: require("./components/Todo.vue").default
     },
     {
         path: "/calendar",
@@ -125,9 +113,25 @@ let routes = [{
         component: require("./components/Timetable.vue").default
     },
     {
+        path: "/grades",
+        component: require("./components/Grades.vue").default
+    },
+    {
+        path: "/courses",
+        component: require("./components/Courses.vue").default
+    },
+    {
+        path: "/teachers",
+        component: require("./components/Teachers.vue").default
+    },
+    {
         path: "*",
         component: require("./components/404.vue").default
-    }
+    },
+    // {
+    //     path: "/developer",
+    //     component: require("./components/Developer.vue").default
+    // },
 ];
 
 const router = new VueRouter({

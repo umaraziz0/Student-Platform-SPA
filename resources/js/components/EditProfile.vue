@@ -318,27 +318,30 @@
                                         >
                                         <div class="col-sm-10">
                                             <div class="input-group">
-                                            <div class="custom-file">
-                                                <input
-                                                    type="file"
-                                                    @change="updatePhoto"
-                                                    name="photo"
-                                                    class="form-control"
-                                                    id="photo"
-                                                />
-                                                <label
-                                                    for="photo"
-                                                    class="custom-file-label"
-                                                ></label></div>
+                                                <div class="custom-file">
+                                                    <input
+                                                        type="file"
+                                                        @change="updatePhoto"
+                                                        name="photo"
+                                                        class="form-control"
+                                                        id="photo"
+                                                    />
+                                                    <label
+                                                        for="photo"
+                                                        class="custom-file-label"
+                                                    ></label>
+                                                </div>
                                                 <div class="input-group-append">
                                                     <span
                                                         class="input-group-text"
                                                         style="cursor:pointer"
-                                                        @click.prevent="removePhoto"
+                                                        @click.prevent="
+                                                            removePhoto
+                                                        "
                                                         >Remove
                                                     </span>
                                                 </div>
-                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -370,6 +373,7 @@
 export default {
     data() {
         return {
+            url: "/api/profile/",
             form: new Form({
                 id: "",
                 student_id: "",
@@ -399,8 +403,8 @@ export default {
             return "img/profile/" + this.form.photo;
         },
 
-        getInfo() {
-            axios.get("api/profile").then(({ data }) => this.form.fill(data));
+        getInfo(url = this.url) {
+            axios.get(url).then(({ data }) => this.form.fill(data));
             // this.getPhoto();
         },
 

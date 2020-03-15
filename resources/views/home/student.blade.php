@@ -130,7 +130,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
     <a href="/home" class="brand-link">
-        <logo></logo>
+          <logo></logo>
       <span class="brand-text font-weight-light">Student Platform</span>
     </a>
 

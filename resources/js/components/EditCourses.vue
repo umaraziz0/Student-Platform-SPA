@@ -187,7 +187,7 @@ export default {
     data() {
         return {
             editMode: false,
-            url: "api/course/",
+            url: "/api/course/",
             data: {},
             formData: {},
             tableProps: {

@@ -22,15 +22,15 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index');
 
-Route::group(['middleware' => 'isAdmin'], function () {
-    Route::get('admin-dashboard', 'HomeController@index');
-    Route::get('users', 'HomeController@index');
-    Route::get('edit-courses', 'HomeController@index');
-    Route::get('edit-profile', 'HomeController@index');
-    Route::get('edit-courses', 'HomeController@index');
-});
+// Route::group(['middleware' => 'isAdmin'], function () {
+//     Route::get('admin-dashboard', 'HomeController@index');
+//     Route::get('users', 'HomeController@index');
+//     Route::get('edit-courses', 'HomeController@index');
+//     Route::get('edit-profile', 'HomeController@index');
+//     Route::get('edit-courses', 'HomeController@index');
+// });
 
-Route::get('admin/{path}', 'HomeController@index')->where('path', '.*');
+Route::get('admin/{path}', 'HomeController@index')->where('path', '.*')->middleware('isAdmin');
 Route::get('agenda/{path}', 'HomeController@index')->where('path', '.*');
 
 Route::get('{path}', 'HomeController@index')->where('path', '.*');

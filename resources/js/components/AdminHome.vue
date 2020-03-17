@@ -1,13 +1,11 @@
 <template>
     <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card">
-                    <div class="card-header">Example Component</div>
-
-                    <div class="card-body">
-                        I'm an example component.
-                    </div>
+        <div class="row justify-content-center mt-5">
+            <div class="col-5 text-right">
+                <i class="fa fa-cogs fa-10x" aria-hidden="true"></i>
+            </div>
+                <div class="col-7 align-self-center">
+                    <h1 class="fa-5x">Admin Panel</h1>
                 </div>
             </div>
         </div>

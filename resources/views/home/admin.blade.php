@@ -188,6 +188,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 </router-link>
             </li>
             <li class="nav-item">
+                <router-link to="/admin/edit-grades" class="nav-link">
+                <i class="fas fa-star nav-icon"></i>
+                <p>
+                    Grades
+                </p>
+                </router-link>
+            </li>
+            <li class="nav-item">
                 <router-link to="/admin/edit-courses" class="nav-link">
                 <i class="fas fa-graduation-cap nav-icon"></i>
                 <p>

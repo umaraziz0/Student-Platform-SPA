@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddCourseNameToGradesTable extends Migration
+class AddStudentNameToGradesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,9 +14,7 @@ class AddCourseNameToGradesTable extends Migration
     public function up()
     {
         Schema::table('grades', function (Blueprint $table) {
-            $table->string('course_name');
-            $table->foreign('course_name')->references('course_name')->on('courses')
-                ->onUpdate('cascade')->onDelete('cascade');
+            $table->string('student_name');
         });
     }
 
@@ -28,7 +26,7 @@ class AddCourseNameToGradesTable extends Migration
     public function down()
     {
         Schema::table('grades', function (Blueprint $table) {
-            $table->dropColumn('course_name');
+            $table->dropColumn('student_name');
         });
     }
 }

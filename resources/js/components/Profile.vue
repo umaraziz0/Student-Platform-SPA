@@ -543,11 +543,11 @@ export default {
 
     created() {
         this.$Progress.start();
-        window.scrollTo(0, 0);
         this.getInfo();
         Fire.$on("refresh", () => {
             this.getInfo();
         });
+        window.scrollTo(0, 0);
         this.$Progress.finish();
     }
 };

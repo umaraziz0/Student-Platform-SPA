@@ -170,7 +170,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
               <li class="nav-item has-treeview menu-open">
                 <a href="#" class="nav-link">
                   <i class="fas fa-clipboard-list nav-icon"></i>
-                  <p>
+                    <p>
                       Agenda
                       <i class="right fas fa-angle-left"></i>
                   </p>

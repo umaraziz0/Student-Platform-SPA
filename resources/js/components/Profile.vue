@@ -396,7 +396,7 @@
                                                         class="input-group-text"
                                                         style="cursor:pointer"
                                                         @click.prevent="
-                                                            removePhoto
+                                                            removePhoto(form.id)
                                                         "
                                                         >Remove
                                                     </span>
@@ -408,7 +408,7 @@
                                         <div class="offset-sm-2 col-sm-10">
                                             <button
                                                 type="submit"
-                                                @click.prevent="updateInfo"
+                                                @click.prevent="updateInfo()"
                                                 class="btn btn-danger"
                                             >
                                                 Submit
@@ -434,6 +434,7 @@ export default {
     data() {
         return {
             fileName: "",
+            url: "/api/profile/",
             form: new Form({
                 id: "",
                 student_id: "",
@@ -460,26 +461,25 @@ export default {
 
             // return photo;
 
-            return "img/profile/" + this.form.photo;
+            return "/img/profile/" + this.form.photo;
         },
 
         getFileName() {
             return this.fileName.length !== 0 ? this.fileName : "Choose file";
         },
 
-        getInfo() {
-            axios.get("api/profile").then(({ data }) => this.form.fill(data));
-            // this.getPhoto();
+        getInfo(url = this.url) {
+            axios.get(url).then(({ data }) => this.form.fill(data));
         },
 
         defaultPhoto(e) {
-            e.target.src = "img/profile/default.png";
+            e.target.src = "/img/profile/default.png";
         },
 
-        removePhoto() {
+        removePhoto(id) {
             this.$Progress.start();
             this.form
-                .delete("api/removePhoto")
+                .delete("/api/removePhoto/" + id)
                 .then(() => {
                     this.$Progress.finish();
                     Toast.fire({
@@ -521,10 +521,10 @@ export default {
             }
         },
 
-        updateInfo() {
+        updateInfo(url = this.url) {
             this.$Progress.start();
             this.form
-                .put("api/profile")
+                .put(url)
                 .then(() => {
                     this.$Progress.finish();
                     Swal.fire({
@@ -532,7 +532,7 @@ export default {
                         title: "Profile updated.",
                         timer: 1500
                     }).then(() => {
-                        location.reload();
+                        window.location = location.href;
                     });
                 })
                 .catch(() => {

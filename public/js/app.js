@@ -21582,10 +21582,35 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
+      userId: 2,
+      profile: "",
+      fileName: "",
       url: "/api/profile/",
+      users: "",
       form: new Form({
         id: "",
         student_id: "",
@@ -21602,51 +21627,80 @@ __webpack_require__.r(__webpack_exports__);
       })
     };
   },
+  created: function created() {
+    var _this = this;
+
+    this.$Progress.start();
+    this.getUsers();
+    this.getUser();
+    Fire.$on("refresh", function () {
+      _this.getInfo();
+    });
+    this.$Progress.finish();
+  },
   methods: {
     getPhoto: function getPhoto() {
-      //   let photo =
+      // let photo =
       //     this.form.photo.length > 100
-      //       ? this.form.photo
-      //       : "img/profile/" + this.form.photo;
-      //   return photo;
-      return "img/profile/" + this.form.photo;
+      //         ? this.form.photo
+      //         : "img/profile/" + this.form.photo;
+      // return photo;
+      return "/img/profile/" + this.form.photo;
     },
-    getInfo: function getInfo() {
-      var _this = this;
-
-      var url = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.url;
-      axios.get(url).then(function (_ref) {
-        var data = _ref.data;
-        return _this.form.fill(data);
-      }); // this.getPhoto();
+    getFileName: function getFileName() {
+      return this.fileName.length !== 0 ? this.fileName : "Choose file";
     },
-    defaultPhoto: function defaultPhoto(e) {
-      e.target.src = "img/profile/default.png";
-    },
-    removePhoto: function removePhoto() {
+    getUsers: function getUsers() {
       var _this2 = this;
 
+      axios.get("/api/user/").then(function (res) {
+        _this2.users = res.data;
+      })["catch"](function (err) {
+        console.error(err);
+      });
+    },
+    getUser: function getUser(userId) {
+      var _this3 = this;
+
+      userId = userId ? userId : 2;
+      axios.get("/api/user/" + userId).then(function (res) {
+        _this3.form.fill(res.data);
+      })["catch"](function (err) {
+        console.error(err);
+      });
+    },
+    defaultPhoto: function defaultPhoto(e) {
+      e.target.src = "/img/profile/default.png";
+    },
+    removePhoto: function removePhoto(userId) {
+      var _this4 = this;
+
       this.$Progress.start();
-      this.form["delete"]("api/removePhoto").then(function () {
-        _this2.$Progress.finish();
+      this.form["delete"]("/api/removePhoto/" + userId).then(function () {
+        _this4.$Progress.finish();
 
         Toast.fire({
           icon: "success",
-          title: "Picture removed."
+          title: "Picture removed.",
+          timer: 1500
+        }).then(function () {
+          window.location = location.href;
         });
-        Fire.$emit("refresh");
-      })["catch"](function () {
-        _this2.$Progress.fail();
+      })["catch"](function (errors) {
+        _this4.$Progress.fail();
 
+        var response = JSON.parse(errors.request.response);
         Toast.fire({
           icon: "error",
-          title: "An error occurred."
+          title: response["message"]
         });
       });
     },
     updatePhoto: function updatePhoto(e) {
-      var _this3 = this;
+      var _this5 = this;
 
+      var photoName = document.getElementById("inputPhoto").value;
+      this.fileName = photoName.split("\\").pop();
       var file = e.target.files[0];
       var reader = new FileReader();
 
@@ -21654,7 +21708,7 @@ __webpack_require__.r(__webpack_exports__);
         //change the file to base64
         reader.onloadend = function (file) {
           // console.log("RESULT", reader.result);
-          _this3.form.photo = reader.result;
+          _this5.form.photo = reader.result;
         };
 
         reader.readAsDataURL(file);
@@ -21667,31 +21721,24 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     updateInfo: function updateInfo() {
-      var _this4 = this;
+      var _this6 = this;
 
+      var url = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.url;
       this.$Progress.start();
-      this.form.put("api/profile").then(function () {
-        _this4.$Progress.finish();
+      this.form.put(url).then(function () {
+        _this6.$Progress.finish();
 
         Swal.fire({
           icon: "success",
-          title: "Profile updated."
+          title: "Profile updated.",
+          timer: 1500
+        }).then(function () {
+          window.location = location.href;
         });
-        Fire.$emit("refresh"); // window.scrollTo(0, 0);
       })["catch"](function () {
-        _this4.$Progress.fail();
+        _this6.$Progress.fail();
       });
     }
-  },
-  created: function created() {
-    var _this5 = this;
-
-    this.$Progress.start();
-    this.getInfo();
-    Fire.$on("refresh", function () {
-      _this5.getInfo();
-    });
-    this.$Progress.finish();
   }
 });
 
@@ -23233,6 +23280,7 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       fileName: "",
+      url: "/api/profile/",
       form: new Form({
         id: "",
         student_id: "",
@@ -23256,7 +23304,7 @@ __webpack_require__.r(__webpack_exports__);
       //         ? this.form.photo
       //         : "img/profile/" + this.form.photo;
       // return photo;
-      return "img/profile/" + this.form.photo;
+      return "/img/profile/" + this.form.photo;
     },
     getFileName: function getFileName() {
       return this.fileName.length !== 0 ? this.fileName : "Choose file";
@@ -23264,19 +23312,20 @@ __webpack_require__.r(__webpack_exports__);
     getInfo: function getInfo() {
       var _this = this;
 
-      axios.get("api/profile").then(function (_ref) {
+      var url = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.url;
+      axios.get(url).then(function (_ref) {
         var data = _ref.data;
         return _this.form.fill(data);
-      }); // this.getPhoto();
+      });
     },
     defaultPhoto: function defaultPhoto(e) {
-      e.target.src = "img/profile/default.png";
+      e.target.src = "/img/profile/default.png";
     },
-    removePhoto: function removePhoto() {
+    removePhoto: function removePhoto(id) {
       var _this2 = this;
 
       this.$Progress.start();
-      this.form["delete"]("api/removePhoto").then(function () {
+      this.form["delete"]("/api/removePhoto/" + id).then(function () {
         _this2.$Progress.finish();
 
         Toast.fire({
@@ -23322,8 +23371,9 @@ __webpack_require__.r(__webpack_exports__);
     updateInfo: function updateInfo() {
       var _this4 = this;
 
+      var url = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.url;
       this.$Progress.start();
-      this.form.put("api/profile").then(function () {
+      this.form.put(url).then(function () {
         _this4.$Progress.finish();
 
         Swal.fire({
@@ -23331,7 +23381,7 @@ __webpack_require__.r(__webpack_exports__);
           title: "Profile updated.",
           timer: 1500
         }).then(function () {
-          location.reload();
+          window.location = location.href;
         });
       })["catch"](function () {
         _this4.$Progress.fail();
@@ -94246,11 +94296,54 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "container" }, [
     _c("div", { staticClass: "row justify-content-center" }, [
-      _c("div", { staticClass: "col-md-10 text-center" }, [
-        _c("h2", [_vm._v(_vm._s(_vm.form.name))])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "col-md-8 text-center mb-3" }, [
+      _c("div", { staticClass: "col-md-4 text-center" }, [
+        _c(
+          "select",
+          {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.userId,
+                expression: "userId"
+              }
+            ],
+            staticClass: "form-control",
+            on: {
+              change: [
+                function($event) {
+                  var $$selectedVal = Array.prototype.filter
+                    .call($event.target.options, function(o) {
+                      return o.selected
+                    })
+                    .map(function(o) {
+                      var val = "_value" in o ? o._value : o.value
+                      return val
+                    })
+                  _vm.userId = $event.target.multiple
+                    ? $$selectedVal
+                    : $$selectedVal[0]
+                },
+                function($event) {
+                  return _vm.getUser(_vm.userId)
+                }
+              ]
+            }
+          },
+          _vm._l(_vm.users.data, function(user) {
+            return _c(
+              "option",
+              { key: user.id, domProps: { value: user.id } },
+              [_vm._v(_vm._s(user.name))]
+            )
+          }),
+          0
+        )
+      ])
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "row justify-content-center" }, [
+      _c("div", { staticClass: "col-md-8 text-center mb-3 mt-3" }, [
         _c("img", {
           staticClass: "profile-user-img img-fluid img-circle",
           staticStyle: { width: "10em" },
@@ -94259,7 +94352,7 @@ var render = function() {
         })
       ]),
       _vm._v(" "),
-      _c("div", { staticClass: "col-md-8" }, [
+      _c("div", { staticClass: "col-md-10" }, [
         _c("div", { staticClass: "card" }, [
           _c("div", { staticClass: "card-header p-2 pl-3" }, [
             _vm._v("Edit Profile")
@@ -94675,6 +94768,9 @@ var render = function() {
                                 }
                               ],
                               staticClass: "custom-select",
+                              class: {
+                                "is-invalid": _vm.form.errors.has("major")
+                              },
                               attrs: { id: "inputMajor", name: "major" },
                               on: {
                                 change: function($event) {
@@ -94900,28 +94996,32 @@ var render = function() {
                         "label",
                         {
                           staticClass: "col-sm-2 col-form-label",
-                          attrs: { for: "photo" }
+                          attrs: { for: "inputPhoto" }
                         },
                         [_vm._v("Profile Picture")]
                       ),
                       _vm._v(" "),
-                      _c("div", { staticClass: "col-sm-10" }, [
+                      _c("div", { staticClass: "col-sm-8" }, [
                         _c("div", { staticClass: "input-group" }, [
                           _c("div", { staticClass: "custom-file" }, [
                             _c("input", {
-                              staticClass: "form-control",
+                              staticClass: "custom-file-input",
                               attrs: {
                                 type: "file",
-                                name: "photo",
-                                id: "photo"
+                                id: "inputPhoto",
+                                name: "photo"
                               },
                               on: { change: _vm.updatePhoto }
                             }),
                             _vm._v(" "),
-                            _c("label", {
-                              staticClass: "custom-file-label",
-                              attrs: { for: "photo" }
-                            })
+                            _c(
+                              "label",
+                              {
+                                staticClass: "custom-file-label",
+                                attrs: { for: "inputPhoto" }
+                              },
+                              [_vm._v(_vm._s(_vm.getFileName()))]
+                            )
                           ]),
                           _vm._v(" "),
                           _c("div", { staticClass: "input-group-append" }, [
@@ -94933,7 +95033,7 @@ var render = function() {
                                 on: {
                                   click: function($event) {
                                     $event.preventDefault()
-                                    return _vm.removePhoto($event)
+                                    return _vm.removePhoto(_vm.userId)
                                   }
                                 }
                               },
@@ -94958,7 +95058,7 @@ var render = function() {
                             on: {
                               click: function($event) {
                                 $event.preventDefault()
-                                return _vm.updateInfo($event)
+                                return _vm.updateInfo()
                               }
                             }
                           },
@@ -97120,7 +97220,7 @@ var render = function() {
                                 on: {
                                   click: function($event) {
                                     $event.preventDefault()
-                                    return _vm.removePhoto($event)
+                                    return _vm.removePhoto(_vm.form.id)
                                   }
                                 }
                               },
@@ -97145,7 +97245,7 @@ var render = function() {
                             on: {
                               click: function($event) {
                                 $event.preventDefault()
-                                return _vm.updateInfo($event)
+                                return _vm.updateInfo()
                               }
                             }
                           },

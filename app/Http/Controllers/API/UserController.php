@@ -61,7 +61,9 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        //
+        $user = User::findOrFail($id);
+
+        return $user;
     }
 
     public function profile()
@@ -72,7 +74,9 @@ class UserController extends Controller
 
     public function updateProfile(Request $request)
     {
-        $user =  auth('api')->user();
+        //updates the user info and profile
+
+        $user =  User::findOrFail($request->id);
 
         $this->validate($request, [
             'name' => 'required|string|max:255',
@@ -89,11 +93,11 @@ class UserController extends Controller
             // get the file and save it to a local directory
             $name = time() . '.' . explode('/', explode(":", substr($request->photo, 0, strpos($request->photo, ";")))[1])[1];
 
-            \Image::make($request->photo)->save(public_path('img/profile/') . $name);
+            \Image::make($request->photo)->save(public_path('/img/profile/') . $name);
 
             $request->merge(['photo' => $name]);
 
-            $userPhoto = public_path('img/profile/') . $currentPhoto;
+            $userPhoto = public_path('/img/profile/') . $currentPhoto;
             if (file_exists($userPhoto)) {
                 @unlink($userPhoto);
             }
@@ -108,8 +112,6 @@ class UserController extends Controller
         }
 
         $user->update($request->all());
-
-        return ['message' => 'success'];
     }
 
     /**
@@ -155,11 +157,11 @@ class UserController extends Controller
         $user->delete();
     }
 
-    public function removePhoto()
+    public function removePhoto($id)
     {
-        $user =  auth('api')->user();
+        $user = User::findOrFail($id);
 
-        $userPhoto = public_path('img/profile/') . $user->photo;
+        $userPhoto = public_path('/img/profile/') . $user->photo;
         if (file_exists($userPhoto)) {
             @unlink($userPhoto);
         }

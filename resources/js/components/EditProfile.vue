@@ -1,10 +1,23 @@
 <template>
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-10 text-center">
-                <h2>{{ form.name }}</h2>
+            <div class="col-md-4 text-center">
+                <select
+                    class="form-control"
+                    v-model="userId"
+                    @change="getUser(userId)"
+                >
+                    <option
+                        v-for="user in users.data"
+                        :key="user.id"
+                        :value="user.id"
+                        >{{ user.name }}</option
+                    >
+                </select>
             </div>
-            <div class="col-md-8 text-center mb-3">
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-md-8 text-center mb-3 mt-3">
                 <img
                     class="profile-user-img img-fluid img-circle"
                     :src="getPhoto()"
@@ -12,7 +25,7 @@
                     style="width: 10em"
                 />
             </div>
-            <div class="col-md-8">
+            <div class="col-md-10">
                 <div class="card">
                     <div class="card-header p-2 pl-3">Edit Profile</div>
                     <!-- /.card-header -->
@@ -211,6 +224,11 @@
                                             <select
                                                 v-model="form.major"
                                                 class="custom-select"
+                                                :class="{
+                                                    'is-invalid': form.errors.has(
+                                                        'major'
+                                                    )
+                                                }"
                                                 id="inputMajor"
                                                 name="major"
                                             >
@@ -312,31 +330,34 @@
                                     </div>
                                     <div class="form-group row">
                                         <label
-                                            for="photo"
+                                            for="inputPhoto"
                                             class="col-sm-2 col-form-label"
                                             >Profile Picture</label
                                         >
-                                        <div class="col-sm-10">
+                                        <div class="col-sm-8">
                                             <div class="input-group">
                                                 <div class="custom-file">
                                                     <input
+                                                        class="custom-file-input"
                                                         type="file"
                                                         @change="updatePhoto"
+                                                        id="inputPhoto"
                                                         name="photo"
-                                                        class="form-control"
-                                                        id="photo"
                                                     />
                                                     <label
-                                                        for="photo"
                                                         class="custom-file-label"
-                                                    ></label>
+                                                        for="inputPhoto"
+                                                        >{{
+                                                            getFileName()
+                                                        }}</label
+                                                    >
                                                 </div>
                                                 <div class="input-group-append">
                                                     <span
                                                         class="input-group-text"
                                                         style="cursor:pointer"
                                                         @click.prevent="
-                                                            removePhoto
+                                                            removePhoto(userId)
                                                         "
                                                         >Remove
                                                     </span>
@@ -348,7 +369,7 @@
                                         <div class="offset-sm-2 col-sm-10">
                                             <button
                                                 type="submit"
-                                                @click.prevent="updateInfo"
+                                                @click.prevent="updateInfo()"
                                                 class="btn btn-danger"
                                             >
                                                 Submit
@@ -373,7 +394,11 @@
 export default {
     data() {
         return {
+            userId: 2,
+            profile: "",
+            fileName: "",
             url: "/api/profile/",
+            users: "",
             form: new Form({
                 id: "",
                 student_id: "",
@@ -391,49 +416,88 @@ export default {
         };
     },
 
+    created() {
+        this.$Progress.start();
+        this.getUsers();
+        this.getUser();
+        Fire.$on("refresh", () => {
+            this.getInfo();
+        });
+        this.$Progress.finish();
+    },
+
     methods: {
         getPhoto() {
-            //   let photo =
+            // let photo =
             //     this.form.photo.length > 100
-            //       ? this.form.photo
-            //       : "img/profile/" + this.form.photo;
+            //         ? this.form.photo
+            //         : "img/profile/" + this.form.photo;
 
-            //   return photo;
+            // return photo;
 
-            return "img/profile/" + this.form.photo;
+            return "/img/profile/" + this.form.photo;
         },
 
-        getInfo(url = this.url) {
-            axios.get(url).then(({ data }) => this.form.fill(data));
-            // this.getPhoto();
+        getFileName() {
+            return this.fileName.length !== 0 ? this.fileName : "Choose file";
+        },
+
+        getUsers() {
+            axios
+                .get("/api/user/")
+                .then(res => {
+                    this.users = res.data;
+                })
+                .catch(err => {
+                    console.error(err);
+                });
+        },
+
+        getUser(userId) {
+            userId = userId ? userId : 2;
+
+            axios
+                .get("/api/user/" + userId)
+                .then(res => {
+                    this.form.fill(res.data);
+                })
+                .catch(err => {
+                    console.error(err);
+                });
         },
 
         defaultPhoto(e) {
-            e.target.src = "img/profile/default.png";
+            e.target.src = "/img/profile/default.png";
         },
 
-        removePhoto() {
+        removePhoto(userId) {
             this.$Progress.start();
             this.form
-                .delete("api/removePhoto")
+                .delete("/api/removePhoto/" + userId)
                 .then(() => {
                     this.$Progress.finish();
                     Toast.fire({
                         icon: "success",
-                        title: "Picture removed."
+                        title: "Picture removed.",
+                        timer: 1500
+                    }).then(() => {
+                        window.location = location.href;
                     });
-                    Fire.$emit("refresh");
                 })
-                .catch(() => {
+                .catch(errors => {
                     this.$Progress.fail();
+                    let response = JSON.parse(errors.request.response);
                     Toast.fire({
                         icon: "error",
-                        title: "An error occurred."
+                        title: response["message"]
                     });
                 });
         },
 
         updatePhoto(e) {
+            let photoName = document.getElementById("inputPhoto").value;
+            this.fileName = photoName.split("\\").pop();
+
             let file = e.target.files[0];
             let reader = new FileReader();
             if (file["size"] < 2111775) {
@@ -452,32 +516,24 @@ export default {
             }
         },
 
-        updateInfo() {
+        updateInfo(url = this.url) {
             this.$Progress.start();
             this.form
-                .put("api/profile")
+                .put(url)
                 .then(() => {
                     this.$Progress.finish();
                     Swal.fire({
                         icon: "success",
-                        title: "Profile updated."
+                        title: "Profile updated.",
+                        timer: 1500
+                    }).then(() => {
+                        window.location = location.href;
                     });
-                    Fire.$emit("refresh");
-                    // window.scrollTo(0, 0);
                 })
                 .catch(() => {
                     this.$Progress.fail();
                 });
         }
-    },
-
-    created() {
-        this.$Progress.start();
-        this.getInfo();
-        Fire.$on("refresh", () => {
-            this.getInfo();
-        });
-        this.$Progress.finish();
     }
 };
 </script>

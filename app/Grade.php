@@ -24,11 +24,5 @@ class Grade extends Model
         'grade' => [
             'searchable' => true,
         ],
-        // 'course_name' => [
-        //     'searchable' => true
-        // ],
-        // 'student_name' => [
-        //     'searchable' => true
-        // ]
     ];
 }

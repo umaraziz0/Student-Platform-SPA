@@ -1,86 +1,59 @@
 <template>
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h2 class="card-title mb-0">Users Table</h2>
-
-                        <div class="card-tools">
-                            <button
-                                type="button"
-                                class="btn btn-block btn-success"
-                                v-on:click="createModal"
-                            >
-                                <i class="fas fa-user-plus"></i>
-                            </button>
-                            <!-- <div class="input-group input-group-sm" style="width: 150px;">
-                                <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
-
-                                <div class="input-group-append">
-                                <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
+            <div class="col-md-10">
+                <h2 class="text-center">Users List</h2>
+                <hr />
+                <br />
+                <data-table
+                    :data="data"
+                    :columns="columns"
+                    @onTablePropsChanged="reloadTable"
+                    ><div slot="filters" slot-scope="{ tableData, perPage }">
+                        <div class="row mb-2">
+                            <div class="col-md-4">
+                                <select
+                                    class="form-control custom-select"
+                                    v-model="tableData.length"
+                                >
+                                    <option
+                                        :key="page"
+                                        v-for="page in perPage"
+                                        >{{ page }}</option
+                                    >
+                                </select>
+                            </div>
+                            <div class="col-md-4 text-center">
+                                <div class="list-inline-item">
+                                    <button
+                                        type="button"
+                                        class="btn btn-block btn-success"
+                                        v-on:click="createModal()"
+                                    >
+                                        <i class="fas fa-plus"> </i> Add User
+                                    </button>
                                 </div>
-              </div>-->
+                            </div>
+                            <div class="col-md-4">
+                                <input
+                                    name="name"
+                                    class="form-control"
+                                    v-model="tableData.search"
+                                    placeholder="Search Table"
+                                />
+                            </div>
                         </div>
                     </div>
-                    <!-- /.card-header -->
-                    <div class="card-body table-responsive p-0">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Student ID</th>
-                                    <th>Name</th>
-                                    <th>Email</th>
-                                    <th>Admin</th>
-                                    <th>Registered at</th>
-                                    <th>Modify</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr v-for="user in users" :key="user.id">
-                                    <td>{{ user.id }}</td>
-                                    <td>{{ user.student_id }}</td>
-                                    <td>{{ user.name }}</td>
-                                    <td>{{ user.email }}</td>
-                                    <td v-if="user.is_admin">True</td>
-                                    <td v-else>False</td>
-                                    <td>{{ user.created_at | myDate }}</td>
-                                    <td>
-                                        <div class="btn-group">
-                                            <button
-                                                type="button"
-                                                class="btn btn-info"
-                                                v-on:click="editModal(user)"
-                                            >
-                                                <i
-                                                    class="fas fa-edit text-white"
-                                                ></i>
-                                            </button>
-                                            <button
-                                                type="button"
-                                                class="btn btn-danger"
-                                                v-on:click="deleteUser(user.id)"
-                                            >
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <!-- /.card-body -->
-                </div>
+                </data-table>
             </div>
         </div>
         <!-- Modal -->
         <div
             class="modal fade"
-            id="addNew"
+            id="newModal"
             tabindex="-1"
             role="dialog"
-            aria-labelledby="addNewLabel"
+            aria-labelledby="newModalLabel"
             aria-hidden="true"
         >
             <div class="modal-dialog" role="document">
@@ -103,27 +76,9 @@
                     >
                         <div class="modal-body">
                             <div class="form-group">
-                                <label for="inputName">Name:</label>
+                                <label for="inputStudentID">Student ID:</label>
                                 <input
-                                    type="text"
-                                    v-model="form.name"
-                                    class="form-control"
-                                    :class="{
-                                        'is-invalid': form.errors.has('name')
-                                    }"
-                                    id="inputName"
-                                    placeholder="Name"
-                                    field="name"
-                                />
-                                <has-error
-                                    :form="form"
-                                    field="name"
-                                ></has-error>
-                            </div>
-                            <div class="form-group">
-                                <label for="studentId">Student ID:</label>
-                                <input
-                                    type="integer"
+                                    type="number"
                                     v-model="form.student_id"
                                     class="form-control"
                                     :class="{
@@ -131,8 +86,7 @@
                                             'student_id'
                                         )
                                     }"
-                                    id="studentId"
-                                    placeholder="Student ID"
+                                    id="inputStudentID"
                                     field="student_id"
                                 />
                                 <has-error
@@ -141,17 +95,33 @@
                                 ></has-error>
                             </div>
                             <div class="form-group">
-                                <label for="inputEmail">Email address:</label>
+                                <label for="inputName">Name:</label>
+                                <input
+                                    type="text"
+                                    v-model="form.name"
+                                    name="name"
+                                    id="inputName"
+                                    class="form-control"
+                                    :class="{
+                                        'is-invalid': form.errors.has('name')
+                                    }"
+                                />
+                                <has-error
+                                    :form="form"
+                                    field="name"
+                                ></has-error>
+                            </div>
+                            <div class="form-group">
+                                <label for="inputEmail">Email:</label>
                                 <input
                                     type="email"
                                     v-model="form.email"
+                                    name="email"
+                                    id="inputEmail"
                                     class="form-control"
                                     :class="{
                                         'is-invalid': form.errors.has('email')
                                     }"
-                                    id="inputEmail"
-                                    placeholder="Email"
-                                    field="email"
                                 />
                                 <has-error
                                     :form="form"
@@ -163,15 +133,14 @@
                                 <input
                                     type="password"
                                     v-model="form.password"
+                                    name="password"
+                                    id="inputPassword"
                                     class="form-control"
                                     :class="{
                                         'is-invalid': form.errors.has(
                                             'password'
                                         )
                                     }"
-                                    id="inputPassword"
-                                    placeholder="Password"
-                                    field="password"
                                 />
                                 <has-error
                                     :form="form"
@@ -223,68 +192,165 @@ export default {
         return {
             editMode: false,
             url: "/api/user/",
-            users: {},
+            data: {},
+            tableProps: {
+                search: "",
+                length: 10,
+                column: "id",
+                dir: "asc"
+            },
             form: new Form({
                 id: "",
                 student_id: "",
                 name: "",
                 email: "",
                 password: "",
-                is_admin: false
-            })
+                is_admin: ""
+            }),
+            columns: [
+                {
+                    label: "User ID",
+                    name: "id",
+                    columnName: "id",
+                    orderable: true
+                },
+                {
+                    label: "Student ID",
+                    name: "student_id",
+                    columnName: "student_id",
+                    orderable: true
+                },
+                {
+                    label: "Name",
+                    name: "name",
+                    columnName: "name",
+                    orderable: true
+                },
+                {
+                    label: "Email",
+                    name: "email",
+                    columnName: "email",
+                    orderable: true
+                },
+                {
+                    label: "Admin",
+                    name: "is_admin",
+                    columnName: "is_admin",
+                    orderable: true
+                },
+                {
+                    label: "Registered at",
+                    name: "created_at",
+                    columnName: "created_at",
+                    orderable: true
+                },
+                {
+                    label: "Edit",
+                    name: "Edit",
+                    orderable: false,
+                    width: 1,
+                    classes: {
+                        btn: true,
+                        "btn-primary": true,
+                        "btn-sm": true
+                    },
+                    event: "click",
+                    handler: this.editModal,
+                    component: ButtonEdit
+                },
+                {
+                    label: "Delete",
+                    name: "Delete",
+                    orderable: false,
+                    classes: {
+                        btn: true,
+                        "btn-primary": true,
+                        "btn-sm": true
+                    },
+                    event: "click",
+                    handler: this.deleteUser,
+                    component: ButtonDelete
+                }
+            ]
         };
+    },
+    created() {
+        this.getData(this.url);
+    },
+
+    components: {
+        ButtonEdit,
+        ButtonDelete
     },
 
     methods: {
+        getData(url = this.url, options = this.tableProps) {
+            axios
+                .get(url, {
+                    params: options
+                })
+                .then(response => {
+                    this.data = response.data;
+                })
+                // eslint-disable-next-line
+                .catch(errors => {
+                    console.log(errors);
+                });
+        },
+
+        formatAdmin(data) {
+            console.log(data);
+        },
+
+        reloadTable(tableProps) {
+            this.getData(this.url, tableProps);
+        },
+
         createModal() {
             this.editMode = false;
             this.form.clear();
             this.form.reset();
-            $("#addNew").modal("show");
+            $("#newModal").modal("show");
         },
 
-        editModal(user) {
-            this.editMode = true;
-            this.form.clear();
-            this.form.reset();
-            $("#addNew").modal("show");
-            this.form.fill(user);
-        },
-
-        loadUsers(url = this.url) {
-            //Send request to fetch data of all users
-            axios.get(url).then(({ data }) => (this.users = data.data));
-        },
-
-        createUser(url = this.url) {
+        createUser() {
             this.$Progress.start();
             this.form
-                .post(url)
+                .post(this.url)
                 .then(() => {
-                    $("#addNew").modal("hide");
+                    $("#newModal").modal("hide");
                     Toast.fire({
                         icon: "success",
-                        title: "User created successfully"
+                        title: "User added!"
                     });
-                    Fire.$emit("refresh");
+                    this.reloadTable();
                     this.$Progress.finish();
                 })
-                .catch(() => {
+                .catch(errors => {
                     this.$Progress.fail();
+                    console.log(errors);
                 });
         },
 
-        editUser(url = this.url) {
+        editModal(data) {
+            this.editMode = true;
+            this.form.clear();
+            this.form.reset();
+            $("#newModal").modal("show");
+            this.form.fill(data);
+        },
+
+        editUser() {
             this.$Progress.start();
             this.form
-                .put(url + this.form.id)
+                .put(this.url + this.form.id)
                 .then(() => {
-                    $("#addNew").modal("hide");
+                    $("#newModal").modal("hide");
                     Toast.fire({
                         icon: "success",
                         title: "Update success"
                     });
-                    Fire.$emit("refresh");
+                    this.reloadTable();
                     this.$Progress.finish();
                 })
                 .catch(() => {
@@ -292,7 +358,7 @@ export default {
                 });
         },
 
-        deleteUser(id, url = this.url) {
+        deleteUser(data) {
             Swal.fire({
                 title: "Are you sure?",
                 icon: "warning",
@@ -302,36 +368,25 @@ export default {
                 confirmButtonText: "Yes, delete it!"
             }).then(result => {
                 if (result.value) {
-                    // Send request to delete user
                     this.form
-                        .delete(url + id)
+                        .delete(this.url + `${data.id}`)
                         .then(() => {
                             this.$Progress.start();
                             Swal.fire("Deleted!", "User deleted.", "success");
-                            Fire.$emit("refresh");
+                            this.reloadTable();
                             this.$Progress.finish();
                         })
-                        .catch(() => {
+                        .catch(errors => {
                             this.$Progress.fail();
                             Swal.fire({
                                 icon: "error",
-                                title: "Oops...",
-                                text: "Something went wrong!"
+                                title: "An error occurred.",
+                                text: `${errors}`
                             });
                         });
                 }
             });
         }
-    },
-
-    created() {
-        this.$Progress.start();
-        this.loadUsers();
-        Fire.$on("refresh", () => {
-            // event listener
-            this.loadUsers();
-        });
-        this.$Progress.finish();
     }
 };
 </script>

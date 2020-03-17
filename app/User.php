@@ -6,18 +6,41 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
+use JamesDordoy\LaravelVueDatatable\Traits\LaravelVueDatatableTrait;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, Notifiable;
+    use HasApiTokens, Notifiable, LaravelVueDatatableTrait;
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $fillable = [
-        'name', 'student_id', 'email', 'password', 'is_admin', 'photo', 'major', 'year', 'phone', 'sex', 'birthdate', 'birthplace'
+    protected $guarded = [];
+
+    protected $dataTableColumns = [
+        'id' => [
+            'searchable' => false,
+        ],
+        'student_id' => [
+            'searchable' => false,
+        ],
+        'name' => [
+            'searchable' => true,
+        ],
+        'email' => [
+            'searchable' => true,
+        ],
+        'is_admin' => [
+            'searchable' => true,
+        ],
+        'password' => [
+            'searchable' => true,
+        ],
+        'created_at' => [
+            'searchable' => true,
+        ],
     ];
 
     /**
@@ -37,4 +60,9 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function getIsAdminAttribute($value)
+    {
+        return $value ? 'Yes' : 'No';
+    }
 }

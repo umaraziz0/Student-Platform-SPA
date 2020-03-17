@@ -174,9 +174,7 @@ export default {
             form: new Form({
                 id: "",
                 student_id: "",
-                name: "",
                 course_id: "",
-                course_name: "",
                 grade: ""
             }),
             columns: [

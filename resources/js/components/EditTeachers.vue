@@ -544,9 +544,11 @@ export default {
                     $("#newModal").modal("hide");
                     Toast.fire({
                         icon: "success",
-                        title: "Picture removed."
+                        title: "Picture removed.",
+                        timer: "1000"
+                    }).then(() => {
+                        location.reload();
                     });
-                    this.getData();
                 })
                 .catch(errors => {
                     this.$Progress.fail();

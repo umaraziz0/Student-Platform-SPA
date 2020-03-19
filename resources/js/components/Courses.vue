@@ -210,8 +210,8 @@ export default {
     data() {
         return {
             editMode: false,
-            url: "api/course/",
-            urlTaken: "api/takencourse/",
+            url: "/api/course/",
+            urlTaken: "/api/takencourse/",
             courses: {},
             coursesTaken: {},
             tableProps: {

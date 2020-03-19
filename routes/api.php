@@ -30,7 +30,7 @@ Route::group(['middleware' => 'auth:api'], function () {
         'todo' => 'API\TodoController',
         'calendar' => 'API\EventController',
         'timetable' => 'API\TimetableController',
-        'dashboard' => 'API\DashboardController'
+        'dashboard' => 'API\DashboardController' //! change this to regular route
     ]);
 });
 

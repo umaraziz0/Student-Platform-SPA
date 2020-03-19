@@ -16,19 +16,24 @@ class TakenCourseController extends Controller
      */
     public function index(Request $request)
     {
-        $user = auth('api')->user();
-
         $length = $request->input('length');
         $sortBy = $request->input('column');
         $orderBy = $request->input('dir');
         $searchValue = $request->input('search');
 
-        $query = TakenCourse::where('student_id', $user->student_id)
-            ->eloquentQuery($sortBy, $orderBy, $searchValue);
+        $query = TakenCourse::join('courses', function ($join) {
+            $join->on('taken_courses.course_id', '=', 'courses.course_id')
+                ->where('taken_courses.student_id', '=', auth('api')->user()->student_id);
+        })
+            ->select('taken_courses.*', 'courses.course_name', 'courses.credits', 'courses.teacher')
+            ->where('taken_courses.course_id', 'LIKE', "%$searchValue%")
+            ->orWhere('courses.course_name', 'LIKE', "%$searchValue%")
+            ->orWhere('courses.credits', 'LIKE', "%$searchValue%")
+            ->orWhere('courses.teacher', 'LIKE', "%$searchValue%")
+            ->orderBy($sortBy, $orderBy)
+            ->paginate($length);
 
-        $data = $query->paginate($length);
-
-        return new DataTableCollectionResource($data);
+        return new DataTableCollectionResource($query);
     }
 
     /**
@@ -39,21 +44,16 @@ class TakenCourseController extends Controller
      */
     public function store(Request $request)
     {
-        $user = auth('api')->user();
-        $studentId = $user->student_id;
+        $studentId = auth('api')->user()->student_id;
         $request->merge(['student_id' => $studentId]);
 
-        $validatedData = $request->validate([
+        $this->validate($request, [
             'course_id' => 'required|unique:taken_courses',
-            'course_name' => 'required|unique:taken_courses'
         ]);
 
         return TakenCourse::create([
             'student_id' => $request['student_id'],
-            'course_id' => $request['course_id'],
-            'course_name' => $request['course_name'],
-            'credits' => $request['credits'],
-            'teacher' => $request['teacher']
+            'course_id' => $request['course_id']
         ]);
     }
 

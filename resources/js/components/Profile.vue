@@ -503,6 +503,8 @@ export default {
         },
 
         updatePhoto(e) {
+            // change file to base64 then append to form for submit
+
             let photoName = document.getElementById("inputPhoto").value;
             this.fileName = photoName.split("\\").pop();
 

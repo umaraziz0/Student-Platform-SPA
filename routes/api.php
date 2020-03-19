@@ -41,10 +41,12 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('profile', 'API\UserController@profile');
     Route::put('profile', 'API\UserController@updateProfile');
     Route::delete('removePhoto/{id}', 'API\UserController@removePhoto');
-    Route::get('studentid', 'API\UserController@getId');
+    //Route::get('studentid', 'API\UserController@getId');
 
     // routes for getting single user info
     Route::get('teachers', 'API\TeacherController@getTeachers');
+    Route::delete('removeTeacherPhoto/{id}', 'API\TeacherController@removePhoto');
+
     Route::get('grades', 'API\GradeController@getGrades');
 
     Route::put('todoCheckAll', 'API\TodoController@checkAll');

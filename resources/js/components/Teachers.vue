@@ -83,9 +83,8 @@ export default {
     data() {
         return {
             editMode: false,
-            url: "api/teachers",
+            url: "/api/teachers/",
             data: {},
-            formData: {},
             title: "",
             photo: "",
             tableProps: {
@@ -158,7 +157,6 @@ export default {
                 .then(response => {
                     this.data = response.data;
                 })
-                // eslint-disable-next-line
                 .catch(errors => {
                     console.log(errors);
                 });

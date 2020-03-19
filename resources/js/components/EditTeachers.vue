@@ -293,6 +293,38 @@
                                             field="courses_taught"
                                         ></has-error>
                                     </div>
+                                    <div class="form-group">
+                                        <label for="inputPhoto"
+                                            >Profile Picture:</label
+                                        >
+
+                                        <div class="input-group">
+                                            <div class="custom-file">
+                                                <input
+                                                    class="custom-file-input"
+                                                    type="file"
+                                                    @change="updatePhoto"
+                                                    id="inputPhoto"
+                                                    name="photo"
+                                                />
+                                                <label
+                                                    class="custom-file-label"
+                                                    for="inputPhoto"
+                                                    >{{ getFileName() }}</label
+                                                >
+                                            </div>
+                                            <div class="input-group-append">
+                                                <span
+                                                    class="input-group-text"
+                                                    style="cursor:pointer"
+                                                    @click.prevent="
+                                                        removePhoto(form.id)
+                                                    "
+                                                    >Remove
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -327,10 +359,10 @@
 export default {
     data() {
         return {
+            fileName: "",
             editMode: false,
             url: "/api/teacher/",
             data: {},
-            formData: {},
             tableProps: {
                 search: "",
                 length: 10,
@@ -430,7 +462,6 @@ export default {
     },
     created() {
         this.getData(this.url);
-        this.getForm(this.url);
     },
 
     components: {
@@ -440,6 +471,7 @@ export default {
 
     methods: {
         getData(url = this.url, options = this.tableProps) {
+            this.fileName = "";
             axios
                 .get(url, {
                     params: options
@@ -453,6 +485,14 @@ export default {
                 });
         },
 
+        reloadTable(tableProps) {
+            this.getData(this.url, tableProps);
+        },
+
+        getFileName() {
+            return this.fileName.length !== 0 ? this.fileName : "Choose file";
+        },
+
         getPhoto() {
             let photo;
 
@@ -461,7 +501,7 @@ export default {
             } else if (this.form.photo.length > 128) {
                 photo = this.form.photo;
             } else {
-                photo = "/img/profile/" + this.form.photo;
+                photo = "/img/teachers/" + this.form.photo;
             }
 
             return photo;
@@ -471,12 +511,51 @@ export default {
             e.target.src = "/img/profile/default.png";
         },
 
-        getForm(url = this.url) {
-            axios.get(url).then(({ data }) => (this.formData = data.data));
+        updatePhoto(e) {
+            // change file to base64 then append to form for submit
+
+            let photoName = document.getElementById("inputPhoto").value;
+            this.fileName = photoName.split("\\").pop();
+
+            let file = e.target.files[0];
+            let reader = new FileReader();
+            if (file["size"] < 2111775) {
+                //change the file to base64
+                reader.onloadend = file => {
+                    // console.log("RESULT", reader.result);
+                    this.form.photo = reader.result;
+                };
+                reader.readAsDataURL(file);
+            } else {
+                Swal.fire({
+                    icon: "error",
+                    title: "Error",
+                    text: "File size too large. Maximum size is 2MB."
+                });
+            }
         },
 
-        reloadTable(tableProps) {
-            this.getData(this.url, tableProps);
+        removePhoto(id) {
+            this.$Progress.start();
+            this.form
+                .delete("/api/removeTeacherPhoto/" + id)
+                .then(() => {
+                    this.$Progress.finish();
+                    $("#newModal").modal("hide");
+                    Toast.fire({
+                        icon: "success",
+                        title: "Picture removed."
+                    });
+                    this.getData();
+                })
+                .catch(errors => {
+                    this.$Progress.fail();
+                    let response = JSON.parse(errors.request.response);
+                    Toast.fire({
+                        icon: "error",
+                        title: response["message"]
+                    });
+                });
         },
 
         createModal() {
@@ -505,12 +584,12 @@ export default {
                 });
         },
 
-        editModal(formData) {
+        editModal(data) {
             this.editMode = true;
             this.form.clear();
             this.form.reset();
             $("#newModal").modal("show");
-            this.form.fill(formData);
+            this.form.fill(data);
         },
 
         editTeacher() {

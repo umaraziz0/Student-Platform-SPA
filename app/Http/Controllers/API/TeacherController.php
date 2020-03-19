@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Teacher;
 use Illuminate\Http\Request;
 use JamesDordoy\LaravelVueDatatable\Http\Resources\DataTableCollectionResource;
+use Intervention\Image\Facades\Image;
 
 class TeacherController extends Controller
 {
@@ -28,6 +29,24 @@ class TeacherController extends Controller
         return new DataTableCollectionResource($data);
     }
 
+    public function storePhoto($request)
+    {
+        if ($request->photo) {
+            $currentPhoto = $request->photo;
+            // get the file and save it to a local directory
+            $name = time() . '.' . explode('/', explode(":", substr($request->photo, 0, strpos($request->photo, ";")))[1])[1];
+
+            Image::make($request->photo)->save(public_path('/img/teachers/') . $name);
+
+            $request->merge(['photo' => $name]);
+
+            $teacherPhoto = public_path('/img/teachers/') . $currentPhoto;
+            if (file_exists($teacherPhoto)) {
+                @unlink($teacherPhoto);
+            }
+        }
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -43,9 +62,13 @@ class TeacherController extends Controller
             'email' => 'nullable|email|unique:teachers'
         ]);
 
+        $this->storePhoto($request);
+
         return Teacher::create([
             'teacher_id' => $request['teacher_id'],
             'name' => $request['name'],
+            'title' => $request['title'],
+            'photo' => $request['photo'],
             'phone' => $request['phone'],
             'email' => $request['email'],
             'office_address' => $request['office_address'],
@@ -67,8 +90,9 @@ class TeacherController extends Controller
 
     public function getTeachers(Request $request)
     {
-        // require data from taken_courses table for current user
+        // require data from taken_courses table for current student
         // display filtered data from teachers table
+        //! put this in show() function
 
         $length = $request->input('length');
         $sortBy = $request->input('column');
@@ -76,9 +100,9 @@ class TeacherController extends Controller
         $searchValue = $request->input('search');
 
         $query = Teacher::join('taken_courses', function ($join) {
-            $user = auth('api')->user()->id;
+            $student = auth('api')->user()->id;
             $join->on('teachers.name', '=', 'taken_courses.teacher')
-                ->where('taken_courses.student_id', '=', $user);
+                ->where('taken_courses.student_id', '=', $student);
         })
             ->eloquentQuery($sortBy, $orderBy, $searchValue);
 
@@ -105,6 +129,12 @@ class TeacherController extends Controller
             'email' => 'nullable|email|unique:teachers,email,' . $teacher->id
         ]);
 
+        $currentPhoto = $teacher->photo;
+
+        if ($request->photo != $currentPhoto) {
+            $this->storePhoto($request);
+        }
+
         $teacher->update($request->all());
     }
 
@@ -118,5 +148,21 @@ class TeacherController extends Controller
     {
         $teacher = Teacher::findOrFail($id);
         $teacher->delete();
+    }
+
+    public function removePhoto($id)
+    {
+        $teacher = Teacher::findOrFail($id);
+
+        $teacherPhoto = public_path('/img/teachers/') . $teacher->photo;
+        if (file_exists($teacherPhoto)) {
+            @unlink($teacherPhoto);
+        }
+
+        if ($teacher->photo != null) {
+            $teacher->update(['photo' => null]);
+        } else {
+            abort(500, 'No photo uploaded.');
+        }
     }
 }

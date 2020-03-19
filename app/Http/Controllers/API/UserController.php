@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\User;
+use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Hash;
 use JamesDordoy\LaravelVueDatatable\Http\Resources\DataTableCollectionResource;
 
@@ -68,13 +69,13 @@ class UserController extends Controller
 
     public function profile()
     {
-        //return authenticated user info
+        //return authenticated user data
         return auth('api')->user();
     }
 
     public function updateProfile(Request $request)
     {
-        //updates the user info and profile
+        //updates the user data and profile
 
         $user =  User::findOrFail($request->id);
 
@@ -93,7 +94,7 @@ class UserController extends Controller
             // get the file and save it to a local directory
             $name = time() . '.' . explode('/', explode(":", substr($request->photo, 0, strpos($request->photo, ";")))[1])[1];
 
-            \Image::make($request->photo)->save(public_path('/img/profile/') . $name);
+            Image::make($request->photo)->save(public_path('/img/profile/') . $name);
 
             $request->merge(['photo' => $name]);
 

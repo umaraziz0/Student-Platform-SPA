@@ -547,6 +547,7 @@ export default {
                         title: "Picture removed.",
                         timer: "1000"
                     }).then(() => {
+                        this.$Progress.finish();
                         location.reload();
                     });
                 })
@@ -602,10 +603,12 @@ export default {
                     $("#newModal").modal("hide");
                     Toast.fire({
                         icon: "success",
-                        title: "Update success"
+                        title: "Update success",
+                        timer: 1000
+                    }).then(() => {
+                        this.$Progress.finish();
+                        location.reload();
                     });
-                    this.reloadTable();
-                    this.$Progress.finish();
                 })
                 .catch(errors => {
                     this.$Progress.fail();

@@ -92,7 +92,6 @@ class TeacherController extends Controller
     {
         // require data from taken_courses table for current student
         // display filtered data from teachers table
-        //! put this in show() function
 
         $length = $request->input('length');
         $sortBy = $request->input('column');
@@ -100,7 +99,7 @@ class TeacherController extends Controller
         $searchValue = $request->input('search');
 
         $query = Teacher::join('taken_courses', function ($join) {
-            $student = auth('api')->user()->id;
+            $student = auth('api')->user()->student_id;
             $join->on('teachers.name', '=', 'taken_courses.teacher')
                 ->where('taken_courses.student_id', '=', $student);
         })

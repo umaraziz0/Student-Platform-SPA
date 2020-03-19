@@ -16,6 +16,8 @@ class GradeController extends Controller
      */
     public function index(Request $request)
     {
+        // adding course_name and user name columns to the edit grades table
+
         $length = $request->input('length');
         $sortBy = $request->input('column');
         $orderBy = $request->input('dir');
@@ -44,16 +46,18 @@ class GradeController extends Controller
         $orderBy = $request->input('dir');
         $searchValue = $request->input('search');
 
-        $query = Grade::join('courses as c', function ($join) {
-            $user = auth('api')->user();
-            $join->on('grades.course_id', '=', 'c.course_id')
-                ->where('grades.student_id', '=', $user->id);
+        $query = Grade::join('courses', function ($join) {
+            $join->on('grades.course_id', '=', 'courses.course_id')
+                ->where('grades.student_id', '=', auth('api')->user()->student_id);
         })
-            ->eloquentQuery($sortBy, $orderBy, $searchValue);
+            ->select('grades.*', 'courses.course_name')
+            ->where('grades.course_id', 'LIKE', "%$searchValue%")
+            ->orWhere('grades.grade', 'LIKE', "%$searchValue%")
+            ->orWhere('courses.course_name', 'LIKE', "%$searchValue%")
+            ->orderBy($sortBy, $orderBy)
+            ->paginate($length);
 
-        $data = $query->paginate($length);
-
-        return new DataTableCollectionResource($data);
+        return new DataTableCollectionResource($query);
     }
 
     /**

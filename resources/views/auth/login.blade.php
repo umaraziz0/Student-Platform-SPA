@@ -22,34 +22,33 @@
   <div class="card">
     <div class="card-body login-card-body">
       <p class="login-box-msg">Sign in</p>
-
       <form method="POST" action="{{ route('login') }}">
         @csrf
         <div class="input-group mb-4">
           <input id="student_id" type="number" class="form-control @error('student_id') is-invalid @enderror" name="student_id" value="{{ old('student_id') }}" required autocomplete="student_id" autofocus placeholder='Student ID'>
-            @error('student_id')
-                <span class="invalid-feedback" role="alert">
-                    <strong>{{ $message }}</strong>
-                </span>
-            @enderror
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-hashtag"></span>
             </div>
           </div>
+          @error('student_id')
+            <span class="invalid-feedback" role="alert">
+                <strong>{{ $message }}</strong>
+            </span>
+          @enderror
         </div>
         <div class="input-group mb-4">
           <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password" placeholder="Password">
-            @error('password')
-                <span class="invalid-feedback" role="alert">
-                    <strong>{{ $message }}</strong>
-                </span>
-            @enderror
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-lock"></span>
             </div>
           </div>
+          @error('password')
+                <span class="invalid-feedback" role="alert">
+                    <strong>{{ $message }}</strong>
+                </span>
+            @enderror
         </div>
         <div class="row">
           <div class="col-8">

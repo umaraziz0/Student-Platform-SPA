@@ -8,6 +8,7 @@
                 <data-table
                     :data="data"
                     :columns="columns"
+                    :debounce-delay="2000"
                     @onTablePropsChanged="reloadTable"
                 >
                     <div slot="filters" slot-scope="{ tableData, perPage }">
@@ -45,7 +46,7 @@
 export default {
     data() {
         return {
-            url: "api/grades",
+            url: "/api/grades/",
             data: {},
             tableProps: {
                 search: "",
@@ -100,7 +101,7 @@ export default {
         },
 
         reloadTable(tableProps) {
-            this.getData(this.url, tableProps);
+            this.getGrades(this.url, tableProps);
         }
     }
 };

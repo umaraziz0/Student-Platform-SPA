@@ -214,7 +214,6 @@ export default {
             urlTaken: "api/takencourse/",
             courses: {},
             coursesTaken: {},
-            formData: {},
             tableProps: {
                 search: "",
                 length: 10,
@@ -311,7 +310,6 @@ export default {
     created() {
         this.getCourses(this.url);
         this.getCoursesTaken(this.urlTaken);
-        this.getForm(this.url);
     },
 
     components: {
@@ -346,10 +344,6 @@ export default {
                 .catch(errors => {
                     //Handle Errors
                 });
-        },
-
-        getForm(url = this.url) {
-            axios.get(url).then(({ data }) => (this.formData = data.data));
         },
 
         reloadTable(tableProps) {
@@ -387,12 +381,12 @@ export default {
                 });
         },
 
-        editModal(formData) {
+        editModal(data) {
             this.editMode = true;
             this.form.clear();
             this.form.reset();
             $("#newModal").modal("show");
-            this.form.fill(formData);
+            this.form.fill(data);
         },
 
         editCourse() {
@@ -413,8 +407,8 @@ export default {
                 });
         },
 
-        takeCourse(formData) {
-            this.form.fill(formData);
+        takeCourse(data) {
+            this.form.fill(data);
             this.form
                 .post(this.urlTaken)
                 .then(() => {

@@ -21,11 +21,16 @@ class CourseController extends Controller
         $orderBy = $request->input('dir');
         $searchValue = $request->input('search');
 
-        $query = Course::eloquentQuery($sortBy, $orderBy, $searchValue);
+        $query = Course::leftJoin('teachers', 'courses.teacher_id', '=', 'teachers.teacher_id')
+            ->select('courses.*', 'teachers.name')
+            ->where('courses.course_id', 'LIKE', "%$searchValue%")
+            ->orWhere('courses.credits', 'LIKE', "%$searchValue%")
+            ->orWhere('courses.course_name', 'LIKE', "%$searchValue%")
+            ->orWhere('teachers.name', 'LIKE', "%$searchValue%")
+            ->orderBy($sortBy, $orderBy)
+            ->paginate($length);
 
-        $data = $query->paginate($length);
-
-        return new DataTableCollectionResource($data);
+        return new DataTableCollectionResource($query);
     }
 
     /**
@@ -46,7 +51,6 @@ class CourseController extends Controller
             'course_id' => $request['course_id'],
             'course_name' => $request['course_name'],
             'credits' => $request['credits'],
-            'teacher' => $request['teacher']
         ]);
     }
 

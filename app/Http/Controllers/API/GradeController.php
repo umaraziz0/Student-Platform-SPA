@@ -25,16 +25,16 @@ class GradeController extends Controller
 
         $query = Grade::join('users', 'grades.student_id', '=', 'users.student_id')
             ->join('courses', 'grades.course_id', '=', 'courses.course_id')
-            ->select('grades.*', 'courses.course_name', 'users.name')->orderBy($sortBy, $orderBy)
+            ->select('grades.*', 'courses.course_name', 'users.name')
             ->where('grades.student_id', 'LIKE', "%$searchValue%")
             ->orWhere('grades.course_id', 'LIKE', "%$searchValue%")
             ->orWhere('grades.grade', 'LIKE', "%$searchValue%")
             ->orWhere('courses.course_name', 'LIKE', "%$searchValue%")
-            ->orWhere('users.name', 'LIKE', "%$searchValue%");
+            ->orWhere('users.name', 'LIKE', "%$searchValue%")
+            ->orderBy($sortBy, $orderBy)
+            ->paginate($length);
 
-        $data = $query->paginate($length);
-
-        return new DataTableCollectionResource($data);
+        return new DataTableCollectionResource($query);
     }
 
     public function getGrades(Request $request)

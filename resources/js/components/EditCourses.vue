@@ -124,7 +124,7 @@
                                 <input
                                     type="number"
                                     v-model="form.credits"
-                                    class="custom-select"
+                                    class="form-control"
                                     :class="{
                                         'is-invalid': form.errors.has('credits')
                                     }"
@@ -137,21 +137,23 @@
                                 ></has-error>
                             </div>
                             <div class="form-group">
-                                <label for="inputTeacher">Teacher:</label>
+                                <label for="inputTeacherID">Teacher ID:</label>
                                 <input
-                                    type="text"
-                                    v-model="form.teacher"
-                                    name="teacher"
-                                    id="inputTeacher"
+                                    type="number"
+                                    v-model="form.teacher_id"
+                                    name="teacher_id"
+                                    id="inputTeacherID"
                                     placeholder=""
                                     class="form-control"
                                     :class="{
-                                        'is-invalid': form.errors.has('teacher')
+                                        'is-invalid': form.errors.has(
+                                            'teacher_id'
+                                        )
                                     }"
                                 />
                                 <has-error
                                     :form="form"
-                                    field="teacher"
+                                    field="teacher_id"
                                 ></has-error>
                             </div>
                         </div>
@@ -200,7 +202,7 @@ export default {
                 course_id: "",
                 course_name: "",
                 credits: "",
-                teacher: ""
+                teacher_id: ""
             }),
             columns: [
                 {
@@ -222,9 +224,15 @@ export default {
                     orderable: true
                 },
                 {
+                    label: "Teacher ID",
+                    name: "teacher_id",
+                    columnName: "teacher_id",
+                    orderable: true
+                },
+                {
                     label: "Teacher",
-                    name: "teacher",
-                    columnName: "teacher",
+                    name: "name",
+                    columnName: "name",
                     orderable: true
                 },
                 {

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Teacher;
+use App\Course;
 use Illuminate\Http\Request;
 use JamesDordoy\LaravelVueDatatable\Http\Resources\DataTableCollectionResource;
 use Intervention\Image\Facades\Image;
@@ -92,6 +93,8 @@ class TeacherController extends Controller
     {
         // require data from taken_courses table for current student
         // display filtered data from teachers table
+
+        //! fix query
 
         $length = $request->input('length');
         $sortBy = $request->input('column');

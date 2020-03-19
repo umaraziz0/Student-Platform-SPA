@@ -30,7 +30,6 @@ Route::group(['middleware' => 'auth:api'], function () {
         'todo' => 'API\TodoController',
         'calendar' => 'API\EventController',
         'timetable' => 'API\TimetableController',
-        'dashboard' => 'API\DashboardController' //! change this to regular route
     ]);
 });
 
@@ -52,5 +51,6 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::put('todoCheckAll', 'API\TodoController@checkAll');
     Route::delete('todoClearCompleted', 'API\TodoController@clearCompleted');
 
-    Route::get('getUpcoming', 'API\DashboardController@getUpcoming');
+    Route::get('dashboard', 'API\DashboardController@index');
+    Route::get('upcoming', 'API\DashboardController@getUpcoming');
 });

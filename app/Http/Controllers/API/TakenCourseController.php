@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\TakenCourse;
+use App\Course;
 use Illuminate\Http\Request;
 use JamesDordoy\LaravelVueDatatable\Http\Resources\DataTableCollectionResource;
 
@@ -21,19 +22,22 @@ class TakenCourseController extends Controller
         $orderBy = $request->input('dir');
         $searchValue = $request->input('search');
 
-        $query = TakenCourse::join('courses', function ($join) {
-            $join->on('taken_courses.course_id', '=', 'courses.course_id')
-                ->where('taken_courses.student_id', '=', auth('api')->user()->student_id);
+        $courses = Course::leftJoin('teachers', function ($join) {
+            $join->on('courses.teacher_id', '=', 'teachers.teacher_id');
         })
-            ->select('taken_courses.*', 'courses.course_name', 'courses.credits', 'courses.teacher')
+            ->select('courses.course_id', 'courses.course_name', 'courses.credits', 'teachers.name');
+
+        $takenCourses = TakenCourse::leftJoinSub($courses, 'c', function ($join) {
+            $join->on('taken_courses.course_id', 'c.course_id')
+                ->where('taken_courses.student_id', '=', auth('api')->user()->student_id);
+        })->select('taken_courses.*', 'c.course_name', 'c.credits', 'c.name')
             ->where('taken_courses.course_id', 'LIKE', "%$searchValue%")
-            ->orWhere('courses.course_name', 'LIKE', "%$searchValue%")
-            ->orWhere('courses.credits', 'LIKE', "%$searchValue%")
-            ->orWhere('courses.teacher', 'LIKE', "%$searchValue%")
+            ->orWhere('c.course_name', 'LIKE', "%$searchValue%")
+            ->orWhere('c.credits', 'LIKE', "%$searchValue%")
             ->orderBy($sortBy, $orderBy)
             ->paginate($length);
 
-        return new DataTableCollectionResource($query);
+        return new DataTableCollectionResource($takenCourses);
     }
 
     /**

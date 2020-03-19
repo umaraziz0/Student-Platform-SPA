@@ -70,138 +70,6 @@
                 </data-table>
             </div>
         </div>
-        <!-- Modal -->
-        <div
-            class="modal fade"
-            id="newModal"
-            tabindex="-1"
-            role="dialog"
-            aria-labelledby="newModalLabel"
-            aria-hidden="true"
-        >
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title">
-                            {{ editMode ? "Edit Course" : "Create New Course" }}
-                        </h4>
-                        <button
-                            type="button"
-                            class="close"
-                            data-dismiss="modal"
-                            aria-label="Close"
-                        >
-                            <span aria-hidden="true">×</span>
-                        </button>
-                    </div>
-                    <form
-                        @submit.prevent="
-                            editMode ? editCourse() : createCourse()
-                        "
-                    >
-                        <div class="modal-body">
-                            <div class="form-group">
-                                <label for="inputCourseID">Course ID:</label>
-                                <input
-                                    type="number"
-                                    v-model="form.course_id"
-                                    class="form-control"
-                                    :class="{
-                                        'is-invalid': form.errors.has(
-                                            'course_id'
-                                        )
-                                    }"
-                                    id="inputCourseID"
-                                    placeholder="Course ID"
-                                    field="course_id"
-                                />
-                                <has-error
-                                    :form="form"
-                                    field="course_id"
-                                ></has-error>
-                            </div>
-                            <div class="form-group">
-                                <label for="inputCourseName"
-                                    >Course Name:</label
-                                >
-                                <input
-                                    type="text"
-                                    v-model="form.course_name"
-                                    class="form-control"
-                                    :class="{
-                                        'is-invalid': form.errors.has(
-                                            'course_name'
-                                        )
-                                    }"
-                                    id="inputCourseName"
-                                    placeholder="Course Name"
-                                    field="course_name"
-                                />
-                                <has-error
-                                    :form="form"
-                                    field="course_name"
-                                ></has-error>
-                            </div>
-                            <div class="form-group">
-                                <label for="inputCredits">Credits</label>
-                                <input
-                                    type="number"
-                                    v-model="form.credits"
-                                    class="custom-select"
-                                    :class="{
-                                        'is-invalid': form.errors.has('credits')
-                                    }"
-                                    id="inputCredits"
-                                    name="credits"
-                                />
-                                <has-error
-                                    :form="form"
-                                    field="credits"
-                                ></has-error>
-                            </div>
-                            <div class="form-group">
-                                <label for="inputTeacher">Teacher:</label>
-                                <input
-                                    type="text"
-                                    v-model="form.teacher"
-                                    name="teacher"
-                                    id="inputTeacher"
-                                    placeholder=""
-                                    class="form-control"
-                                    :class="{
-                                        'is-invalid': form.errors.has('teacher')
-                                    }"
-                                />
-                                <has-error
-                                    :form="form"
-                                    field="teacher"
-                                ></has-error>
-                            </div>
-                        </div>
-                        <div class="modal-footer justify-content-between">
-                            <button
-                                type="button"
-                                class="btn btn-danger"
-                                data-dismiss="modal"
-                            >
-                                Close
-                            </button>
-                            <button
-                                type="submit"
-                                class="btn"
-                                :class="{
-                                    'btn-success': !editMode,
-                                    'btn-primary': editMode
-                                }"
-                            >
-                                {{ editMode ? "Update" : "Create" }}
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-        <!-- Modal End -->
     </div>
 </template>
 
@@ -224,8 +92,7 @@ export default {
                 id: "",
                 course_id: "",
                 course_name: "",
-                credits: "",
-                teacher: ""
+                credits: ""
             }),
             columns: [
                 {
@@ -248,8 +115,8 @@ export default {
                 },
                 {
                     label: "Teacher",
-                    name: "teacher",
-                    columnName: "teacher",
+                    name: "name",
+                    columnName: "name",
                     orderable: true
                 },
                 {
@@ -287,8 +154,8 @@ export default {
                 },
                 {
                     label: "Teacher",
-                    name: "teacher",
-                    columnName: "teacher",
+                    name: "name",
+                    columnName: "name",
                     orderable: true
                 },
                 {

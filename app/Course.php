@@ -9,9 +9,7 @@ class Course extends Model
 {
     use LaravelVueDatatableTrait;
 
-    protected $fillable = [
-        'id', 'course_id', 'course_name', 'credits', 'teacher'
-    ];
+    protected $guarded = [];
 
     protected $dataTableColumns = [
         'id' => [
@@ -26,7 +24,7 @@ class Course extends Model
         'credits' => [
             'searchable' => true,
         ],
-        'teacher' => [
+        'teacher_id' => [
             'searchable' => true,
         ]
     ];

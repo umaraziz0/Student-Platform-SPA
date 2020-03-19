@@ -454,14 +454,17 @@ export default {
 
     methods: {
         getPhoto() {
-            // let photo =
-            //     this.form.photo.length > 100
-            //         ? this.form.photo
-            //         : "img/profile/" + this.form.photo;
+            let photo;
 
-            // return photo;
+            if (!this.form.photo) {
+                photo = "/img/profile/default.png";
+            } else if (this.form.photo.length > 128) {
+                photo = this.form.photo;
+            } else {
+                photo = "/img/profile/" + this.form.photo;
+            }
 
-            return "/img/profile/" + this.form.photo;
+            return photo;
         },
 
         getFileName() {
@@ -485,9 +488,9 @@ export default {
                     Toast.fire({
                         icon: "success",
                         title: "Picture removed."
+                    }).then(() => {
+                        window.location = location.href;
                     });
-                    Fire.$emit("refresh");
-                    window.scrollTo(0, 0);
                 })
                 .catch(errors => {
                     this.$Progress.fail();
@@ -544,9 +547,6 @@ export default {
     created() {
         this.$Progress.start();
         this.getInfo();
-        Fire.$on("refresh", () => {
-            this.getInfo();
-        });
         window.scrollTo(0, 0);
         this.$Progress.finish();
     }

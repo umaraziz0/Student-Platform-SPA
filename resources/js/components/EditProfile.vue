@@ -420,22 +420,22 @@ export default {
         this.$Progress.start();
         this.getUsers();
         this.getUser();
-        Fire.$on("refresh", () => {
-            this.getInfo();
-        });
         this.$Progress.finish();
     },
 
     methods: {
         getPhoto() {
-            // let photo =
-            //     this.form.photo.length > 100
-            //         ? this.form.photo
-            //         : "img/profile/" + this.form.photo;
+            let photo;
 
-            // return photo;
+            if (!this.form.photo) {
+                photo = "/img/profile/default.png";
+            } else if (this.form.photo.length > 128) {
+                photo = this.form.photo;
+            } else {
+                photo = "/img/profile/" + this.form.photo;
+            }
 
-            return "/img/profile/" + this.form.photo;
+            return photo;
         },
 
         getFileName() {

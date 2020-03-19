@@ -75,13 +75,13 @@
                         </button>
                     </div>
 
-                            <form
-                                @submit.prevent="
-                                    editMode ? editTeacher() : createTeacher()
-                                "
-                            >
-                            <div class="modal-body">
-                              <div class="row">
+                    <form
+                        @submit.prevent="
+                            editMode ? editTeacher() : createTeacher()
+                        "
+                    >
+                        <div class="modal-body">
+                            <div class="row">
                                 <div class="col-md-4">
                                     <div class="card card-primary">
                                         <div class="card-body box-profile">
@@ -89,64 +89,81 @@
                                                 <img
                                                     class="profile-user-img img-fluid
                                                 img-circle"
-                                                    src="/img/profile/default.png"
-                                                    alt="User
-                                                profile picture"
+                                                    :src="getPhoto()"
+                                                    @error="defaultPhoto"
                                                 />
                                             </div>
 
-                                            <h3 class="profile-username text-center">
-                                                {{ form.name ? form.name : "Name" }}
+                                            <h3
+                                                class="profile-username text-center"
+                                            >
+                                                {{
+                                                    form.name
+                                                        ? form.name
+                                                        : "Name"
+                                                }}
                                             </h3>
 
                                             <p class="text-muted text-center">
-                                                {{ form.title ? form.title : 'Title'}}
+                                                {{
+                                                    form.title
+                                                        ? form.title
+                                                        : "Title"
+                                                }}
                                             </p>
 
                                             <ul
                                                 class="list-group list-group-unbordered mb-3"
                                             >
                                                 <li class="list-group-item">
-                                                  <label for="inputTeacherID">Teacher ID:</label>
-                                                  <br>
-                                                  <input
-                                                    type="number"
-                                                    v-model="form.teacher_id"
-                                                    class="form-control"
-                                                    :class="{
-                                                        'is-invalid': form.errors.has(
-                                                            'teacher_id'
-                                                        )
-                                                    }"
-                                                    id="inputTeacherID"
-                                                    field="teacher_id"
-                                                />
-                                                <has-error
-                                                    :form="form"
-                                                    field="teacher_id"
-                                                ></has-error>
+                                                    <label for="inputTeacherID"
+                                                        >Teacher ID:</label
+                                                    >
+                                                    <br />
+                                                    <input
+                                                        type="number"
+                                                        v-model="
+                                                            form.teacher_id
+                                                        "
+                                                        class="form-control"
+                                                        :class="{
+                                                            'is-invalid': form.errors.has(
+                                                                'teacher_id'
+                                                            )
+                                                        }"
+                                                        id="inputTeacherID"
+                                                        field="teacher_id"
+                                                    />
+                                                    <has-error
+                                                        :form="form"
+                                                        field="teacher_id"
+                                                    ></has-error>
                                                 </li>
                                                 <li class="list-group-item">
-                                                  <label for="inputPhone">Phone:</label>
-                                                  <input
-                                                    type="number"
-                                                    v-model="form.phone"
-                                                    class="custom-select"
-                                                    :class="{
-                                                        'is-invalid': form.errors.has(
-                                                            'phone'
-                                                        )
-                                                    }"
-                                                    id="inputPhone"
-                                                    name="phone"
-                                                  />
-                                                  <has-error
-                                                    :form="form"
-                                                    field="phone"
-                                                  ></has-error>
+                                                    <label for="inputPhone"
+                                                        >Phone:</label
+                                                    >
+                                                    <input
+                                                        type="number"
+                                                        v-model="form.phone"
+                                                        class="custom-select"
+                                                        :class="{
+                                                            'is-invalid': form.errors.has(
+                                                                'phone'
+                                                            )
+                                                        }"
+                                                        id="inputPhone"
+                                                        name="phone"
+                                                    />
+                                                    <has-error
+                                                        :form="form"
+                                                        field="phone"
+                                                    ></has-error>
                                                 </li>
                                                 <li class="list-group-item">
-                                                    <label for="inputEmail">Email:</label>
+                                                    <label for="inputEmail"
+                                                        >Email:</label
+                                                    >
                                                     <input
                                                         type="email"
                                                         v-model="form.email"
@@ -277,37 +294,33 @@
                                         ></has-error>
                                     </div>
                                 </div>
-                                     </div>
-                                </div>
-                                <div
-                                    class="modal-footer justify-content-between"
-                                >
-                                    <button
-                                        type="button"
-                                        class="btn btn-danger"
-                                        data-dismiss="modal"
-                                    >
-                                        Close
-                                    </button>
-                                    <button
-                                        type="submit"
-                                        class="btn"
-                                        :class="{
-                                            'btn-success': !editMode,
-                                            'btn-primary': editMode
-                                        }"
-                                    >
-                                        {{ editMode ? "Update" : "Create" }}
-                                    </button>
-                                </div>
-                            </form>
+                            </div>
                         </div>
-                    </div>
+                        <div class="modal-footer justify-content-between">
+                            <button
+                                type="button"
+                                class="btn btn-danger"
+                                data-dismiss="modal"
+                            >
+                                Close
+                            </button>
+                            <button
+                                type="submit"
+                                class="btn"
+                                :class="{
+                                    'btn-success': !editMode,
+                                    'btn-primary': editMode
+                                }"
+                            >
+                                {{ editMode ? "Update" : "Create" }}
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
-        <!-- Modal End -->
     </div>
+    <!-- Modal End -->
 </template>
 
 <script>
@@ -440,16 +453,30 @@ export default {
                 });
         },
 
+        getPhoto() {
+            let photo;
+
+            if (!this.form.photo) {
+                photo = "/img/profile/default.png";
+            } else if (this.form.photo.length > 128) {
+                photo = this.form.photo;
+            } else {
+                photo = "/img/profile/" + this.form.photo;
+            }
+
+            return photo;
+        },
+
+        defaultPhoto(e) {
+            e.target.src = "/img/profile/default.png";
+        },
+
         getForm(url = this.url) {
             axios.get(url).then(({ data }) => (this.formData = data.data));
         },
 
         reloadTable(tableProps) {
             this.getData(this.url, tableProps);
-        },
-
-        displayRow(data) {
-            alert(`You clicked teacher ${data.id}`);
         },
 
         createModal() {

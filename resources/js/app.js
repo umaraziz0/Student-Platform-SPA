@@ -65,7 +65,7 @@ import VueRouter from "vue-router";
 Vue.use(VueRouter);
 
 let routes = [{
-        path: "/admin/dashboard",
+        path: "/admin/home",
         component: require("./components/AdminHome.vue").default
     },
     {

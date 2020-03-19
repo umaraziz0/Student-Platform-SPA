@@ -33,7 +33,7 @@ class LoginController extends Controller
     public function redirectTo()
     {
         if (Auth::user()->is_admin) {
-            return '/admin/dashboard';
+            return '/admin/home';
         } else {
             return '/home';
         }

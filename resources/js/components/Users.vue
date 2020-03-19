@@ -199,14 +199,6 @@ export default {
                 column: "id",
                 dir: "asc"
             },
-            form: new Form({
-                id: "",
-                student_id: "",
-                name: "",
-                email: "",
-                password: "",
-                is_admin: ""
-            }),
             columns: [
                 {
                     label: "User ID",
@@ -271,7 +263,15 @@ export default {
                     handler: this.deleteUser,
                     component: ButtonDelete
                 }
-            ]
+            ],
+            form: new Form({
+                id: "",
+                student_id: "",
+                name: "",
+                email: "",
+                password: "",
+                is_admin: ""
+            })
         };
     },
     created() {
@@ -298,8 +298,8 @@ export default {
                 });
         },
 
-        formatAdmin(data) {
-            console.log(data);
+        formatAdmin(form = this.form) {
+            console.log(form);
         },
 
         reloadTable(tableProps) {

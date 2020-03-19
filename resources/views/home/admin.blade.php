@@ -27,7 +27,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-bars"></i></a>
       </li>
       <li class="nav-item d-none d-sm-inline-block">
-        <a href="home" class="nav-link">Home</a>
+        <a href="/admin/home" class="nav-link">Home</a>
       </li>
     </ul>
 
@@ -141,7 +141,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <!-- Main Sidebar Container -->
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
-    <a href="home" class="brand-link">
+    <a href="/admin/home" class="brand-link">
       <i class="fas fa-cogs ml-3 mr-1"></i>
       <span class="brand-text font-weight-light">Admin Panel</span>
     </a>
@@ -164,7 +164,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
             <li class="nav-item">
-                <router-link to="/admin/dashboard" class="nav-link">
+                <router-link to="/admin/home" class="nav-link">
                     <i class="fas fa-home nav-icon"></i>
                     <p>
                         Dashboard

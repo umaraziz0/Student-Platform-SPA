@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Http\Controllers\Controller;
-use App\Teacher;
 use App\Course;
+use App\Http\Controllers\Controller;
+use App\TakenCourse;
+use App\Teacher;
 use Illuminate\Http\Request;
 use JamesDordoy\LaravelVueDatatable\Http\Resources\DataTableCollectionResource;
 use Intervention\Image\Facades\Image;
@@ -101,10 +102,14 @@ class TeacherController extends Controller
         $orderBy = $request->input('dir');
         $searchValue = $request->input('search');
 
-        $query = Teacher::join('taken_courses', function ($join) {
-            $student = auth('api')->user()->student_id;
-            $join->on('teachers.name', '=', 'taken_courses.teacher')
-                ->where('taken_courses.student_id', '=', $student);
+        $takenCourses = Course::join('taken_courses', function ($join) {
+            $studentId = auth('api')->user()->student_id;
+            $join->on('courses.course_id', '=', 'taken_courses.course_id')
+                ->where('taken_courses.student_id', '=', $studentId);
+        })->select('courses.teacher_id');
+
+        $query = Teacher::joinSub($takenCourses, 'taken', function ($join) {
+            $join->on('teachers.teacher_id', '=', 'taken.teacher_id');
         })
             ->eloquentQuery($sortBy, $orderBy, $searchValue);
 

@@ -26,6 +26,8 @@ class CreateTimetablesTable extends Migration
             $table->string('room')->nullable();
             $table->string('building')->nullable();
             $table->text('details')->nullable();
+            $table->string('color')->default('#3788d9');
+            $table->string('text_color')->default('#ffffff');
             $table->timestamps();
         });
     }

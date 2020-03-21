@@ -194,7 +194,6 @@ export default {
             editMode: false,
             url: "/api/assignment/",
             data: {},
-            formData: {},
             tableProps: {
                 search: "",
                 length: 10,
@@ -249,29 +248,27 @@ export default {
                     component: ButtonEdit
                 },
                 {
-                    label: "Delete",
-                    name: "Delete",
+                    label: "Complete",
+                    name: "Complete",
                     orderable: false,
                     classes: {
                         btn: true,
-                        "btn-primary": true,
-                        "btn-sm": true
+                        "btn-danger": true
                     },
                     event: "click",
                     handler: this.deleteAssignment,
-                    component: ButtonDelete
+                    component: ButtonCheck
                 }
             ]
         };
     },
     created() {
         this.getData(this.url);
-        this.getForm(this.url);
     },
 
     components: {
         ButtonEdit,
-        ButtonDelete
+        ButtonCheck
     },
 
     methods: {
@@ -287,10 +284,6 @@ export default {
                 .catch(errors => {
                     //Handle Errors
                 });
-        },
-
-        getForm(url = this.url) {
-            axios.get(url).then(({ data }) => (this.formData = data.data));
         },
 
         reloadTable(tableProps) {
@@ -316,7 +309,7 @@ export default {
                     $("#newModal").modal("hide");
                     Toast.fire({
                         icon: "success",
-                        title: "Assignment created successfully"
+                        title: "Assignment created."
                     });
                     this.reloadTable();
                     this.$Progress.finish();
@@ -327,12 +320,12 @@ export default {
                 });
         },
 
-        editModal(formData) {
+        editModal(data) {
             this.editMode = true;
             this.form.clear();
             this.form.reset();
             $("#newModal").modal("show");
-            this.form.fill(formData);
+            this.form.fill(data);
         },
 
         editAssignment() {
@@ -354,37 +347,22 @@ export default {
         },
 
         deleteAssignment(data) {
-            Swal.fire({
-                title: "Are you sure?",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Yes, delete it!"
-            }).then(result => {
-                if (result.value) {
-                    this.form
-                        .delete(this.url + `${data.id}`)
-                        .then(() => {
-                            this.$Progress.start();
-                            Swal.fire(
-                                "Deleted!",
-                                "Assignment deleted.",
-                                "success"
-                            );
-                            this.reloadTable();
-                            this.$Progress.finish();
-                        })
-                        .catch(errors => {
-                            this.$Progress.fail();
-                            Swal.fire({
-                                icon: "error",
-                                title: "An error occurred.",
-                                text: `${errors}`
-                            });
-                        });
-                }
-            });
+            this.form
+                .delete(this.url + `${data.id}`)
+                .then(() => {
+                    this.$Progress.start();
+                    Swal.fire("Completed!", "Assignment completed.", "success");
+                    this.reloadTable();
+                    this.$Progress.finish();
+                })
+                .catch(errors => {
+                    this.$Progress.fail();
+                    Swal.fire({
+                        icon: "error",
+                        title: "An error occurred.",
+                        text: `${errors}`
+                    });
+                });
         }
     }
 };

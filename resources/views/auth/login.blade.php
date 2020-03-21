@@ -52,12 +52,13 @@
         </div>
         <div class="row">
           <div class="col-8">
-            <div class="custom-control custom-checkbox">
+              <a href="/">Back to Homepage</a>
+            {{-- <div class="custom-control custom-checkbox">
               <input class="custom-control-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
                 <label for="remember" class="custom-control-label">
                     {{ __('Remember Me') }}
                 </label>
-            </div>
+            </div> --}}
           </div>
           <!-- /.col -->
           <div class="col-4">
@@ -68,13 +69,13 @@
           <!-- /.col -->
         </div>
       </form>
-      <p class="mb-1">
+      {{-- <p class="mb-1">
         @if (Route::has('password.request'))
             <a class="btn btn-link" href="{{ route('password.request') }}">
                 {{ __('Forgot Your Password?') }}
             </a>
         @endif
-      </p>
+      </p> --}}
     </div>
     <!-- /.login-card-body -->
   </div>

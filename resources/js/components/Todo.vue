@@ -48,10 +48,10 @@
                                     :class="{ done: todo.isCompleted }"
                                 >
                                     <!-- drag handle -->
-                                    <span class="handle ui-sortable-handle">
+                                    <!-- <span class="handle ui-sortable-handle">
                                         <i class="fas fa-ellipsis-v"></i>
                                         <i class="fas fa-ellipsis-v"></i>
-                                    </span>
+                                    </span> -->
                                     <!-- checkbox -->
                                     <div class="d-inline ml-4">
                                         <input

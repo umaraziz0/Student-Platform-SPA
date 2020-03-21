@@ -19,11 +19,12 @@ class CreateEventsTable extends Migration
             $table->foreign('student_id')->references('student_id')->on('users')
                 ->onUpdate('cascade')->onDelete('cascade');
             $table->string('name');
-            $table->date('start_date');
-            $table->date('end_date');
-            $table->time('start_time', 0)->nullable();
-            $table->time('end_time', 0)->nullable();
+            $table->datetime('start', 0);
+            $table->datetime('end', 0)->nullable();
+            $table->boolean('all_day')->default(false);
             $table->text('details')->nullable();
+            $table->string('color')->default('#3788d9');
+            $table->string('text_color')->default('#ffffff');
             $table->timestamps();
         });
     }

@@ -79,6 +79,7 @@
 
         <div class="row">
           <div class="col-8">
+              <a href="/">Back to Homepage</a>
           </div>
           <!-- /.col -->
           <div class="col-4">

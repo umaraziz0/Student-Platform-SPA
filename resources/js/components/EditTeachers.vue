@@ -12,7 +12,7 @@
                 >
                     <div slot="filters" slot-scope="{ tableData, perPage }">
                         <div class="row mb-2">
-                            <div class="col-md-4">
+                            <div class="col-md-2">
                                 <select
                                     class="form-control custom-select"
                                     v-model="tableData.length"
@@ -24,6 +24,7 @@
                                     >
                                 </select>
                             </div>
+                            <div class="col-md-2"></div>
                             <div class="col-md-4 text-center">
                                 <div class="list-inline-item">
                                     <button
@@ -38,7 +39,7 @@
                             <div class="col-md-4">
                                 <input
                                     name="name"
-                                    class="form-control custom-select"
+                                    class="form-control"
                                     v-model="tableData.search"
                                     placeholder="Search Table"
                                 />
@@ -116,6 +117,11 @@
                                                 class="list-group list-group-unbordered mb-3"
                                             >
                                                 <li class="list-group-item">
+                                                    <i
+                                                        class="fa fa-hashtag"
+                                                        aria-hidden="true"
+                                                    ></i
+                                                    >&nbsp;
                                                     <label for="inputTeacherID"
                                                         >Teacher ID:</label
                                                     >
@@ -140,6 +146,11 @@
                                                     ></has-error>
                                                 </li>
                                                 <li class="list-group-item">
+                                                    <i
+                                                        class="fa fa-phone"
+                                                        aria-hidden="true"
+                                                    ></i
+                                                    >&nbsp;
                                                     <label for="inputPhone"
                                                         >Phone:</label
                                                     >
@@ -161,6 +172,11 @@
                                                     ></has-error>
                                                 </li>
                                                 <li class="list-group-item">
+                                                    <i
+                                                        class="fa fa-envelope"
+                                                        aria-hidden="true"
+                                                    ></i
+                                                    >&nbsp;
                                                     <label for="inputEmail"
                                                         >Email:</label
                                                     >
@@ -388,6 +404,12 @@ export default {
                     columnName: "teacher_id",
                     orderable: true
                 },
+                // {
+                //     label: "Photo",
+                //     name: "photo",
+                //     columnName: "photo",
+                //     orderable: true
+                // },
                 {
                     label: "Name",
                     name: "name",

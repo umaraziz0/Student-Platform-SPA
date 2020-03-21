@@ -95,8 +95,6 @@ class TeacherController extends Controller
         // require data from taken_courses table for current student
         // display filtered data from teachers table
 
-        //! fix query
-
         $length = $request->input('length');
         $sortBy = $request->input('column');
         $orderBy = $request->input('dir');

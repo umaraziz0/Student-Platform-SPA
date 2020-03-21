@@ -107,6 +107,12 @@ export default {
                     orderable: true
                 },
                 {
+                    label: "Title",
+                    name: "title",
+                    columnName: "title",
+                    orderable: true
+                },
+                {
                     label: "Phone",
                     name: "phone",
                     columnName: "phone",

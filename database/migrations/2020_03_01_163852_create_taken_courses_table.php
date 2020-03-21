@@ -16,10 +16,9 @@ class CreateTakenCoursesTable extends Migration
         Schema::create('taken_courses', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->integer('student_id');
-            $table->string('course_name');
+            $table->foreign('student_id')->references('student_id')->on('users')->onDelete('cascade')->onUpdate('cascade');
             $table->integer('course_id');
-            $table->integer('credits')->nullable();
-            $table->string('teacher')->nullable();
+            $table->foreign('course_id')->references('course_id')->on('courses')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
     }

@@ -19,7 +19,9 @@ class CreateAssignmentsTable extends Migration
             $table->foreign('student_id')->references('student_id')->on('users')
                 ->onDelete('cascade')->onUpdate('cascade');
             $table->string('name');
-            $table->string('course_name');
+            $table->string('course_name')->nullable();
+            // $table->string('course_id')->nullable();
+            // $table->foreign('course_id')->references('course_id')->on('courses')->onDelete('cascade')->onUpdate('cascade');
             $table->date('due_date')->nullable();
             $table->text('details')->nullable();
             $table->timestamps();

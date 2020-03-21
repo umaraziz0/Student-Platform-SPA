@@ -241,7 +241,6 @@ export default {
             editMode: false,
             url: "/api/exam/",
             data: {},
-            formData: {},
             tableProps: {
                 search: "",
                 length: 10,
@@ -334,7 +333,6 @@ export default {
     },
     created() {
         this.getData(this.url);
-        this.getForm(this.url);
     },
 
     components: {
@@ -355,10 +353,6 @@ export default {
                 .catch(errors => {
                     //Handle Errors
                 });
-        },
-
-        getForm(url = this.url) {
-            axios.get(url).then(({ data }) => (this.formData = data.data));
         },
 
         reloadTable(tableProps) {
@@ -384,7 +378,7 @@ export default {
                     $("#newModal").modal("hide");
                     Toast.fire({
                         icon: "success",
-                        title: "Exam created successfully"
+                        title: "Exam created."
                     });
                     this.reloadTable();
                     this.$Progress.finish();
@@ -394,12 +388,12 @@ export default {
                 });
         },
 
-        editModal(formData) {
+        editModal(data) {
             this.editMode = true;
             this.form.clear();
             this.form.reset();
             $("#newModal").modal("show");
-            this.form.fill(formData);
+            this.form.fill(data);
         },
 
         editExam() {

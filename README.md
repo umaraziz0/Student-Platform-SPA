@@ -27,4 +27,11 @@ Currently a work in progress.
 4. Save the `.env.example` as `.env` and set your database information
 5. Generate the app key: `php artisan key:generate`
 6. Run database migrations: `php artisan migrate`
-7. Run the server: `php artisan serve` and `npm run dev`
+7. Run seeder: `php artisan db:seed`, which will create 2 accounts:
+   1. Admin
+      - Student ID: 0
+      - Password: admin1234
+   2. Student
+      - Student ID: 1
+      - Password: student1234
+8. Run the server: `php artisan serve` and `npm run dev`

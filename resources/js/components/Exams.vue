@@ -98,19 +98,20 @@
                                 <label for="inputCourseName"
                                     >Course Name:</label
                                 >
-                                <input
-                                    type="text"
-                                    v-model="form.course_name"
-                                    class="form-control"
-                                    :class="{
-                                        'is-invalid': form.errors.has(
-                                            'course_name'
-                                        )
-                                    }"
+                                <select
+                                    name="course_name"
                                     id="inputCourseName"
-                                    placeholder=""
+                                    class="form-control custom-select"
+                                    v-model="form.course_name"
                                     field="course_name"
-                                />
+                                >
+                                    <option
+                                        v-for="course in courses"
+                                        :key="course.id"
+                                        :value="course.course_name"
+                                        >{{ course.course_name }}</option
+                                    >
+                                </select>
                                 <has-error
                                     :form="form"
                                     field="course_name"
@@ -121,7 +122,7 @@
                                 <input
                                     type="date"
                                     v-model="form.date"
-                                    class="custom-select"
+                                    class="form-control"
                                     :class="{
                                         'is-invalid': form.errors.has('date')
                                     }"
@@ -241,6 +242,7 @@ export default {
             editMode: false,
             url: "/api/exam/",
             data: {},
+            courses: {},
             tableProps: {
                 search: "",
                 length: 10,
@@ -333,6 +335,7 @@ export default {
     },
     created() {
         this.getData(this.url);
+        this.getCourses();
     },
 
     components: {
@@ -348,6 +351,18 @@ export default {
                 })
                 .then(response => {
                     this.data = response.data;
+                })
+                // eslint-disable-next-line
+                .catch(errors => {
+                    //Handle Errors
+                });
+        },
+
+        getCourses() {
+            axios
+                .get("/api/takenCourses/")
+                .then(response => {
+                    this.courses = response.data;
                 })
                 // eslint-disable-next-line
                 .catch(errors => {

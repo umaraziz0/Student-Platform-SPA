@@ -9,9 +9,7 @@ class Exam extends Model
 {
     use LaravelVueDatatableTrait;
     //
-    protected $fillable = [
-        'student_id', 'name', 'course_name', 'date', 'time', 'room', 'building', 'details'
-    ];
+    protected $guarded = [];
 
     protected $dataTableColumns = [
         'id' => [
@@ -42,10 +40,4 @@ class Exam extends Model
             'searchable' => true,
         ]
     ];
-
-    protected $dates = [
-        'date'
-    ];
-
-    protected $dateFormat = 'Y-m-d';
 }

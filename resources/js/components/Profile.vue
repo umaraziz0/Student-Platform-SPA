@@ -261,33 +261,22 @@
                                         >
                                         <div class="col-sm-10">
                                             <select
-                                                v-model="form.major"
-                                                class="custom-select"
-                                                :class="{
-                                                    'is-invalid': form.errors.has(
-                                                        'major'
-                                                    )
-                                                }"
-                                                id="inputMajor"
                                                 name="major"
+                                                id="inputMajor"
+                                                class="form-control custom-select"
+                                                v-model="form.major"
+                                                field="major"
                                             >
-                                                <option value="Computer Science"
-                                                    >Computer Science</option
-                                                >
                                                 <option
-                                                    value="Software Engineering"
-                                                    >Software
-                                                    Engineering</option
-                                                >
-                                                <option
-                                                    value="Computer Engineering"
-                                                    >Computer
-                                                    Engineering</option
+                                                    v-for="major in majors"
+                                                    :key="major.id"
+                                                    :value="major.name"
+                                                    >{{ major.name }}</option
                                                 >
                                             </select>
                                             <has-error
                                                 :form="form"
-                                                field="major"
+                                                field="course_name"
                                             ></has-error>
                                         </div>
                                     </div>
@@ -435,6 +424,7 @@ export default {
         return {
             fileName: "",
             url: "/api/profile/",
+            majors: {},
             form: new Form({
                 id: "",
                 student_id: "",
@@ -452,7 +442,30 @@ export default {
         };
     },
 
+    created() {
+        this.$Progress.start();
+        this.getInfo();
+        this.getMajors();
+        window.scrollTo(0, 0);
+        this.$Progress.finish();
+    },
+
     methods: {
+        getInfo(url = this.url) {
+            axios.get(url).then(({ data }) => this.form.fill(data));
+        },
+
+        getMajors() {
+            axios
+                .get("/api/majors/")
+                .then(res => {
+                    this.majors = res.data;
+                })
+                .catch(err => {
+                    console.error(err);
+                });
+        },
+
         getPhoto() {
             let photo;
 
@@ -469,10 +482,6 @@ export default {
 
         getFileName() {
             return this.fileName.length !== 0 ? this.fileName : "Choose file";
-        },
-
-        getInfo(url = this.url) {
-            axios.get(url).then(({ data }) => this.form.fill(data));
         },
 
         defaultPhoto(e) {
@@ -544,13 +553,6 @@ export default {
                     this.$Progress.fail();
                 });
         }
-    },
-
-    created() {
-        this.$Progress.start();
-        this.getInfo();
-        window.scrollTo(0, 0);
-        this.$Progress.finish();
     }
 };
 </script>

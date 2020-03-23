@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Major;
 use Illuminate\Http\Request;
 use App\User;
 use Intervention\Image\Facades\Image;
@@ -28,6 +29,13 @@ class UserController extends Controller
         $data = $query->paginate($length);
 
         return new DataTableCollectionResource($data);
+    }
+
+    public function getMajors()
+    {
+        $majors = Major::select('majors.name')->get();
+
+        return $majors;
     }
 
     /**

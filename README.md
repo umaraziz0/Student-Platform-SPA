@@ -1,9 +1,9 @@
-# Student Platform using Laravel 6 and Vue 2
+# :mortar_board: Student Platform using Laravel 6 and Vue 2
 
 A simple student platform / management single page application using Laravel and Vue.
 Currently a work in progress.
 
-## Features
+## :star: Features
 
 -   Dashboard
 -   To-Do List
@@ -13,13 +13,13 @@ Currently a work in progress.
 -   View grades, courses, teachers
 -   Admin Panel
 
-## Requirements
+## :exclamation: Requirements
 
 -   [Composer](www.getcomposer.org)
 -   [Node](www.nodejs.org)
 -   [MySQL](www.mysql.com) or your preferred DBMS
 
-## Installation
+## :arrow_down: Installation
 
 1. Clone the repo: `git clone https://github.com/umaraziz0/Student-Platform-SPA.git`
 2. `cd` to the project folder

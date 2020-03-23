@@ -61,6 +61,16 @@ class TakenCourseController extends Controller
         ]);
     }
 
+    public function getCourseName()
+    {
+        $takenCourses = TakenCourse::join('courses', function ($join) {
+            $join->on('taken_courses.course_id', 'courses.course_id')
+                ->where('taken_courses.student_id', '=', auth('api')->user()->student_id);
+        })->select('courses.course_name')->get();
+
+        return $takenCourses;
+    }
+
     /**
      * Display the specified resource.
      *

@@ -15,9 +15,9 @@ Currently a work in progress.
 
 ## :exclamation: Requirements
 
--   [Composer](www.getcomposer.org)
--   [Node](www.nodejs.org)
--   [MySQL](www.mysql.com) or your preferred DBMS
+-   [Composer](https://www.getcomposer.org)
+-   [Node](https://www.nodejs.org)
+-   [MySQL](https://www.mysql.com) or your preferred DBMS
 
 ## :arrow_down: Installation
 
@@ -28,10 +28,10 @@ Currently a work in progress.
 5. Generate the app key: `php artisan key:generate`
 6. Run database migrations: `php artisan migrate`
 7. Run seeder: `php artisan db:seed`, which will create 2 accounts:
-   1. Admin
-      - Student ID: 0
-      - Password: admin1234
-   2. Student
-      - Student ID: 1
-      - Password: student1234
+    1. Admin
+        - Student ID: 0
+        - Password: admin1234
+    2. Student
+        - Student ID: 1
+        - Password: student1234
 8. Run the server: `php artisan serve` and `npm run dev`

@@ -100,7 +100,7 @@
                             </thead>
                             <tbody>
                                 <tr
-                                    v-for="upcomingItem in upcomingItems"
+                                    v-for="upcomingItem in orderedUpcoming"
                                     :key="upcomingItem.id"
                                 >
                                     <td>{{ upcomingItem.name }}</td>
@@ -169,6 +169,12 @@ export default {
         this.dateRange();
         this.getEvents();
         this.getUpcoming();
+    },
+
+    computed: {
+        orderedUpcoming: function() {
+            return _.orderBy(this.upcomingItems, "due_date");
+        }
     },
 
     methods: {

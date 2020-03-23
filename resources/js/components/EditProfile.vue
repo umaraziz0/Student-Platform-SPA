@@ -222,33 +222,22 @@
                                         >
                                         <div class="col-sm-10">
                                             <select
-                                                v-model="form.major"
-                                                class="custom-select"
-                                                :class="{
-                                                    'is-invalid': form.errors.has(
-                                                        'major'
-                                                    )
-                                                }"
-                                                id="inputMajor"
                                                 name="major"
+                                                id="inputMajor"
+                                                class="form-control custom-select"
+                                                v-model="form.major"
+                                                field="major"
                                             >
-                                                <option value="Computer Science"
-                                                    >Computer Science</option
-                                                >
                                                 <option
-                                                    value="Software Engineering"
-                                                    >Software
-                                                    Engineering</option
-                                                >
-                                                <option
-                                                    value="Computer Engineering"
-                                                    >Computer
-                                                    Engineering</option
+                                                    v-for="major in majors"
+                                                    :key="major.id"
+                                                    :value="major.name"
+                                                    >{{ major.name }}</option
                                                 >
                                             </select>
                                             <has-error
                                                 :form="form"
-                                                field="major"
+                                                field="course_name"
                                             ></has-error>
                                         </div>
                                     </div>
@@ -399,6 +388,7 @@ export default {
             fileName: "",
             url: "/api/profile/",
             users: "",
+            majors: {},
             form: new Form({
                 id: "",
                 student_id: "",
@@ -420,6 +410,7 @@ export default {
         this.$Progress.start();
         this.getUsers();
         this.getUser();
+        this.getMajors();
         this.$Progress.finish();
     },
 
@@ -460,6 +451,17 @@ export default {
                 .get("/api/user/" + userId)
                 .then(res => {
                     this.form.fill(res.data);
+                })
+                .catch(err => {
+                    console.error(err);
+                });
+        },
+
+        getMajors() {
+            axios
+                .get("/api/majors/")
+                .then(res => {
+                    this.majors = res.data;
                 })
                 .catch(err => {
                     console.error(err);

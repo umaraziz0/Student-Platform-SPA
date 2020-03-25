@@ -106,7 +106,10 @@
                                     <td>{{ upcomingItem.name }}</td>
                                     <td>{{ upcomingItem.type }}</td>
                                     <td>
-                                        {{ upcomingItem.due_date }}
+                                        {{
+                                            upcomingItem.due_date
+                                                | formatDateDay
+                                        }}
                                     </td>
                                 </tr>
                             </tbody>

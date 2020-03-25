@@ -228,13 +228,15 @@ export default {
                     label: "Admin",
                     name: "is_admin",
                     columnName: "is_admin",
-                    orderable: true
+                    orderable: true,
+                    component: UppercaseString
                 },
                 {
                     label: "Registered at",
                     name: "created_at",
                     columnName: "created_at",
-                    orderable: true
+                    orderable: true,
+                    component: FormatDate
                 },
                 {
                     label: "Edit",
@@ -270,7 +272,7 @@ export default {
                 name: "",
                 email: "",
                 password: "",
-                is_admin: ""
+                is_admin: 0
             })
         };
     },
@@ -280,7 +282,9 @@ export default {
 
     components: {
         ButtonEdit,
-        ButtonDelete
+        ButtonDelete,
+        UppercaseString,
+        FormatDate
     },
 
     methods: {

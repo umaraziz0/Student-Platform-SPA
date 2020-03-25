@@ -14,10 +14,14 @@ Vue.use(DataTable);
 import ButtonEdit from "./components/ButtonEdit.vue";
 import ButtonDelete from "./components/ButtonDelete.vue";
 import ButtonCheck from "./components/ButtonCheck.vue";
+import UppercaseString from "./components/UppercaseString.vue";
+import FormatDate from "./components/FormatDate.vue";
 
 window.ButtonEdit = ButtonEdit;
 window.ButtonDelete = ButtonDelete;
 window.ButtonCheck = ButtonCheck;
+window.UppercaseString = UppercaseString;
+window.FormatDate = FormatDate;
 
 import FullCalendar from "@fullcalendar/vue";
 import dayGridPlugin from "@fullcalendar/daygrid";
@@ -149,13 +153,14 @@ const router = new VueRouter({
 });
 
 // Global vue filters
-// to uppercase first letter in text
-Vue.filter("upText", function (text) {
-    return text.charAt(0).toUpperCase() + text.slice(1);
-});
+
 // reformat date
-Vue.filter("myDate", function (created) {
-    return moment(created).format("MMMM Do YYYY, h:mm a");
+Vue.filter("formatDateDay", function (created) {
+    return moment(created).format("dddd, MMMM Do @ h:mm a");
+});
+
+Vue.filter("formatDate", function (created) {
+    return moment(created).format("MMMM Do, YYYY");
 });
 
 window.Fire = new Vue(); // custom global event bus

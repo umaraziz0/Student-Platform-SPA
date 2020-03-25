@@ -14,12 +14,6 @@ export default {
                 ? "/img/profile/" + this.userphoto
                 : "/img/profile/default.png"
         };
-    },
-
-    methods: {
-        defaultPhoto() {
-            //
-        }
     }
 };
 </script>

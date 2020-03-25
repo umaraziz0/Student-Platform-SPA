@@ -1,14 +1,19 @@
 <template>
-    <img
-        class="img-circle img-bordered-sm icon-avatar"
-        :src="'/img/teachers/' + data.photo"
-    />
+    <img class="img-circle img-bordered-sm icon-avatar" :src="url" />
 </template>
 
 <script>
 export default {
     props: {
         data: {}
+    },
+
+    data() {
+        return {
+            url: this.data.photo
+                ? "/img/teachers/" + this.data.photo
+                : "/img/profile/default.png"
+        };
     }
 };
 </script>

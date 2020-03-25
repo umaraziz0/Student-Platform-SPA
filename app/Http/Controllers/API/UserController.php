@@ -31,13 +31,6 @@ class UserController extends Controller
         return new DataTableCollectionResource($data);
     }
 
-    public function getMajors()
-    {
-        $majors = Major::select('majors.name')->get();
-
-        return $majors;
-    }
-
     /**
      * Store a newly created resource in storage.
      *

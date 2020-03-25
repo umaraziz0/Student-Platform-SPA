@@ -218,10 +218,6 @@ export default {
             this.getCoursesTaken(this.urlTaken, tableProps);
         },
 
-        displayRow(data) {
-            alert(`You clicked course ${data.id}`);
-        },
-
         createModal() {
             this.editMode = false;
             this.form.clear();
@@ -237,7 +233,7 @@ export default {
                     $("#newModal").modal("hide");
                     Toast.fire({
                         icon: "success",
-                        title: "Course created successfully"
+                        title: "Course created."
                     });
                     this.reloadTable();
                     this.$Progress.finish();

@@ -17,9 +17,6 @@ Route::get('/', function () {
 
 Auth::routes();
 
-// Route::get('/admin', 'HomeController@admin')->middleware('isAdmin');
-// Route::get('/admin/{path}', 'HomeController@admin')->where('path', '([A-z\d\-\/_.]+)?');
-
 Route::get('/home', 'HomeController@index');
 
 // Route::group(['middleware' => 'isAdmin'], function () {

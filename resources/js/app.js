@@ -77,6 +77,10 @@ let routes = [{
         component: require("./components/EditProfile.vue").default
     },
     {
+        path: "/admin/majors",
+        component: require("./components/Majors.vue").default
+    },
+    {
         path: "/admin/edit-courses",
         component: require("./components/EditCourses.vue").default
     },

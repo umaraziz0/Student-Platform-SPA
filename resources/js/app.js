@@ -16,12 +16,14 @@ import ButtonDelete from "./components/ButtonDelete.vue";
 import ButtonCheck from "./components/ButtonCheck.vue";
 import UppercaseString from "./components/UppercaseString.vue";
 import FormatDate from "./components/FormatDate.vue";
+import PhotoIcon from "./components/PhotoIcon.vue";
 
 window.ButtonEdit = ButtonEdit;
 window.ButtonDelete = ButtonDelete;
 window.ButtonCheck = ButtonCheck;
 window.UppercaseString = UppercaseString;
 window.FormatDate = FormatDate;
+window.PhotoIcon = PhotoIcon;
 
 import FullCalendar from "@fullcalendar/vue";
 import dayGridPlugin from "@fullcalendar/daygrid";

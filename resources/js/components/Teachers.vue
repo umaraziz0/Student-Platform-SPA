@@ -101,6 +101,12 @@ export default {
                     orderable: true
                 },
                 {
+                    label: "Photo",
+                    name: "photo",
+                    columnName: "photo",
+                    component: PhotoIcon
+                },
+                {
                     label: "Name",
                     name: "name",
                     columnName: "name",
@@ -151,7 +157,8 @@ export default {
 
     components: {
         ButtonEdit,
-        ButtonDelete
+        ButtonDelete,
+        PhotoIcon
     },
 
     methods: {

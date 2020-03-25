@@ -404,12 +404,12 @@ export default {
                     columnName: "teacher_id",
                     orderable: true
                 },
-                // {
-                //     label: "Photo",
-                //     name: "photo",
-                //     columnName: "photo",
-                //     orderable: true
-                // },
+                {
+                    label: "Photo",
+                    name: "photo",
+                    columnName: "photo",
+                    component: PhotoIcon
+                },
                 {
                     label: "Name",
                     name: "name",
@@ -488,7 +488,8 @@ export default {
 
     components: {
         ButtonEdit,
-        ButtonDelete
+        ButtonDelete,
+        PhotoIcon
     },
 
     methods: {

@@ -22,11 +22,6 @@ class TakenCourseController extends Controller
         $orderBy = $request->input('dir');
         $searchValue = $request->input('search');
 
-        $length = $request->input('length');
-        $sortBy = $request->input('column');
-        $orderBy = $request->input('dir');
-        $searchValue = $request->input('search');
-
         $query = TakenCourse::eloquentQuery($sortBy, $orderBy, $searchValue)
             ->paginate($length);
 

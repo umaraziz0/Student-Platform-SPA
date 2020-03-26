@@ -144,9 +144,10 @@ export default {
                 },
                 {
                     label: "Courses Taught",
-                    name: "courses_taught",
-                    columnName: "courses_taught",
-                    orderable: true
+                    name: "course_name",
+                    columnName: "course_name",
+                    orderable: true,
+                    component: CourseNames
                 }
             ]
         };
@@ -158,7 +159,8 @@ export default {
     components: {
         ButtonEdit,
         ButtonDelete,
-        PhotoIcon
+        PhotoIcon,
+        CourseNames
     },
 
     methods: {

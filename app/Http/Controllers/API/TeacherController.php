@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Course;
 use App\Http\Controllers\Controller;
 use App\TakenCourse;
+use App\TaughtCourse;
 use App\Teacher;
 use Illuminate\Http\Request;
 use JamesDordoy\LaravelVueDatatable\Http\Resources\DataTableCollectionResource;
@@ -29,6 +30,34 @@ class TeacherController extends Controller
         $data = $query->paginate($length);
 
         return new DataTableCollectionResource($data);
+    }
+
+    public function getTeachers(Request $request)
+    {
+        // require data from taken_courses table for current student
+        // display filtered data from teachers table
+
+        $length = $request->input('length');
+        $sortBy = $request->input('column');
+        $orderBy = $request->input('dir');
+        $searchValue = $request->input('search');
+
+        $studentId = auth('api')->user()->student_id;
+
+        $takenCourses = TakenCourse::where('student_id', '=', $studentId)
+            ->select('course_id');
+
+        $takenCoursesTaught = TaughtCourse::joinSub($takenCourses, 'tc', function ($join) {
+            $join->on('taught_courses.course_id', '=', 'tc.course_id');
+        })->select('taught_courses.teacher_id');
+
+        $takenTeachers = Teacher::leftJoinSub($takenCoursesTaught, 'tct', function ($join) {
+            $join->on('teachers.teacher_id', '=', 'tct.teacher_id');
+        })
+            ->eloquentQuery($sortBy, $orderBy, $searchValue)
+            ->paginate($length);
+
+        return new DataTableCollectionResource($takenTeachers);
     }
 
     public function storePhoto($request)
@@ -87,32 +116,6 @@ class TeacherController extends Controller
     public function show(Request $request)
     {
         //
-    }
-
-    public function getTeachers(Request $request)
-    {
-        // require data from taken_courses table for current student
-        // display filtered data from teachers table
-
-        $length = $request->input('length');
-        $sortBy = $request->input('column');
-        $orderBy = $request->input('dir');
-        $searchValue = $request->input('search');
-
-        $takenCourses = Course::join('taken_courses', function ($join) {
-            $studentId = auth('api')->user()->student_id;
-            $join->on('courses.course_id', '=', 'taken_courses.course_id')
-                ->where('taken_courses.student_id', '=', $studentId);
-        })->select('courses.teacher_id');
-
-        $query = Teacher::joinSub($takenCourses, 'taken', function ($join) {
-            $join->on('teachers.teacher_id', '=', 'taken.teacher_id');
-        })
-            ->eloquentQuery($sortBy, $orderBy, $searchValue);
-
-        $data = $query->paginate($length);
-
-        return new DataTableCollectionResource($data);
     }
 
     /**

@@ -18,6 +18,8 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index');
+
+Route::get('/dashboard', 'DashboardController@index');
 Route::get('/upcoming', 'DashboardController@getUpcoming');
 
 Route::get('admin/{path}', 'HomeController@index')->where('path', '.*')->middleware('isAdmin');

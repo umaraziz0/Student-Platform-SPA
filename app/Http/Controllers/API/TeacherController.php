@@ -51,7 +51,7 @@ class TeacherController extends Controller
             $join->on('taught_courses.course_id', '=', 'tc.course_id');
         })->select('taught_courses.teacher_id');
 
-        $takenTeachers = Teacher::leftJoinSub($takenCoursesTaught, 'tct', function ($join) {
+        $takenTeachers = Teacher::joinSub($takenCoursesTaught, 'tct', function ($join) {
             $join->on('teachers.teacher_id', '=', 'tct.teacher_id');
         })
             ->eloquentQuery($sortBy, $orderBy, $searchValue)

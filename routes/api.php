@@ -51,8 +51,6 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     Route::get('grades', 'API\GradeController@getGrades');
 
-    Route::get('takenCourses', 'API\TakenCourseController@getCourseName');
-
     Route::put('todoCheckAll', 'API\TodoController@checkAll');
     Route::delete('todoClearCompleted', 'API\TodoController@clearCompleted');
 

@@ -24,8 +24,8 @@ class Course extends Model
         'credits' => [
             'searchable' => true,
         ],
-        'teacher_id' => [
-            'searchable' => true,
-        ]
+        // 'teacher_id' => [
+        //     'searchable' => true,
+        // ]
     ];
 }

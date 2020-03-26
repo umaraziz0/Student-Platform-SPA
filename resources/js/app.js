@@ -87,6 +87,10 @@ let routes = [{
         component: require("./components/Majors.vue").default
     },
     {
+        path: "/admin/edit-grades",
+        component: require("./components/EditGrades.vue").default
+    },
+    {
         path: "/admin/edit-courses",
         component: require("./components/EditCourses.vue").default
     },
@@ -95,8 +99,8 @@ let routes = [{
         component: require("./components/EditTeachers.vue").default
     },
     {
-        path: "/admin/edit-grades",
-        component: require("./components/EditGrades.vue").default
+        path: "/admin/courses-taught",
+        component: require("./components/CoursesTaught.vue").default
     },
     {
         path: "/home",

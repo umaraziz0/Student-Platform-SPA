@@ -219,6 +219,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 </p>
                 </router-link>
             </li>
+            <li class="nav-item">
+                <router-link to="/admin/courses-taught" class="nav-link">
+                <i class="fas fa-chalkboard-teacher nav-icon"></i>
+                <p>
+                    Courses Taught
+                </p>
+                </router-link>
+            </li>
              {{-- <li class="nav-item">
                 <router-link to="/developer" class="nav-link">
                 <i class="fas fa-code nav-icon"></i>

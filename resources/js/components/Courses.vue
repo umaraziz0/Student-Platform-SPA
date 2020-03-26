@@ -115,9 +115,10 @@ export default {
                 },
                 {
                     label: "Teacher",
-                    name: "name",
-                    columnName: "name",
-                    orderable: true
+                    name: "teacher_name",
+                    columnName: "teacher_name",
+                    orderable: true,
+                    component: TeacherNames
                 },
                 {
                     label: "Take Course",
@@ -154,9 +155,10 @@ export default {
                 },
                 {
                     label: "Teacher",
-                    name: "name",
-                    columnName: "name",
-                    orderable: true
+                    name: "teacher_name",
+                    columnName: "teacher_name",
+                    orderable: true,
+                    component: TeacherNames
                 },
                 {
                     label: "Delete",
@@ -181,7 +183,8 @@ export default {
 
     components: {
         ButtonCheck,
-        ButtonDelete
+        ButtonDelete,
+        TeacherNames
     },
 
     methods: {

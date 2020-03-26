@@ -39,8 +39,20 @@ class Teacher extends Model
         'office_hours' => [
             'searchable' => true,
         ],
-        'courses_taught' => [
-            'searchable' => true,
-        ]
     ];
+
+    public function getCourseIdAttribute()
+    {
+        return TaughtCourse::where('teacher_id', '=', $this->teacher_id)
+            ->pluck('course_id');
+    }
+
+    public function getCourseNameAttribute()
+    {
+        return TaughtCourse::join('courses', 'taught_courses.course_id', '=', 'courses.course_id')
+            ->where('taught_courses.teacher_id', '=', $this->teacher_id)
+            ->pluck('courses.course_name');
+    }
+
+    protected $appends = ['course_id', 'course_name'];
 }

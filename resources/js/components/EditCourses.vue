@@ -137,26 +137,6 @@
                                     field="credits"
                                 ></has-error>
                             </div>
-                            <div class="form-group">
-                                <label for="inputTeacherID">Teacher ID:</label>
-                                <input
-                                    type="number"
-                                    v-model="form.teacher_id"
-                                    name="teacher_id"
-                                    id="inputTeacherID"
-                                    placeholder=""
-                                    class="form-control"
-                                    :class="{
-                                        'is-invalid': form.errors.has(
-                                            'teacher_id'
-                                        )
-                                    }"
-                                />
-                                <has-error
-                                    :form="form"
-                                    field="teacher_id"
-                                ></has-error>
-                            </div>
                         </div>
                         <div class="modal-footer justify-content-between">
                             <button
@@ -202,8 +182,7 @@ export default {
                 id: "",
                 course_id: "",
                 course_name: "",
-                credits: "",
-                teacher_id: ""
+                credits: ""
             }),
             columns: [
                 {
@@ -228,13 +207,15 @@ export default {
                     label: "Teacher ID",
                     name: "teacher_id",
                     columnName: "teacher_id",
-                    orderable: true
+                    orderable: true,
+                    component: TeacherIds
                 },
                 {
                     label: "Teacher",
-                    name: "name",
-                    columnName: "name",
-                    orderable: true
+                    name: "teacher_name",
+                    columnName: "teacher_name",
+                    orderable: true,
+                    component: TeacherNames
                 },
                 {
                     label: "Edit",
@@ -272,7 +253,9 @@ export default {
 
     components: {
         ButtonEdit,
-        ButtonDelete
+        ButtonDelete,
+        TeacherIds,
+        TeacherNames
     },
 
     methods: {
@@ -313,7 +296,7 @@ export default {
                     $("#newModal").modal("hide");
                     Toast.fire({
                         icon: "success",
-                        title: "Course created successfully"
+                        title: "Course created."
                     });
                     this.reloadTable();
                     this.$Progress.finish();
@@ -340,7 +323,7 @@ export default {
                     $("#newModal").modal("hide");
                     Toast.fire({
                         icon: "success",
-                        title: "Update success"
+                        title: "Update success."
                     });
                     this.reloadTable();
                     this.$Progress.finish();

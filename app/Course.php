@@ -24,8 +24,20 @@ class Course extends Model
         'credits' => [
             'searchable' => true,
         ],
-        // 'teacher_id' => [
-        //     'searchable' => true,
-        // ]
     ];
+
+    public function getTeacherIdAttribute()
+    {
+        return TaughtCourse::where('course_id', '=', $this->course_id)
+            ->pluck('teacher_id');
+    }
+
+    public function getTeacherNameAttribute()
+    {
+        return TaughtCourse::join('teachers', 'taught_courses.teacher_id', '=', 'teachers.teacher_id')
+            ->where('taught_courses.course_id', '=', $this->course_id)
+            ->pluck('teachers.name');
+    }
+
+    protected $appends = ['teacher_id', 'teacher_name'];
 }

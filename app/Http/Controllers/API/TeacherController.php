@@ -75,7 +75,6 @@ class TeacherController extends Controller
             'email' => $request['email'],
             'office_address' => $request['office_address'],
             'office_hours' => $request['office_hours'],
-            'courses_taught' => $request['courses_taught']
         ]);
     }
 

@@ -17,6 +17,9 @@ import ButtonCheck from "./components/ButtonCheck.vue";
 import UppercaseString from "./components/UppercaseString.vue";
 import FormatDate from "./components/FormatDate.vue";
 import PhotoIcon from "./components/PhotoIcon.vue";
+import TeacherIds from "./components/TeacherIds.vue";
+import TeacherNames from "./components/TeacherNames.vue";
+import CourseNames from "./components/CourseNames.vue";
 
 window.ButtonEdit = ButtonEdit;
 window.ButtonDelete = ButtonDelete;
@@ -24,6 +27,9 @@ window.ButtonCheck = ButtonCheck;
 window.UppercaseString = UppercaseString;
 window.FormatDate = FormatDate;
 window.PhotoIcon = PhotoIcon;
+window.TeacherIds = TeacherIds;
+window.TeacherNames = TeacherNames;
+window.CourseNames = CourseNames;
 
 import FullCalendar from "@fullcalendar/vue";
 import dayGridPlugin from "@fullcalendar/daygrid";

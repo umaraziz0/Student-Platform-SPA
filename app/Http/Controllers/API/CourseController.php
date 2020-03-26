@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Course;
+use App\TaughtCourse;
 use JamesDordoy\LaravelVueDatatable\Http\Resources\DataTableCollectionResource;
 
 class CourseController extends Controller
@@ -45,16 +46,18 @@ class CourseController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'course_id' => 'required|numeric',
-            'course_name' => 'required|string',
+            'course_id' => 'required|numeric|unique:courses',
+            'course_name' => 'required|string|unique:courses',
             'credits' => 'required|numeric',
         ]);
 
-        return Course::create([
+        $course =  Course::create([
             'course_id' => $request['course_id'],
             'course_name' => $request['course_name'],
             'credits' => $request['credits'],
         ]);
+
+        return response(200, $course);
     }
 
     /**
@@ -80,8 +83,8 @@ class CourseController extends Controller
         $course = Course::findOrFail($id);
 
         $this->validate($request, [
-            'course_id' => 'required|numeric',
-            'course_name' => 'required|string',
+            'course_id' => 'required|numeric|unique:courses,course_id,' . $course->id,
+            'course_name' => 'required|string|unique:courses,course_name,' . $course->id,
             'credits' => 'required|numeric',
         ]);
 

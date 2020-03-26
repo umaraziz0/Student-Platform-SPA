@@ -289,27 +289,6 @@
                                         ></has-error>
                                     </div>
                                     <div class="form-group">
-                                        <label for="inputCoursesTaught"
-                                            >Courses Taught:</label
-                                        >
-                                        <textarea
-                                            v-model="form.courses_taught"
-                                            class="form-control"
-                                            :class="{
-                                                'is-invalid': form.errors.has(
-                                                    'courses_taught'
-                                                )
-                                            }"
-                                            id="inputCoursesTaught"
-                                            placeholder=""
-                                            field="courses_taught"
-                                        ></textarea>
-                                        <has-error
-                                            :form="form"
-                                            field="courses_taught"
-                                        ></has-error>
-                                    </div>
-                                    <div class="form-group">
                                         <label for="inputPhoto"
                                             >Profile Picture:</label
                                         >
@@ -394,8 +373,7 @@ export default {
                 phone: "",
                 email: "",
                 office_address: "",
-                office_hours: "",
-                courses_taught: ""
+                office_hours: ""
             }),
             columns: [
                 {
@@ -448,9 +426,10 @@ export default {
                 },
                 {
                     label: "Courses Taught",
-                    name: "courses_taught",
-                    columnName: "courses_taught",
-                    orderable: true
+                    name: "course_name",
+                    columnName: "course_name",
+                    orderable: true,
+                    component: CourseNames
                 },
                 {
                     label: "Edit",
@@ -489,7 +468,8 @@ export default {
     components: {
         ButtonEdit,
         ButtonDelete,
-        PhotoIcon
+        PhotoIcon,
+        CourseNames
     },
 
     methods: {
@@ -599,7 +579,7 @@ export default {
                     $("#newModal").modal("hide");
                     Toast.fire({
                         icon: "success",
-                        title: "Teacher created successfully"
+                        title: "Teacher created."
                     });
                     this.reloadTable();
                     this.$Progress.finish();

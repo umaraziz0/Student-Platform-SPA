@@ -23,15 +23,7 @@ class GradeController extends Controller
         $orderBy = $request->input('dir');
         $searchValue = $request->input('search');
 
-        $query = Grade::join('users', 'grades.student_id', '=', 'users.student_id')
-            ->join('courses', 'grades.course_id', '=', 'courses.course_id')
-            ->select('grades.*', 'courses.course_name', 'users.name')
-            ->where('grades.student_id', 'LIKE', "%$searchValue%")
-            ->orWhere('grades.course_id', 'LIKE', "%$searchValue%")
-            ->orWhere('grades.grade', 'LIKE', "%$searchValue%")
-            ->orWhere('courses.course_name', 'LIKE', "%$searchValue%")
-            ->orWhere('users.name', 'LIKE', "%$searchValue%")
-            ->orderBy($sortBy, $orderBy)
+        $query = Grade::eloquentQuery($sortBy, $orderBy, $searchValue)
             ->paginate($length);
 
         return new DataTableCollectionResource($query);
@@ -46,15 +38,8 @@ class GradeController extends Controller
         $orderBy = $request->input('dir');
         $searchValue = $request->input('search');
 
-        $query = Grade::join('courses', function ($join) {
-            $join->on('grades.course_id', '=', 'courses.course_id')
-                ->where('grades.student_id', '=', auth('api')->user()->student_id);
-        })
-            ->select('grades.*', 'courses.course_name')
-            ->where('grades.course_id', 'LIKE', "%$searchValue%")
-            ->orWhere('grades.grade', 'LIKE', "%$searchValue%")
-            ->orWhere('courses.course_name', 'LIKE', "%$searchValue%")
-            ->orderBy($sortBy, $orderBy)
+        $query = Grade::where('student_id', '=', auth('api')->user()->student_id)
+            ->eloquentQuery($sortBy, $orderBy, $searchValue)
             ->paginate($length);
 
         return new DataTableCollectionResource($query);

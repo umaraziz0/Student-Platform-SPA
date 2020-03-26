@@ -25,4 +25,18 @@ class Grade extends Model
             'searchable' => true,
         ],
     ];
+
+    public function getCourseNameAttribute()
+    {
+        return Course::where('course_id', '=', $this->course_id)
+            ->pluck('course_name');
+    }
+
+    public function getStudentNameAttribute()
+    {
+        return User::where('student_id', '=', $this->student_id)
+            ->pluck('name');
+    }
+
+    protected $appends = ['course_name', 'student_name'];
 }

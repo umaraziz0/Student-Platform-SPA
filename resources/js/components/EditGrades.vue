@@ -193,8 +193,8 @@ export default {
                 },
                 {
                     label: "Student Name",
-                    name: "name",
-                    columnName: "name",
+                    name: "student_name",
+                    columnName: "student_name",
                     orderable: true
                 },
                 {

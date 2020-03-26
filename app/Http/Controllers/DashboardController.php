@@ -1,9 +1,7 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Assignment;
 use App\Exam;
 use App\Todo;
@@ -57,63 +55,18 @@ class DashboardController extends Controller
 
         $upcomingAssignments = Assignment::where('student_id', $studentId)
             ->whereBetween('due_date', [$today, $week])
-            ->select('id', 'name', 'course_name', 'due_date')
+            ->select('id', 'name', 'due_date')
             ->addSelect(DB::raw("'Assignment' as 'type'"))
             ->get();
 
         $upcomingExams = Exam::where('student_id', $studentId)
             ->whereBetween('date', [$today, $week])
-            ->select('id', 'name', 'course_name', 'date AS due_date')
+            ->select('id', 'name', 'date AS due_date')
             ->addSelect(DB::raw("'Exam' as 'type'"))
             ->get();
 
         $result = $upcomingAssignments->merge($upcomingExams);
 
         return $result;
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
     }
 }

@@ -152,7 +152,7 @@ export default {
     data() {
         return {
             calendarPlugins: [listPlugin, interactionPlugin],
-            url: "/api/dashboard/",
+            url: "/dashboard",
             range: "",
             items: "",
             eventExample: [
@@ -218,7 +218,7 @@ export default {
 
         getUpcoming() {
             axios
-                .get("/api/upcoming")
+                .get("/upcoming")
                 .then(res => {
                     this.upcomingItems = res.data;
                 })

@@ -55,7 +55,4 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     Route::put('todoCheckAll', 'API\TodoController@checkAll');
     Route::delete('todoClearCompleted', 'API\TodoController@clearCompleted');
-
-    Route::get('dashboard', 'API\DashboardController@index');
-    Route::get('upcoming', 'API\DashboardController@getUpcoming');
 });

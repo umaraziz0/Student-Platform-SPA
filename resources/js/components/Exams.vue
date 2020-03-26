@@ -102,13 +102,13 @@
                                     name="course_name"
                                     id="inputCourseName"
                                     class="form-control custom-select"
-                                    v-model="form.course_name"
+                                    v-model="form.course_id"
                                     field="course_name"
                                 >
                                     <option
                                         v-for="course in courses"
                                         :key="course.id"
-                                        :value="course.course_name | toString"
+                                        :value="course.course_id"
                                         >{{
                                             course.course_name | toString
                                         }}</option
@@ -255,7 +255,7 @@ export default {
                 id: "",
                 name: "",
                 student_id: "",
-                course_name: "",
+                course_id: "",
                 date: "",
                 time: "",
                 room: "",

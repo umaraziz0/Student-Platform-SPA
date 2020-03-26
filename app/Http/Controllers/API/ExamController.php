@@ -45,7 +45,7 @@ class ExamController extends Controller
 
         $this->validate($request, [
             'name' => 'required|string|max:255',
-            'course_name' => 'required|string',
+            'course_id' => 'required|numeric',
             'date' => 'required|date',
             'time' => 'required'
         ]);
@@ -53,7 +53,7 @@ class ExamController extends Controller
         return Exam::create([
             'name' => $request['name'],
             'student_id' => $request['student_id'],
-            'course_name' => $request['course_name'],
+            'course_id' => $request['course_id'],
             'date' => $request['date'],
             'time' => $request['time'],
             'room' => $request['room'],
@@ -86,7 +86,7 @@ class ExamController extends Controller
 
         $this->validate($request, [
             'name' => 'required|string|max:255',
-            'course_name' => 'required|string',
+            'course_id' => 'required|numeric',
             'date' => 'required|date',
             'time' => 'required'
         ]);

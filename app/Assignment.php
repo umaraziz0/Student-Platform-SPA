@@ -21,14 +21,22 @@ class Assignment extends Model
         'name' => [
             'searchable' => true,
         ],
-        'course_name' => [
-            'searchable' => true,
-        ],
         'due_date' => [
             'searchable' => true,
         ],
         'details' => [
             'searchable' => true,
         ],
+        'course_id' => [
+            'searchable' => true,
+        ],
     ];
+
+    public function getCourseNameAttribute()
+    {
+        return Course::where('course_id', '=', $this->course_id)
+            ->pluck('course_name');
+    }
+
+    protected $appends = ['course_name'];
 }

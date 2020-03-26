@@ -21,7 +21,7 @@ class Exam extends Model
         'name' => [
             'searchable' => true,
         ],
-        'course_name' => [
+        'course_id' => [
             'searchable' => true,
         ],
         'date' => [
@@ -40,4 +40,12 @@ class Exam extends Model
             'searchable' => true,
         ]
     ];
+
+    public function getCourseNameAttribute()
+    {
+        return Course::where('course_id', '=', $this->course_id)
+            ->pluck('course_name');
+    }
+
+    protected $appends = ['course_name'];
 }

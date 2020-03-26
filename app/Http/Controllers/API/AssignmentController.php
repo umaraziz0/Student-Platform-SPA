@@ -46,13 +46,13 @@ class AssignmentController extends Controller
 
         $this->validate($request, [
             'name' => 'required|string|max:255',
-            'course_name' => 'required|string'
+            'course_id' => 'required|numeric'
         ]);
 
         return Assignment::create([
             'student_id' => $request['student_id'],
             'name' => $request['name'],
-            'course_name' => $request['course_name'],
+            'course_id' => $request['course_id'],
             'due_date' => $request['due_date'],
             'details' => $request['details']
         ]);
@@ -82,7 +82,7 @@ class AssignmentController extends Controller
 
         $this->validate($request, [
             'name' => 'required|string|max:255',
-            'course_name' => 'required|string'
+            'course_id' => 'required|numeric'
         ]);
 
         $assignment->update($request->all());

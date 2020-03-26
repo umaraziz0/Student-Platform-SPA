@@ -288,7 +288,7 @@ export default {
                     $("#newModal").modal("hide");
                     Toast.fire({
                         icon: "success",
-                        title: "Grade added!"
+                        title: "Grade added."
                     });
                     this.reloadTable();
                     this.$Progress.finish();
@@ -315,7 +315,7 @@ export default {
                     $("#newModal").modal("hide");
                     Toast.fire({
                         icon: "success",
-                        title: "Update success"
+                        title: "Grade updated."
                     });
                     this.reloadTable();
                     this.$Progress.finish();

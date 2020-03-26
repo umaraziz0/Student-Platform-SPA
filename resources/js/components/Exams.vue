@@ -108,8 +108,10 @@
                                     <option
                                         v-for="course in courses"
                                         :key="course.id"
-                                        :value="course.course_name"
-                                        >{{ course.course_name }}</option
+                                        :value="course.course_name | toString"
+                                        >{{
+                                            course.course_name | toString
+                                        }}</option
                                     >
                                 </select>
                                 <has-error
@@ -419,7 +421,7 @@ export default {
                     $("#newModal").modal("hide");
                     Toast.fire({
                         icon: "success",
-                        title: "Update success"
+                        title: "Exam updated."
                     });
                     this.reloadTable();
                     this.$Progress.finish();

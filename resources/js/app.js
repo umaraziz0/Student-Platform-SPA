@@ -175,6 +175,12 @@ Vue.filter("formatDate", function (created) {
     return moment(created).format("MMMM Do, YYYY");
 });
 
+Vue.filter('toString', function (value) {
+    if (!value) return ''
+    return value.toString();
+})
+
+
 window.Fire = new Vue(); // custom global event bus
 
 /**

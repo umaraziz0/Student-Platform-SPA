@@ -323,7 +323,7 @@ export default {
                     $("#newModal").modal("hide");
                     Toast.fire({
                         icon: "success",
-                        title: "Update success."
+                        title: "Course updated."
                     });
                     this.reloadTable();
                     this.$Progress.finish();

@@ -606,7 +606,7 @@ export default {
                     $("#newModal").modal("hide");
                     Toast.fire({
                         icon: "success",
-                        title: "Update success",
+                        title: "Teacher updated.",
                         timer: 1000
                     }).then(() => {
                         this.$Progress.finish();

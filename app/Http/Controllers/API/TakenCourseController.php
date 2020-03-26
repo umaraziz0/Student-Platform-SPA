@@ -49,6 +49,15 @@ class TakenCourseController extends Controller
         ]);
     }
 
+    public function getCourseName()
+    {
+        // used by [assignments] and [exams] page
+        $studentId = auth('api')->user()->student_id;
+
+        return TakenCourse::where('student_id', '=', $studentId)
+            ->get();
+    }
+
     /**
      * Display the specified resource.
      *

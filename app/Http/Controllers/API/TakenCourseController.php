@@ -4,12 +4,16 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\TakenCourse;
-use App\Course;
 use Illuminate\Http\Request;
 use JamesDordoy\LaravelVueDatatable\Http\Resources\DataTableCollectionResource;
 
 class TakenCourseController extends Controller
 {
+    public function __construct()
+    {
+        $this->studentId = auth('api')->user()->student_id;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -22,7 +26,8 @@ class TakenCourseController extends Controller
         $orderBy = $request->input('dir');
         $searchValue = $request->input('search');
 
-        $query = TakenCourse::eloquentQuery($sortBy, $orderBy, $searchValue)
+        $query = TakenCourse::where('student_id', '=', auth('api')->user()->student_id)
+            ->eloquentQuery($sortBy, $orderBy, $searchValue)
             ->paginate($length);
 
         return new DataTableCollectionResource($query);
@@ -36,11 +41,10 @@ class TakenCourseController extends Controller
      */
     public function store(Request $request)
     {
-        $studentId = auth('api')->user()->student_id;
-        $request->merge(['student_id' => $studentId]);
+        $request->merge(['student_id' => $this->studentId]);
 
         $this->validate($request, [
-            'course_id' => 'required|unique:taken_courses',
+            'course_id' => 'required|unique:taken_courses,course_id,NULL,id,student_id,3',
         ]);
 
         return TakenCourse::create([
@@ -52,9 +56,7 @@ class TakenCourseController extends Controller
     public function getCourseName()
     {
         // used by [assignments] and [exams] page
-        $studentId = auth('api')->user()->student_id;
-
-        return TakenCourse::where('student_id', '=', $studentId)
+        return TakenCourse::where('student_id', '=', $this->studentId)
             ->get();
     }
 

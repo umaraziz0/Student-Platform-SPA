@@ -53,11 +53,13 @@ class TeacherController extends Controller
 
         $takenTeachers = Teacher::joinSub($takenCoursesTaught, 'tct', function ($join) {
             $join->on('teachers.teacher_id', '=', 'tct.teacher_id');
-        })
+        })->select('teachers.*')->distinct();
+
+        $data = $takenTeachers
             ->eloquentQuery($sortBy, $orderBy, $searchValue)
             ->paginate($length);
 
-        return new DataTableCollectionResource($takenTeachers);
+        return new DataTableCollectionResource($data);
     }
 
     public function storePhoto($request)

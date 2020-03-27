@@ -178,7 +178,7 @@ export default {
         },
 
         reloadTable(tableProps) {
-            this.getData(this.url, tableProps);
+            this.getTeachers(this.url, tableProps);
         }
     }
 };

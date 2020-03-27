@@ -9,6 +9,10 @@ use JamesDordoy\LaravelVueDatatable\Http\Resources\DataTableCollectionResource;
 
 class ExamController extends Controller
 {
+    public function __construct()
+    {
+        $this->studentId = auth('api')->user()->student_id;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -16,19 +20,19 @@ class ExamController extends Controller
      */
     public function index(Request $request)
     {
-        $user = auth('api')->user();
 
         $length = $request->input('length');
         $sortBy = $request->input('column');
         $orderBy = $request->input('dir');
         $searchValue = $request->input('search');
 
-        $query = Exam::where('student_id', $user->student_id)
-            ->eloquentQuery($sortBy, $orderBy, $searchValue);
+        $query = Exam::where('student_id', '=', $this->studentId)
+            ->eloquentQuery($sortBy, $orderBy, $searchValue)
+            ->paginate($length);
 
-        $data = $query->paginate($length);
-
-        return new DataTableCollectionResource($data);
+        return new DataTableCollectionResource(
+            $query
+        );
     }
 
     /**
@@ -39,9 +43,7 @@ class ExamController extends Controller
      */
     public function store(Request $request)
     {
-        $user = auth('api')->user();
-        $studentId = $user->student_id;
-        $request->merge(['student_id' => $studentId]);
+        $request->merge(['student_id' => $this->studentId]);
 
         $this->validate($request, [
             'name' => 'required|string|max:255',

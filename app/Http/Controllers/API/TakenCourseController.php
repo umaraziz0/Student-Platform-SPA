@@ -44,7 +44,7 @@ class TakenCourseController extends Controller
         $request->merge(['student_id' => $this->studentId]);
 
         $this->validate($request, [
-            'course_id' => 'required|unique:taken_courses,course_id,NULL,id,student_id,3',
+            'course_id' => 'required|unique:taken_courses,course_id,NULL,id,student_id,' . $this->studentId,
         ]);
 
         return TakenCourse::create([

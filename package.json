@@ -33,7 +33,7 @@
         "admin-lte": "^3.0.2",
         "animate.css": "^3.7.2",
         "icheck-bootstrap": "^3.0.1",
-        "laravel-vue-datatable": "^0.5.10",
+        "laravel-vue-datatable": "^0.5.11",
         "moment": "^2.24.0",
         "sweetalert2": "^9.10.2",
         "vform": "^1.0.1",

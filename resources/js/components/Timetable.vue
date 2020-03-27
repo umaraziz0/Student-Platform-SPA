@@ -32,22 +32,28 @@
                         >
                             <div class="modal-body">
                                 <div class="form-group">
-                                    <label for="inputName">Class:</label>
-                                    <input
-                                        type="text"
-                                        v-model="form.course_name"
-                                        class="form-control"
-                                        :class="{
-                                            'is-invalid': form.errors.has(
-                                                'name'
-                                            )
-                                        }"
-                                        id="inputName"
-                                        placeholder=""
-                                    />
+                                    <label for="inputCourseName"
+                                        >Course Name:</label
+                                    >
+                                    <select
+                                        name="course_name"
+                                        id="inputCourseName"
+                                        class="form-control custom-select"
+                                        v-model="form.course_id"
+                                        field="course_name"
+                                    >
+                                        <option
+                                            v-for="course in courses"
+                                            :key="course.course_id"
+                                            :value="course.course_id"
+                                            >{{
+                                                course.course_name | toString
+                                            }}</option
+                                        >
+                                    </select>
                                     <has-error
                                         :form="form"
-                                        field="name"
+                                        field="course_name"
                                     ></has-error>
                                 </div>
                                 <div class="form-group">
@@ -181,25 +187,7 @@
                                         field="room"
                                     ></has-error>
                                 </div>
-                                <div class="form-group">
-                                    <label for="inputBuilding">Building:</label>
-                                    <input
-                                        type="text"
-                                        v-model="form.building"
-                                        class="form-control"
-                                        :class="{
-                                            'is-invalid': form.errors.has(
-                                                'buliding'
-                                            )
-                                        }"
-                                        id="inputBuilding"
-                                        name="buliding"
-                                    />
-                                    <has-error
-                                        :form="form"
-                                        field="buliding"
-                                    ></has-error>
-                                </div>
+
                                 <div class="form-group">
                                     <label for="inputDetails">Details:</label>
                                     <textarea
@@ -330,10 +318,11 @@ export default {
                 }
             ],
             classes: "",
+            courses: {},
             form: new Form({
                 id: "",
                 student_id: "",
-                course_name: "",
+                course_id: "",
                 class_type: "",
                 day: "",
                 start: "",
@@ -349,6 +338,7 @@ export default {
 
     created() {
         this.getClasses();
+        this.getCourseNames();
     },
 
     methods: {
@@ -360,6 +350,18 @@ export default {
                 })
                 .catch(err => {
                     console.error(err.response.data);
+                });
+        },
+
+        getCourseNames() {
+            axios
+                .get("/api/takenCourses/")
+                .then(response => {
+                    this.courses = response.data;
+                })
+                // eslint-disable-next-line
+                .catch(errors => {
+                    //Handle Errors
                 });
         },
 
@@ -377,7 +379,7 @@ export default {
                     $("#newModal").modal("hide");
                     Toast.fire({
                         icon: "success",
-                        title: "Class added!"
+                        title: "Class added."
                     });
                     this.getClasses();
                 })
@@ -395,6 +397,7 @@ export default {
             const {
                 id,
                 student_id,
+                course_id,
                 title,
                 resourceId,
                 class_type,
@@ -410,7 +413,7 @@ export default {
             let classData = {
                 id: id,
                 student_id: student_id,
-                course_name: title,
+                course_id: course_id,
                 class_type: class_type,
                 day: resourceId,
                 start: start.slice(11),
@@ -432,7 +435,7 @@ export default {
                     $("#newModal").modal("hide");
                     Toast.fire({
                         icon: "success",
-                        title: "Class updated!"
+                        title: "Class updated."
                     });
                     this.getClasses();
                 })
@@ -448,7 +451,7 @@ export default {
                     $("#newModal").modal("hide");
                     Toast.fire({
                         icon: "success",
-                        title: "Class deleted!"
+                        title: "Class deleted."
                     });
                     this.getClasses();
                 })

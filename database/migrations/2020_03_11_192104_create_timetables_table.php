@@ -18,7 +18,9 @@ class CreateTimetablesTable extends Migration
             $table->integer('student_id');
             $table->foreign('student_id')->references('student_id')->on('users')
                 ->onUpdate('cascade')->onDelete('cascade');
-            $table->string('course_name');
+            $table->integer('course_id');
+            $table->foreign('course_id')->references('course_id')->on('courses')
+                ->onUpdate('cascade')->onDelete('cascade');
             $table->string('class_type')->default('lecture');
             $table->string('day');
             $table->time('start', 0);

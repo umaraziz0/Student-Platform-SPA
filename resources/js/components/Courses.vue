@@ -7,6 +7,7 @@
                 <data-table
                     :data="coursesTaken"
                     :columns="columnsTaken"
+                    :debounce-delay="2000"
                     @onTablePropsChanged="reloadTable"
                     ><div slot="filters" slot-scope="{ tableData, perPage }">
                         <div class="row mb-2">

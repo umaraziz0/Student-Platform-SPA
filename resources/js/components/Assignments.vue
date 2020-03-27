@@ -197,7 +197,6 @@ export default {
             editMode: false,
             url: "/api/assignment/",
             data: {},
-            courseName: "",
             courses: {},
             tableProps: {
                 search: "",

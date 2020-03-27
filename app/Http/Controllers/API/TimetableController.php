@@ -14,7 +14,7 @@ class TimetableController extends Controller
 
     public function __construct()
     {
-        $this->user = auth('api')->user();
+        $this->studentId = auth('api')->user()->student_id;
     }
 
     /**
@@ -24,9 +24,7 @@ class TimetableController extends Controller
      */
     public function index()
     {
-        $studentId = $this->user->student_id;
-
-        return TimetableResource::collection(Timetable::where('student_id', $studentId)->get());
+        return TimetableResource::collection(Timetable::where('student_id', $this->studentId)->get());
     }
 
     /**
@@ -37,11 +35,10 @@ class TimetableController extends Controller
      */
     public function store(Request $request)
     {
-        $studentId = $this->user->student_id;
-        $request->merge(['student_id' => $studentId]);
+        $request->merge(['student_id' => $this->studentId]);
 
         $request->validate([
-            'course_name' => 'required|string',
+            'course_id' => 'required|numeric',
             'class_type' => 'required|string',
             'day' => 'required|string',
             'start' => 'required',
@@ -79,7 +76,7 @@ class TimetableController extends Controller
         $class = Timetable::findOrFail($id);
 
         $request->validate([
-            'course_name' => 'required|string',
+            'course_id' => 'required|numeric',
             'class_type' => 'required|string',
             'day' => 'required|string',
             'start' => 'required',

@@ -21,6 +21,7 @@ class TimetableResource extends JsonResource
             'id' => $this->id,
             'student_id' => $this->student_id,
             'title' => $this->course_name,
+            'course_id' => $this->course_id,
             'resourceId' => $this->day,
             'class_type' => $this->class_type,
             'start' => $date . ' ' . $this->start,

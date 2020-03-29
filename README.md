@@ -28,10 +28,12 @@ Currently a work in progress.
 5. Generate the app key: `php artisan key:generate`
 6. Run database migrations: `php artisan migrate`
 7. Run seeder: `php artisan db:seed`, which will create 2 accounts:
-    1. Admin
+    1. Admin 
         - Student ID: 0
         - Password: admin1234
+        - will login into the Admin Panel
     2. Student
         - Student ID: 1
         - Password: student1234
+        - will login into the student dashboard
 8. Run the server: `php artisan serve` and `npm run dev`

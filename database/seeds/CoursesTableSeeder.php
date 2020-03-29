@@ -19,7 +19,7 @@ class CoursesTableSeeder extends Seeder
                 'credits' => 4
             ),
             array(
-                'course_id' => 1,
+                'course_id' => 2,
                 'course_name' => 'Data Structures',
                 'credits' => 4
             ),

@@ -16,14 +16,15 @@ class CreateAssignmentsTable extends Migration
         Schema::create('assignments', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->integer('student_id');
-            $table->foreign('student_id')->references('student_id')->on('users')
-                ->onDelete('cascade')->onUpdate('cascade');
             $table->string('name');
-            $table->string('course_id')->nullable();
-            $table->foreign('course_id')->references('course_id')->on('courses')->onDelete('cascade')->onUpdate('cascade');
+            $table->integer('course_id');
             $table->date('due_date')->nullable();
             $table->text('details')->nullable();
             $table->timestamps();
+            $table->foreign('student_id')->references('student_id')->on('users')
+                ->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('course_id')->references('course_id')->on('courses')
+                ->onUpdate('cascade')->onDelete('cascade');
         });
     }
 

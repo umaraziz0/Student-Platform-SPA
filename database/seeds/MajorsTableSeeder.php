@@ -14,18 +14,23 @@ class MajorsTableSeeder extends Seeder
     {
         $courses = array(
             array(
+                'major_id' => 1,
                 'name' => 'Computer Science'
             ),
             array(
+                'major_id' => 2,
                 'name' => 'Software Engineering'
             ),
             array(
+                'major_id' => 3,
                 'name' => 'International Trade and Economics'
             ),
             array(
+                'major_id' => 4,
                 'name' => 'International Law'
             ),
             array(
+                'major_id' => 5,
                 'name' => 'Computer Engineering'
             ),
         );

@@ -18,7 +18,7 @@ class CreateExamsTable extends Migration
             $table->string('name');
             $table->integer('student_id');
             $table->foreign('student_id')->references('student_id')->on('users')->onDelete('cascade')->onUpdate('cascade');
-            $table->string('course_id')->nullable();
+            $table->integer('course_id');
             $table->foreign('course_id')->references('course_id')->on('courses')->onDelete('cascade')->onUpdate('cascade');
             $table->date('date');
             $table->time('time', 0);

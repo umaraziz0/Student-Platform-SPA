@@ -16,7 +16,7 @@ Currently a work in progress.
 ## :exclamation: Requirements
 
 -   [Composer](https://www.getcomposer.org)
--   [Node](https://www.nodejs.org)
+-   [Node.js](https://www.nodejs.org) comes with npm
 -   [MySQL](https://www.mysql.com) or your preferred DBMS
 
 ## :arrow_down: Installation
@@ -27,7 +27,8 @@ Currently a work in progress.
 4. Save the `.env.example` as `.env` and set your database information
 5. Generate the app key: `php artisan key:generate`
 6. Run database migrations: `php artisan migrate`
-7. Run seeder: `php artisan db:seed`, which will create 2 accounts:
+7. Run `php artisan passport:install` to generate Laravel Passport OAuth keys
+8. Run seeder: `php artisan db:seed`, which will create 2 accounts:
     1. Admin 
         - Student ID: 0
         - Password: admin1234
@@ -36,4 +37,4 @@ Currently a work in progress.
         - Student ID: 1
         - Password: student1234
         - will login into the student dashboard
-8. Run the server: `php artisan serve` and `npm run dev`
+9. Run the server: `php artisan serve` and `npm run dev`

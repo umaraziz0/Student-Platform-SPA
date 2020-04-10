@@ -303,6 +303,11 @@ export default {
                 })
                 .catch(errors => {
                     this.$Progress.fail();
+                    Swal.fire({
+                        icon: "error",
+                        title: "An error occurred.",
+                        text: errors
+                    });
                     console.log(errors);
                 });
         },
@@ -328,8 +333,14 @@ export default {
                     this.reloadTable();
                     this.$Progress.finish();
                 })
-                .catch(() => {
+                .catch(errors => {
                     this.$Progress.fail();
+                    Swal.fire({
+                        icon: "error",
+                        title: "An error occurred.",
+                        text: errors
+                    });
+                    console.log(errors);
                 });
         },
 
@@ -356,8 +367,9 @@ export default {
                             Swal.fire({
                                 icon: "error",
                                 title: "An error occurred.",
-                                text: `${errors}`
+                                text: errors
                             });
+                            console.log(errors);
                         });
                 }
             });

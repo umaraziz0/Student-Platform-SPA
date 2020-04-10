@@ -39,7 +39,7 @@ Route::group(['middleware' => 'auth:api'], function () {
 
 Route::group(['middleware' => 'auth:api'], function () {
     //define new routes for new methods
-    Route::get('profile', 'API\UserController@profile');
+    Route::get('profile', 'API\UserController@showProfile');
     Route::get('majors', 'API\MajorController@getName');
     Route::put('profile', 'API\UserController@updateProfile');
     Route::delete('removePhoto/{id}', 'API\UserController@removePhoto');

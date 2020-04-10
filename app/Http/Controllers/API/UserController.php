@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Major;
 use Illuminate\Http\Request;
 use App\User;
 use Intervention\Image\Facades\Image;
@@ -68,7 +67,7 @@ class UserController extends Controller
         return $user;
     }
 
-    public function profile()
+    public function showProfile()
     {
         //return authenticated user data
         return auth('api')->user();

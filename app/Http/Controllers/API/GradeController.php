@@ -54,7 +54,7 @@ class GradeController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'student_id' => 'required|numeric',
+            'student_id' => 'required|numeric|exists:users,student_id',
             'course_id' => 'required|numeric',
             'grade' => 'required|numeric',
         ]);

@@ -104,7 +104,10 @@
                                             >Student ID</label
                                         >
                                         <div class="col-sm-10">
-                                            <input
+                                            <p class="form-control">
+                                                {{ form.student_id }}
+                                            </p>
+                                            <!-- <input
                                                 type="number"
                                                 v-model="form.student_id"
                                                 class="form-control"
@@ -119,7 +122,7 @@
                                             <has-error
                                                 :form="form"
                                                 field="student_id"
-                                            ></has-error>
+                                            ></has-error> -->
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -383,7 +386,7 @@
                                                 <div class="input-group-append">
                                                     <span
                                                         class="input-group-text"
-                                                        style="cursor:pointer"
+                                                        style="cursor: pointer;"
                                                         @click.prevent="
                                                             removePhoto(form.id)
                                                         "
@@ -549,8 +552,14 @@ export default {
                         window.location = location.href;
                     });
                 })
-                .catch(() => {
+                .catch(errors => {
                     this.$Progress.fail();
+                    Swal.fire({
+                        icon: "error",
+                        title: "Error",
+                        text: "An error occurred"
+                    });
+                    console.log(errors);
                 });
         }
     }

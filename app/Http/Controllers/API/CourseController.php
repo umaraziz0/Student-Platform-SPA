@@ -48,7 +48,7 @@ class CourseController extends Controller
             'credits' => $request['credits'],
         ]);
 
-        return response(200, $course);
+        return response(200);
     }
 
     /**

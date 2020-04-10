@@ -9,7 +9,6 @@ use JamesDordoy\LaravelVueDatatable\Http\Resources\DataTableCollectionResource;
 
 class AssignmentController extends Controller
 {
-
     public function __construct()
     {
         $this->studentId = auth('api')->user()->student_id;
@@ -22,7 +21,6 @@ class AssignmentController extends Controller
 
     public function index(Request $request)
     {
-
         $length = $request->input('length');
         $sortBy = $request->input('column');
         $orderBy = $request->input('dir');
@@ -43,7 +41,7 @@ class AssignmentController extends Controller
      */
     public function store(Request $request)
     {
-        $request->merge(['student_id' => $this->student_id]);
+        $request->merge(['student_id' => $this->studentId]);
 
         $this->validate($request, [
             'name' => 'required|string|max:255',

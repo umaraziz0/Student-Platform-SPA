@@ -13,7 +13,7 @@
                 >
                     <div slot="filters" slot-scope="{ tableData, perPage }">
                         <div class="row mb-2">
-                            <div class="col-md-4">
+                            <div class="col-md-2">
                                 <select
                                     class="form-control custom-select"
                                     v-model="tableData.length"
@@ -25,6 +25,7 @@
                                     >
                                 </select>
                             </div>
+                            <div class="col-md-2"></div>
                             <div class="col-md-4 text-center"></div>
                             <div class="col-md-4">
                                 <input

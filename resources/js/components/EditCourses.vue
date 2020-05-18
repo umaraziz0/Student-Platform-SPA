@@ -303,11 +303,6 @@ export default {
                 })
                 .catch(errors => {
                     this.$Progress.fail();
-                    Swal.fire({
-                        icon: "error",
-                        title: "An error occurred.",
-                        text: errors
-                    });
                     console.log(errors);
                 });
         },

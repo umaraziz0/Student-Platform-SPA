@@ -39,6 +39,11 @@
                                         name="course_name"
                                         id="inputCourseName"
                                         class="form-control custom-select"
+                                        :class="{
+                                            'is-invalid': form.errors.has(
+                                                'course_id'
+                                            )
+                                        }"
                                         v-model="form.course_id"
                                         field="course_name"
                                     >
@@ -53,7 +58,7 @@
                                     </select>
                                     <has-error
                                         :form="form"
-                                        field="course_name"
+                                        field="course_id"
                                     ></has-error>
                                 </div>
                                 <div class="form-group">
@@ -126,11 +131,11 @@
                                             for="lab"
                                             >Lab</label
                                         >
+                                        <has-error
+                                            :form="form"
+                                            field="type"
+                                        ></has-error>
                                     </div>
-                                    <has-error
-                                        :form="form"
-                                        field="type"
-                                    ></has-error>
                                 </div>
                                 <div class="form-group">
                                     <label for="inputStartTime">Start:</label>
@@ -323,7 +328,7 @@ export default {
                 id: "",
                 student_id: "",
                 course_id: "",
-                class_type: "",
+                class_type: "lecture",
                 day: "",
                 start: "",
                 end: "",

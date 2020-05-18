@@ -12,11 +12,7 @@
                     <div class="icon">
                         <i class="fas fa-edit"></i>
                     </div>
-                    <router-link
-                        to="/agenda/todo"
-                        class="small-box-footer"
-                        style=""
-                    >
+                    <router-link to="/todo" class="small-box-footer" style="">
                         More Info <i class="fas fa-arrow-circle-right"></i>
                     </router-link>
                 </div>

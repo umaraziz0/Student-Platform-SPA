@@ -103,6 +103,11 @@
                                     name="course_name"
                                     id="inputCourseName"
                                     class="form-control custom-select"
+                                    :class="{
+                                        'is-invalid': form.errors.has(
+                                            'course_id'
+                                        )
+                                    }"
                                     v-model="form.course_id"
                                     field="course_name"
                                 >
@@ -117,7 +122,7 @@
                                 </select>
                                 <has-error
                                     :form="form"
-                                    field="course_name"
+                                    field="course_id"
                                 ></has-error>
                             </div>
                             <div class="form-group">
@@ -396,7 +401,7 @@ export default {
                     $("#newModal").modal("hide");
                     Toast.fire({
                         icon: "success",
-                        title: "Exam created."
+                        title: "Exam added."
                     });
                     this.reloadTable();
                     this.$Progress.finish();

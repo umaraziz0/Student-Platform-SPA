@@ -1,13 +1,12 @@
 # :mortar_board: Student Platform using Laravel 6 and Vue 2
 
-A simple student platform / management single page application using Laravel and Vue.
-Currently a work in progress.
+A simple student platform / management single page application using Laravel and Vue. Part of my undergraduate degree final year project. 
 
 ## :star: Features
 
 -   Dashboard
 -   To-Do List
--   Add assignments, exams
+-   Add and manage assignments & exams
 -   Custom weekly timetable
 -   Calendar & events
 -   View grades, courses, teachers
@@ -15,6 +14,7 @@ Currently a work in progress.
 
 ## :exclamation: Requirements
 
+-   [PHP 7+](https://www.php.net/)
 -   [Composer](https://www.getcomposer.org)
 -   [Node.js](https://www.nodejs.org) comes with npm
 -   [MySQL](https://www.mysql.com) or your preferred DBMS

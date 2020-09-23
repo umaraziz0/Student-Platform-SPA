@@ -1,6 +1,6 @@
 # :mortar_board: Student Platform using Laravel 6 and Vue 2
 
-A simple student platform / management single page application using Laravel and Vue. Part of my undergraduate degree final year project. 
+A simple student planner / management single page application using Laravel and Vue. Part of my undergraduate degree final year project. 
 
 ## :star: Features
 
